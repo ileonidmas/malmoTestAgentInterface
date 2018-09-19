@@ -53,6 +53,7 @@ namespace RunMission
         bool alreadyMovingRight = false;
         private void Look(double currentYaw, double desiredYaw, double currentPitch, double desiredPitch)
         {
+            //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
             var deltaYaw = desiredYaw - currentYaw;
             while (deltaYaw < -180)
                 deltaYaw += 360;
