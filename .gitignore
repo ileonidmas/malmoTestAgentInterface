@@ -1,0 +1,6 @@
+# Folders
+bin/
+obj/
+.vs/
+mission_records
+*.tgz
