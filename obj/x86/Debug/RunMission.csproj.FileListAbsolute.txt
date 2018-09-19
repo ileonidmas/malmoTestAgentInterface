@@ -1,0 +1,9 @@
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\bin\x86\Debug\MalmoNETNative.dll
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\bin\x86\Debug\CSharpExamples_RunMission.exe.config
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\bin\x86\Debug\CSharpExamples_RunMission.exe
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\bin\x86\Debug\CSharpExamples_RunMission.pdb
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\bin\x86\Debug\MalmoNET.dll
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\obj\x86\Debug\RunMission.csproj.CoreCompileInputs.cache
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\obj\x86\Debug\RunMission.csproj.CopyComplete
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\obj\x86\Debug\CSharpExamples_RunMission.exe
+C:\Users\lema\Desktop\School\Malmo\CSharp_Examples\obj\x86\Debug\CSharpExamples_RunMission.pdb
