@@ -64,7 +64,7 @@ class Program
 
         //https://microsoft.github.io/malmo/0.14.0/Schemas/Mission.html#element_AgentStart
         //https://microsoft.github.io/malmo/0.14.0/Schemas/Mission.html#element_InventoryItem
-        var xml = System.IO.File.ReadAllText(@"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\myworld.xml");
+        var xml = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\2018-ThesisTest\myworld.xml");
         MissionSpec mission = new MissionSpec(xml, false);
         mission.setModeToCreative();
         int attempts = 0;
@@ -134,10 +134,12 @@ class Program
                 if (!runonce)
                 {
                     agentHelper.PlaceBlock(AgentHelperP.Direction.Front);
-                    agentHelper.PlaceBlock(AgentHelperP.Direction.Right);
-                    agentHelper.PlaceBlock(AgentHelperP.Direction.Back);
+                    Console.WriteLine("___________________________");
                     agentHelper.PlaceBlock(AgentHelperP.Direction.Left);
-                    agentHelper.PlaceBlock(AgentHelperP.Direction.Under);
+                    Console.WriteLine("___________________________");
+                    agentHelper.PlaceBlock(AgentHelperP.Direction.Right);
+                    Console.WriteLine("___________________________");
+                    agentHelper.PlaceBlock(AgentHelperP.Direction.Back);
                     runonce = true;
                 }
 

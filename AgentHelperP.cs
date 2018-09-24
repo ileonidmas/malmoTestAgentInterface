@@ -74,12 +74,12 @@ namespace RunMission
             //Yaw control
             if (Math.Round(currentYaw, 0) != desiredYaw)
             {
-                if (tickCountYaw < (desiredYaw / perTickYaw) - 1)
+                remainingTickYawVal = desiredYaw - currentYaw;
+                if (tickCountYaw < (remainingTickYawVal / perTickYaw) - 1)
                 {
-                    remainingTickYawVal = desiredYaw - currentYaw;
                     Console.WriteLine("Remaining yaw: {0} ", remainingTickYawVal);
 
-                    if (remainingTickYawVal > perTickYaw)
+                    if (remainingTickYawVal > perTickYaw || remainingTickYawVal < perTickYaw)
                     {
                         if(desiredYaw - currentYaw > 0)
                         {
@@ -104,17 +104,17 @@ namespace RunMission
 
                     agentHost.sendCommand("turn " + deltaYawFormated);
                 }
-            } 
+            }
 
             //Pitch control
             if (Math.Round(currentPitch, 0) != desiredPitch)
             {
-                if (tickCountPitch < (desiredPitch / perTickPitch) - 1)
+                remainingTickPitchVal = desiredPitch - currentPitch;
+                if (tickCountPitch < (remainingTickPitchVal / perTickPitch) - 1)
                 {
-                    remainingTickPitchVal = desiredPitch - currentPitch;
                     Console.WriteLine("Remaining pitch: {0} ", remainingTickPitchVal);
 
-                    if (remainingTickPitchVal > perTickPitch)
+                    if (remainingTickPitchVal > perTickPitch || remainingTickPitchVal < perTickPitch)
                     {
                         if (desiredPitch - currentPitch > 0)
                         {
