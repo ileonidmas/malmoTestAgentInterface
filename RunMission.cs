@@ -64,7 +64,7 @@ class Program
 
         //https://microsoft.github.io/malmo/0.14.0/Schemas/Mission.html#element_AgentStart
         //https://microsoft.github.io/malmo/0.14.0/Schemas/Mission.html#element_InventoryItem
-        var xml = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\2018-ThesisTest\myworld.xml");
+        var xml = System.IO.File.ReadAllText(@"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\myworld.xml");
         MissionSpec mission = new MissionSpec(xml, false);
         mission.setModeToCreative();
         int attempts = 0;
@@ -146,8 +146,8 @@ class Program
                         if (!runonce)
                         {
                             agentHost.sendCommand("turn 0");
-                            agentHost.sendCommand("attack 1");
-                            agentHost.sendCommand("attack 0");
+                            //agentHost.sendCommand("attack 1");
+                            //agentHost.sendCommand("attack 0");
                             Thread.Sleep(50);
                             agentHost.sendCommand("use 1");
                             agentHost.sendCommand("use 0");
@@ -155,7 +155,7 @@ class Program
 
                             Console.WriteLine("______________________________");
 
-                            agentHelper.UpdateDirection(180, 90);
+                            agentHelper.UpdateDirection(180, 45);
 
 
                             agentHost.sendCommand("use 1");

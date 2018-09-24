@@ -69,7 +69,7 @@ namespace RunMission
         private void Look(double currentYaw, double desiredYaw, double currentPitch, double desiredPitch, int tickCountYaw, double remainingTickYawVal, int tickCountPitch, double remainingTickPitchVal)
         {
             var perTickYaw = 18;
-            var perTickPitch = 6;
+            var perTickPitch = 18;
             
             Console.WriteLine(Math.Round(currentYaw, 0));
             Console.WriteLine(Math.Round(currentPitch, 0));
@@ -100,7 +100,7 @@ namespace RunMission
 
                     agentHost.sendCommand("turn " + deltaYawFormated);
                 }
-            }
+            } 
 
             //Pitch control
             if (Math.Round(currentPitch, 0) != desiredPitch)
@@ -112,7 +112,7 @@ namespace RunMission
 
                     if (remainingTickPitchVal > perTickPitch)
                     {
-                        agentHost.sendCommand(String.Format("turn {0}", 1));
+                        agentHost.sendCommand(String.Format("pitch {0}", 1));
                         tickCountPitch++;
                     }
                 }
