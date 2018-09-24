@@ -13,14 +13,14 @@ namespace RunMission
     class AgentHelperP
     {
         private AgentHost agentHost;
-        public enum Direction { Front, Left, Right, Back, BottomFront, BottomLeft, BottomRight, BottomBack , TopFront, TopLeft, TopRight, TopBack };
+        public enum Direction { Front, Left, Right, Back, BottomFront, BottomLeft, BottomRight, BottomBack , TopFront, TopLeft, TopRight, TopBack, Under };
         public AgentHelperP(AgentHost agentHost)
         {
             this.agentHost = agentHost;
         }
         public AgentHost AgentHost => agentHost;
 
-        public void UpdateDirection(double desiredYaw, double desiredPitch)
+        public void UpdateDirection(double desiredYaw, double desiredPitch, double precision = 0.1)
         {
             var currentYaw = 0d;
             var currentPitch = 0d;
@@ -61,7 +61,7 @@ namespace RunMission
                 {
                     Debug.WriteLine("error reading observations in Agent helper");
                 }
-            } while (Math.Round(currentYaw, 0) != desiredYaw || Math.Round(currentPitch, 0) != desiredPitch);
+            } while (Math.Abs(currentYaw - desiredYaw) > precision || Math.Abs(currentPitch - desiredPitch) > precision);
             agentHost.sendCommand("turn " + 0);
             agentHost.sendCommand("pitch " + 0);
         }
@@ -139,45 +139,51 @@ namespace RunMission
             switch (where)
             {
                 case Direction.Front:
-                    UpdateDirection(0,0);
+                    UpdateDirection(0,60, 1);
                     break;
                 case Direction.Right:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(90, 60, 1);
                     break;
                 case Direction.Back:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(180, 60, 1);
                     break;
                 case Direction.Left:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(270, 60, 1);
                     break;
                 case Direction.BottomFront:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(0, 60, 1);
                     break;
                 case Direction.BottomRight:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(90, 60, 1);
                     break;
                 case Direction.BottomBack:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(180, 60, 1);
                     break;
                 case Direction.BottomLeft:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(270, 60, 1);
                     break;
                 case Direction.TopFront:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(0, 45, 1);
                     break;
                 case Direction.TopRight:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(90, 45, 1);
                     break;
                 case Direction.TopBack:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(180, 45, 1);
                     break;
                 case Direction.TopLeft:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(270, 45, 1);
+                    break;
+                case Direction.Under:
+                    UpdateDirection(180, 90, 1);
+                    agentHost.sendCommand("jump 1");
                     break;
             }
 
             agentHost.sendCommand("use 1");
+            Thread.Sleep(500);
             agentHost.sendCommand("use 0");
+            agentHost.sendCommand("jump 0");
         }
 
         public void DestroyBlock(Direction where)

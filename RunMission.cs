@@ -130,40 +130,19 @@ class Program
                 var ypos = observationJson.GetValue("YPos");
                 var zpos = observationJson.GetValue("ZPos");
 
-                //Console.WriteLine(String.Format("XPos: {0} YPos: {1} ZPos: {2} Yaw: {3} Acc: {4}", xpos, ypos,zpos, yaw, a));
-                if ((double)zpos <= -553 && goForward)
-                    agentHost.sendCommand("move 1");
-                else
+
+                if (!runonce)
                 {
-                    if (Math.Round((double)yaw) != 180)
-                    {
-                        goForward = false;
-                        agentHost.sendCommand("move 0");
-                        //agentHost.sendCommand("turn -0.5");
-                        agentHelper.UpdateDirection(180,60);
-                    } else
-                    {
-                        if (!runonce)
-                        {
-                            agentHost.sendCommand("turn 0");
-                            //agentHost.sendCommand("attack 1");
-                            //agentHost.sendCommand("attack 0");
-                            Thread.Sleep(50);
-                            agentHost.sendCommand("use 1");
-                            agentHost.sendCommand("use 0");
-                            runonce = true;
-
-                            Console.WriteLine("______________________________");
-
-                            agentHelper.UpdateDirection(180, 45);
-
-
-                            agentHost.sendCommand("use 1");
-                            agentHost.sendCommand("use 0");
-                        }
-                    }
+                    agentHelper.PlaceBlock(AgentHelperP.Direction.Front);
+                    agentHelper.PlaceBlock(AgentHelperP.Direction.Right);
+                    agentHelper.PlaceBlock(AgentHelperP.Direction.Back);
+                    agentHelper.PlaceBlock(AgentHelperP.Direction.Left);
+                    agentHelper.PlaceBlock(AgentHelperP.Direction.Under);
+                    runonce = true;
                 }
-            } catch (ArgumentOutOfRangeException ex)
+
+            }
+            catch (ArgumentOutOfRangeException ex)
             {
                 Debug.WriteLine("Error reading observations in RunMission");
             }
