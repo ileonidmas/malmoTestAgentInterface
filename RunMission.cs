@@ -30,7 +30,7 @@ class Program
     public static void Main()
     {
         AgentHost agentHost = new AgentHost();
-        AgentHelper agentHelper = new AgentHelper(agentHost);
+        AgentHelperP agentHelper = new AgentHelperP(agentHost);
         try
         {
             var something = Environment.GetCommandLineArgs();

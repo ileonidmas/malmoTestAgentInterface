@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentHelper.cs" />
+    <Compile Include="AgentHelperP.cs" />
     <Compile Include="RunMission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
