@@ -154,6 +154,7 @@ class Program
         while (worldState.is_mission_running);
         //Console.ReadKey();
         Console.WriteLine("Mission has stopped.");
+        Console.ReadKey();
     }
 
 

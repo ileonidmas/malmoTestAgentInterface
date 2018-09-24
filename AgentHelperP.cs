@@ -12,25 +12,26 @@ namespace RunMission
 {
     class AgentHelperP
     {
+        #region Private members
         private AgentHost agentHost;
-        public enum Direction { Front, Left, Right, Back, FrontUnder, LeftUnder, RightUnder, BackUnder , FrontTop, LeftTop, RightTop, BackTop, Under };
+        public enum Direction { Front, Left, Right, Back, FrontUnder, LeftUnder, RightUnder, BackUnder, FrontTop, LeftTop, RightTop, BackTop, Under };
+
+        #endregion
+
+        #region Constructor
         public AgentHelperP(AgentHost agentHost)
         {
             this.agentHost = agentHost;
         }
-        public AgentHost AgentHost => agentHost;
+        #endregion
 
-        public void UpdateDirection(double desiredYaw, double desiredPitch, double precision = 0.1)
+        #region Private methods
+        private void UpdateDirection(double desiredYaw, double desiredPitch, double precision = 1)
         {
             var currentYaw = 0d;
             var currentPitch = 0d;
-
-            var tickCountYaw = 0;
-            var remainingTickYawVal = desiredYaw;
-
-            var tickCountPitch = 0;
-            var remainingTickPitchVal = desiredPitch;
-
+            var deltaYaw = 0d;
+            var deltaPitch = 0d;
             do
             {
                 try
@@ -42,151 +43,128 @@ namespace RunMission
                     currentPitch = (double)observations.GetValue("Pitch");
 
                     Console.WriteLine(String.Format("Yaw: {0} Pitch: {1}", currentYaw, currentPitch));
-
                     if (observations == null)
                         continue;
                     else
                     {
-                        Debug.WriteLine("Current yaw " + currentYaw);
-                        Look(currentYaw, desiredYaw, currentPitch, desiredPitch, tickCountYaw, remainingTickYawVal, tickCountPitch, remainingTickPitchVal);
 
-                        remainingTickYawVal = currentYaw - remainingTickYawVal;
-                        tickCountYaw++;
+                        //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
+                        deltaYaw = desiredYaw - currentYaw;
+                        if (deltaYaw > 180)
+                            deltaYaw -= 360;
+                        if (deltaYaw < -180)
+                            deltaYaw += 360;
 
-                        remainingTickPitchVal = currentPitch - remainingTickPitchVal;
-                        tickCountPitch++;
+                        deltaPitch = desiredPitch - currentPitch;
+                        if (deltaPitch > 180)
+                            deltaPitch -= 360;
+                        if (deltaPitch < -180)
+                            deltaPitch += 360;
+
+                        Look(currentYaw, deltaYaw, currentPitch, deltaPitch);
                     }
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
                     Debug.WriteLine("error reading observations in Agent helper");
                 }
-            } while (Math.Abs(currentYaw - desiredYaw) > precision || Math.Abs(currentPitch - desiredPitch) > precision);
+            } while (Math.Abs(deltaYaw) > precision || Math.Abs(deltaPitch) > precision);
             agentHost.sendCommand("turn " + 0);
             agentHost.sendCommand("pitch " + 0);
         }
-        
-        private void Look(double currentYaw, double desiredYaw, double currentPitch, double desiredPitch, int tickCountYaw, double remainingTickYawVal, int tickCountPitch, double remainingTickPitchVal)
+
+
+        private void Look(double currentYaw, double deltaYaw, double currentPitch, double deltaPitch, int precision = 1)
         {
             var perTickYaw = 18;
             var perTickPitch = 18;
             
             //Yaw control
-            if (Math.Round(currentYaw, 0) != desiredYaw)
+            if (Math.Abs(deltaYaw) > 1)
             {
-                remainingTickYawVal = desiredYaw - currentYaw;
-                if (tickCountYaw < (remainingTickYawVal / perTickYaw) - 1)
+                if (Math.Abs(deltaYaw) - perTickYaw > 0)
                 {
-                    Console.WriteLine("Remaining yaw: {0} ", remainingTickYawVal);
-
-                    if (remainingTickYawVal > perTickYaw || remainingTickYawVal < perTickYaw)
-                    {
-                        if(desiredYaw - currentYaw > 0)
-                        {
-                            agentHost.sendCommand(String.Format("turn {0}", 1));
-                        } else
-                        {
-                            agentHost.sendCommand(String.Format("turn {0}", -1));
-                        }
-                        tickCountYaw++;
-                    }
+                    if (deltaYaw > 0)                 
+                        agentHost.sendCommand(String.Format("turn {0}", 1));
+                    else
+                        agentHost.sendCommand(String.Format("turn {0}", -1));                  
                 }
                 else
                 {
-                    //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
-                    var deltaYaw = desiredYaw - currentYaw;
-                    while (deltaYaw < -180)
-                        deltaYaw += 360;
-                    while (deltaYaw > 180)
-                        deltaYaw -= 360;
                     deltaYaw /= 180.0;
-                    string deltaYawFormated = FormatValue(deltaYaw);
-
-                    agentHost.sendCommand("turn " + deltaYawFormated);
+                    agentHost.sendCommand("turn " + FormatValue(deltaYaw));
                 }
             }
 
             //Pitch control
-            if (Math.Round(currentPitch, 0) != desiredPitch)
-            {
-                remainingTickPitchVal = desiredPitch - currentPitch;
-                if (tickCountPitch < (remainingTickPitchVal / perTickPitch) - 1)
+            if (Math.Abs(deltaPitch) > precision)
+            {                
+                if (Math.Abs(deltaPitch) - perTickPitch > 0)
                 {
-                    Console.WriteLine("Remaining pitch: {0} ", remainingTickPitchVal);
-
-                    if (remainingTickPitchVal > perTickPitch || remainingTickPitchVal < perTickPitch)
-                    {
-                        if (desiredPitch - currentPitch > 0)
-                        {
-                            agentHost.sendCommand(String.Format("pitch {0}", 1));
-                        }
-                        else
-                        {
-                            agentHost.sendCommand(String.Format("pitch {0}", -1));
-                        }
-                        tickCountPitch++;
-                    }
+                    if (deltaPitch > 0)
+                        agentHost.sendCommand(String.Format("pitch {0}", 1));
+                    else
+                        agentHost.sendCommand(String.Format("pitch {0}", -1));
                 }
                 else
                 {
-                    //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
-                    var deltaPitch = desiredPitch - currentPitch;
-                    while (deltaPitch < -180)
-                        deltaPitch += 360;
-                    while (deltaPitch > 180)
-                        deltaPitch -= 360;
                     deltaPitch /= 180.0;
-                    string deltaPitchFormated = FormatValue(deltaPitch);
-
-                    agentHost.sendCommand("pitch " + deltaPitchFormated);
+                    agentHost.sendCommand("pitch " + FormatValue(deltaPitch));
                 }
             }
         }
 
-        
+        private string FormatValue(double value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        #endregion
+
+        #region Public methods
 
         public void PlaceBlock(Direction where)
         {
             switch (where)
             {
                 case Direction.Front:
-                    UpdateDirection(0,60, 1);
+                    UpdateDirection(0,60);
                     break;
                 case Direction.Right:
-                    UpdateDirection(90, 60, 1);
+                    UpdateDirection(90, 60);
                     break;
                 case Direction.Back:
-                    UpdateDirection(180, 60, 1);
+                    UpdateDirection(180, 60);
                     break;
                 case Direction.Left:
-                    UpdateDirection(270, 60, 1);
+                    UpdateDirection(270, 60);
                     break;
                 case Direction.FrontUnder:
-                    UpdateDirection(0, 70, 1);
+                    UpdateDirection(0, 70);
                     break;
                 case Direction.RightUnder:
-                    UpdateDirection(90, 70, 1);
+                    UpdateDirection(90, 70);
                     break;
                 case Direction.BackUnder:
-                    UpdateDirection(180, 70, 1);
+                    UpdateDirection(180, 70);
                     break;
                 case Direction.LeftUnder:
-                    UpdateDirection(270, 70, 1);
+                    UpdateDirection(270, 70);
                     break;
                 case Direction.FrontTop:
-                    UpdateDirection(0, 45, 1);
+                    UpdateDirection(0, 45);
                     break;
                 case Direction.RightTop:
-                    UpdateDirection(90, 45, 1);
+                    UpdateDirection(90, 45);
                     break;
                 case Direction.BackTop:
-                    UpdateDirection(180, 45, 1);
+                    UpdateDirection(180, 45);
                     break;
                 case Direction.LeftTop:
-                    UpdateDirection(270, 45, 1);
+                    UpdateDirection(270, 45);
                     break;
                 case Direction.Under:
-                    UpdateDirection(180, 90, 1);
+                    UpdateDirection(180, 90);
                     agentHost.sendCommand("jump 1");
                     break;
             }
@@ -203,53 +181,49 @@ namespace RunMission
             switch (where)
             {
                 case Direction.Front:
-                    UpdateDirection(0, 60, 1);
+                    UpdateDirection(0, 60);
                     break;
                 case Direction.Right:
-                    UpdateDirection(90, 60, 1);
+                    UpdateDirection(90, 60);
                     break;
                 case Direction.Back:
-                    UpdateDirection(180, 60, 1);
+                    UpdateDirection(180, 60);
                     break;
                 case Direction.Left:
-                    UpdateDirection(270, 60, 1);
+                    UpdateDirection(270, 60);
                     break;
                 case Direction.FrontUnder:
-                    UpdateDirection(0, 70, 1);
+                    UpdateDirection(0, 70);
                     break;
                 case Direction.RightUnder:
-                    UpdateDirection(90, 70, 1);
+                    UpdateDirection(90, 70);
                     break;
                 case Direction.BackUnder:
-                    UpdateDirection(180, 70, 1);
+                    UpdateDirection(180, 70);
                     break;
                 case Direction.LeftUnder:
-                    UpdateDirection(270, 70, 1);
+                    UpdateDirection(270, 70);
                     break;
                 case Direction.FrontTop:
-                    UpdateDirection(0, 45, 1);
+                    UpdateDirection(0, 45);
                     break;
                 case Direction.RightTop:
-                    UpdateDirection(90, 45, 1);
+                    UpdateDirection(90, 45);
                     break;
                 case Direction.BackTop:
-                    UpdateDirection(180, 45, 1);
+                    UpdateDirection(180, 45);
                     break;
                 case Direction.LeftTop:
-                    UpdateDirection(270, 45, 1);
+                    UpdateDirection(270, 45);
                     break;
                 case Direction.Under:
-                    UpdateDirection(180, 90, 1);
+                    UpdateDirection(180, 90);
                     break;
             }
             
             agentHost.sendCommand("attack 1");
             agentHost.sendCommand("attack 0");
         }
-
-        private string FormatValue(double value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture);
-        }
+        #endregion
     }
 }
