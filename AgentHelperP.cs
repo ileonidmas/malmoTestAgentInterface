@@ -13,7 +13,7 @@ namespace RunMission
     class AgentHelperP
     {
         private AgentHost agentHost;
-        public enum Direction { Front, Left, Right, Back, BottomFront, BottomLeft, BottomRight, BottomBack , TopFront, TopLeft, TopRight, TopBack, Under };
+        public enum Direction { Front, Left, Right, Back, FrontUnder, LeftUnder, RightUnder, BackUnder , FrontTop, LeftTop, RightTop, BackTop, Under };
         public AgentHelperP(AgentHost agentHost)
         {
             this.agentHost = agentHost;
@@ -161,28 +161,28 @@ namespace RunMission
                 case Direction.Left:
                     UpdateDirection(270, 60, 1);
                     break;
-                case Direction.BottomFront:
-                    UpdateDirection(0, 60, 1);
+                case Direction.FrontUnder:
+                    UpdateDirection(0, 70, 1);
                     break;
-                case Direction.BottomRight:
-                    UpdateDirection(90, 60, 1);
+                case Direction.RightUnder:
+                    UpdateDirection(90, 70, 1);
                     break;
-                case Direction.BottomBack:
-                    UpdateDirection(180, 60, 1);
+                case Direction.BackUnder:
+                    UpdateDirection(180, 70, 1);
                     break;
-                case Direction.BottomLeft:
-                    UpdateDirection(270, 60, 1);
+                case Direction.LeftUnder:
+                    UpdateDirection(270, 70, 1);
                     break;
-                case Direction.TopFront:
+                case Direction.FrontTop:
                     UpdateDirection(0, 45, 1);
                     break;
-                case Direction.TopRight:
+                case Direction.RightTop:
                     UpdateDirection(90, 45, 1);
                     break;
-                case Direction.TopBack:
+                case Direction.BackTop:
                     UpdateDirection(180, 45, 1);
                     break;
-                case Direction.TopLeft:
+                case Direction.LeftTop:
                     UpdateDirection(270, 45, 1);
                     break;
                 case Direction.Under:
@@ -192,7 +192,8 @@ namespace RunMission
             }
 
             agentHost.sendCommand("use 1");
-            Thread.Sleep(500);
+            if(where == Direction.Under)
+                Thread.Sleep(500);
             agentHost.sendCommand("use 0");
             agentHost.sendCommand("jump 0");
         }
@@ -202,44 +203,46 @@ namespace RunMission
             switch (where)
             {
                 case Direction.Front:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(0, 60, 1);
                     break;
                 case Direction.Right:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(90, 60, 1);
                     break;
                 case Direction.Back:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(180, 60, 1);
                     break;
                 case Direction.Left:
-                    UpdateDirection(0, 0);
+                    UpdateDirection(270, 60, 1);
                     break;
-                case Direction.BottomFront:
-                    UpdateDirection(0, 0);
+                case Direction.FrontUnder:
+                    UpdateDirection(0, 70, 1);
                     break;
-                case Direction.BottomRight:
-                    UpdateDirection(0, 0);
+                case Direction.RightUnder:
+                    UpdateDirection(90, 70, 1);
                     break;
-                case Direction.BottomBack:
-                    UpdateDirection(0, 0);
+                case Direction.BackUnder:
+                    UpdateDirection(180, 70, 1);
                     break;
-                case Direction.BottomLeft:
-                    UpdateDirection(0, 0);
+                case Direction.LeftUnder:
+                    UpdateDirection(270, 70, 1);
                     break;
-                case Direction.TopFront:
-                    UpdateDirection(0, 0);
+                case Direction.FrontTop:
+                    UpdateDirection(0, 45, 1);
                     break;
-                case Direction.TopRight:
-                    UpdateDirection(0, 0);
+                case Direction.RightTop:
+                    UpdateDirection(90, 45, 1);
                     break;
-                case Direction.TopBack:
-                    UpdateDirection(0, 0);
+                case Direction.BackTop:
+                    UpdateDirection(180, 45, 1);
                     break;
-                case Direction.TopLeft:
-                    UpdateDirection(0, 0);
+                case Direction.LeftTop:
+                    UpdateDirection(270, 45, 1);
+                    break;
+                case Direction.Under:
+                    UpdateDirection(180, 90, 1);
                     break;
             }
-
-
+            
             agentHost.sendCommand("attack 1");
             agentHost.sendCommand("attack 0");
         }
