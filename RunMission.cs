@@ -152,6 +152,12 @@ class Program
                             agentHost.sendCommand("use 1");
                             agentHost.sendCommand("use 0");
                             runonce = true;
+
+                            agentHelper.UpdateDirection(180, 90);
+
+
+                            agentHost.sendCommand("use 1");
+                            agentHost.sendCommand("use 0");
                         }
                     }
                 }

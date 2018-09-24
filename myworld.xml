@@ -13,7 +13,7 @@
    <AgentSection>
       <Name>A default agent</Name>
       <AgentStart>
-         <Placement x="-230.5" y="227.5" z="-555.5" />
+         <Placement x="0.5" y="227.5" z="0.5" />
          <Inventory>
             <InventoryBlock slot="0" type="gold_ore" quantity="63"/>
          </Inventory>

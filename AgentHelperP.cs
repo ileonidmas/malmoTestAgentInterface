@@ -61,7 +61,7 @@ namespace RunMission
                 {
                     Debug.WriteLine("error reading observations in Agent helper");
                 }
-            } while (Math.Round(currentYaw, 1) != desiredYaw && Math.Round(currentPitch, 1) != desiredPitch);
+            } while (Math.Round(currentYaw, 1) != desiredYaw || Math.Round(currentPitch, 1) != desiredPitch);
             agentHost.sendCommand("turn " + 0);
         }
         
