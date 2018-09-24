@@ -71,19 +71,23 @@ namespace RunMission
             var perTickYaw = 18;
             var perTickPitch = 18;
             
-            Console.WriteLine(Math.Round(currentYaw, 0));
-            Console.WriteLine(Math.Round(currentPitch, 0));
             //Yaw control
             if (Math.Round(currentYaw, 0) != desiredYaw)
             {
                 if (tickCountYaw < (desiredYaw / perTickYaw) - 1)
                 {
-                    remainingTickYawVal = (desiredYaw - (tickCountYaw * perTickYaw));
-                    Console.WriteLine(remainingTickYawVal);
+                    remainingTickYawVal = desiredYaw - currentYaw;
+                    Console.WriteLine("Remaining yaw: {0} ", remainingTickYawVal);
 
                     if (remainingTickYawVal > perTickYaw)
                     {
-                        agentHost.sendCommand(String.Format("turn {0}", 1));
+                        if(desiredYaw - currentYaw > 0)
+                        {
+                            agentHost.sendCommand(String.Format("turn {0}", 1));
+                        } else
+                        {
+                            agentHost.sendCommand(String.Format("turn {0}", -1));
+                        }
                         tickCountYaw++;
                     }
                 }
@@ -107,12 +111,19 @@ namespace RunMission
             {
                 if (tickCountPitch < (desiredPitch / perTickPitch) - 1)
                 {
-                    remainingTickPitchVal = (desiredPitch - (tickCountPitch * perTickPitch));
-                    Console.WriteLine(remainingTickPitchVal);
+                    remainingTickPitchVal = desiredPitch - currentPitch;
+                    Console.WriteLine("Remaining pitch: {0} ", remainingTickPitchVal);
 
                     if (remainingTickPitchVal > perTickPitch)
                     {
-                        agentHost.sendCommand(String.Format("pitch {0}", 1));
+                        if (desiredPitch - currentPitch > 0)
+                        {
+                            agentHost.sendCommand(String.Format("pitch {0}", 1));
+                        }
+                        else
+                        {
+                            agentHost.sendCommand(String.Format("pitch {0}", -1));
+                        }
                         tickCountPitch++;
                     }
                 }
