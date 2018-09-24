@@ -48,21 +48,27 @@ class Program
             Console.Error.WriteLine(agentHost.getUsage());
             Environment.Exit(0);
         }
-        MissionSpec mission = new MissionSpec();
-        mission.timeLimitInSeconds(100000);
+        float startX = -230.5f, startY = 227.5f, startZ = -555.5f;
+        /*MissionSpec mission = new MissionSpec();
+        mission.timeLimitInSeconds(10000);
         //mission.requestVideo( 320, 240 );
         //mission.rewardForReachingPosition(19.5f,0.0f,19.5f,100.0f,1.1f);
-        mission.startAt(-230.5f, 227.5f, -555.5f);
-        
+        mission.startAt(startX,startY,startZ);
+        */
         MissionRecordSpec missionRecord = new MissionRecordSpec("./saved_data.tgz");
+        
         missionRecord.recordCommands();
        // missionRecord.recordMP4(20, 400000);
         //missionRecord.recordRewards();
         missionRecord.recordObservations();
 
-        
-        bool connected = false;
+        //https://microsoft.github.io/malmo/0.14.0/Schemas/Mission.html#element_AgentStart
+        //https://microsoft.github.io/malmo/0.14.0/Schemas/Mission.html#element_InventoryItem
+        var xml = System.IO.File.ReadAllText(@"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\myworld.xml");
+        MissionSpec mission = new MissionSpec(xml, false);
+        mission.setModeToCreative();
         int attempts = 0;
+        bool connected = false;
         while (!connected)
         {
             try
@@ -107,6 +113,7 @@ class Program
         Thread.Sleep(500);
         bool goForward = true;
 
+        bool runonce = false;
         do
         {
             try
@@ -136,8 +143,16 @@ class Program
                         agentHelper.UpdateDirection(180,60);
                     } else
                     {
-                        agentHost.sendCommand("turn 0");
-                        agentHost.sendCommand("attack 1");
+                        if (!runonce)
+                        {
+                            agentHost.sendCommand("turn 0");
+                            agentHost.sendCommand("attack 1");
+                            agentHost.sendCommand("attack 0");
+                            Thread.Sleep(50);
+                            agentHost.sendCommand("use 1");
+                            agentHost.sendCommand("use 0");
+                            runonce = true;
+                        }
                     }
                 }
             } catch (ArgumentOutOfRangeException ex)
@@ -148,9 +163,11 @@ class Program
             foreach (TimestampedString error in worldState.errors) Console.Error.WriteLine("Error: {0}", error.text);
         }
         while (worldState.is_mission_running);
-        Console.ReadKey();
+        //Console.ReadKey();
         Console.WriteLine("Mission has stopped.");
     }
+
+
 
     
 }
