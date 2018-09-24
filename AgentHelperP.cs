@@ -13,7 +13,7 @@ namespace RunMission
     class AgentHelperP
     {
         private AgentHost agentHost;
-
+        public enum Direction { Front, Left, Right, Back, BottomFront, BottomLeft, BottomRight, BottomBack , TopFront, TopLeft, TopRight, TopBack };
         public AgentHelperP(AgentHost agentHost)
         {
             this.agentHost = agentHost;
@@ -120,6 +120,101 @@ namespace RunMission
 
                 agentHost.sendCommand("pitch " + deltaPitchFormated);
             }
+        }
+
+        
+
+        public void PlaceBlock(Direction where)
+        {
+            switch (where)
+            {
+                case Direction.Front:
+                    UpdateDirection(0,0);
+                    break;
+                case Direction.Right:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.Back:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.Left:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.BottomFront:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.BottomRight:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.BottomBack:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.BottomLeft:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.TopFront:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.TopRight:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.TopBack:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.TopLeft:
+                    UpdateDirection(0, 0);
+                    break;
+            }
+
+            agentHost.sendCommand("use 1");
+            agentHost.sendCommand("use 0");
+        }
+
+        public void DestroyBlock(Direction where)
+        {
+            switch (where)
+            {
+                case Direction.Front:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.Right:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.Back:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.Left:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.BottomFront:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.BottomRight:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.BottomBack:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.BottomLeft:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.TopFront:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.TopRight:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.TopBack:
+                    UpdateDirection(0, 0);
+                    break;
+                case Direction.TopLeft:
+                    UpdateDirection(0, 0);
+                    break;
+            }
+
+
+            agentHost.sendCommand("attack 1");
+            agentHost.sendCommand("attack 0");
         }
 
         private string FormatValue(double value)
