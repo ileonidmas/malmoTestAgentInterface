@@ -61,64 +61,74 @@ namespace RunMission
                 {
                     Debug.WriteLine("error reading observations in Agent helper");
                 }
-            } while (Math.Round(currentYaw, 1) != desiredYaw || Math.Round(currentPitch, 1) != desiredPitch);
+            } while (Math.Round(currentYaw, 0) != desiredYaw || Math.Round(currentPitch, 0) != desiredPitch);
             agentHost.sendCommand("turn " + 0);
+            agentHost.sendCommand("pitch " + 0);
         }
         
         private void Look(double currentYaw, double desiredYaw, double currentPitch, double desiredPitch, int tickCountYaw, double remainingTickYawVal, int tickCountPitch, double remainingTickPitchVal)
         {
-            var perTickYaw = 18.18;
+            var perTickYaw = 18;
             var perTickPitch = 6;
-
+            
+            Console.WriteLine(Math.Round(currentYaw, 0));
+            Console.WriteLine(Math.Round(currentPitch, 0));
             //Yaw control
-            if (tickCountYaw < (desiredYaw / perTickYaw) - 1)
+            if (Math.Round(currentYaw, 0) != desiredYaw)
             {
-                remainingTickYawVal = (desiredYaw - (tickCountYaw * perTickYaw));
-                Console.WriteLine(remainingTickYawVal);
-
-                if (remainingTickYawVal > perTickYaw)
+                if (tickCountYaw < (desiredYaw / perTickYaw) - 1)
                 {
-                    agentHost.sendCommand(String.Format("turn {0}", 1));
-                    tickCountYaw++;
-                }
-            } else
-            {
-                //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
-                var deltaYaw = desiredYaw - currentYaw;
-                while (deltaYaw < -180)
-                    deltaYaw += 360;
-                while (deltaYaw > 180)
-                    deltaYaw -= 360;
-                deltaYaw /= 180.0;
-                string deltaYawFormated = FormatValue(deltaYaw);
+                    remainingTickYawVal = (desiredYaw - (tickCountYaw * perTickYaw));
+                    Console.WriteLine(remainingTickYawVal);
 
-                agentHost.sendCommand("turn " + deltaYawFormated);
+                    if (remainingTickYawVal > perTickYaw)
+                    {
+                        agentHost.sendCommand(String.Format("turn {0}", 1));
+                        tickCountYaw++;
+                    }
+                }
+                else
+                {
+                    //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
+                    var deltaYaw = desiredYaw - currentYaw;
+                    while (deltaYaw < -180)
+                        deltaYaw += 360;
+                    while (deltaYaw > 180)
+                        deltaYaw -= 360;
+                    deltaYaw /= 180.0;
+                    string deltaYawFormated = FormatValue(deltaYaw);
+
+                    agentHost.sendCommand("turn " + deltaYawFormated);
+                }
             }
 
-
             //Pitch control
-            if(tickCountPitch < (desiredPitch / perTickPitch) - 1)
+            if (Math.Round(currentPitch, 0) != desiredPitch)
             {
-                remainingTickPitchVal = (desiredPitch - (tickCountPitch * perTickPitch));
-                Console.WriteLine(remainingTickPitchVal);
-
-                if (remainingTickPitchVal > perTickPitch)
+                if (tickCountPitch < (desiredPitch / perTickPitch) - 1)
                 {
-                    agentHost.sendCommand(String.Format("turn {0}", 1));
-                    tickCountPitch++;
-                }
-            } else
-            {
-                //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
-                var deltaPitch = desiredPitch - currentPitch;
-                while (deltaPitch < -180)
-                    deltaPitch += 360;
-                while (deltaPitch > 180)
-                    deltaPitch -= 360;
-                deltaPitch /= 180.0;
-                string deltaPitchFormated = FormatValue(deltaPitch);
+                    remainingTickPitchVal = (desiredPitch - (tickCountPitch * perTickPitch));
+                    Console.WriteLine(remainingTickPitchVal);
 
-                agentHost.sendCommand("pitch " + deltaPitchFormated);
+                    if (remainingTickPitchVal > perTickPitch)
+                    {
+                        agentHost.sendCommand(String.Format("turn {0}", 1));
+                        tickCountPitch++;
+                    }
+                }
+                else
+                {
+                    //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
+                    var deltaPitch = desiredPitch - currentPitch;
+                    while (deltaPitch < -180)
+                        deltaPitch += 360;
+                    while (deltaPitch > 180)
+                        deltaPitch -= 360;
+                    deltaPitch /= 180.0;
+                    string deltaPitchFormated = FormatValue(deltaPitch);
+
+                    agentHost.sendCommand("pitch " + deltaPitchFormated);
+                }
             }
         }
 
