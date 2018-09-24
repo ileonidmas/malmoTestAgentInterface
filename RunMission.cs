@@ -30,7 +30,7 @@ class Program
     public static void Main()
     {
         AgentHost agentHost = new AgentHost();
-        AgentHelperP agentHelper = new AgentHelperP(agentHost);
+        AgentHelper agentHelper = new AgentHelper(agentHost);
         try
         {
             var something = Environment.GetCommandLineArgs();
@@ -133,13 +133,13 @@ class Program
 
                 if (!runonce)
                 {
-                    agentHelper.PlaceBlock(AgentHelperP.Direction.Front);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Front);
                     Console.WriteLine("___________________________");
-                    agentHelper.PlaceBlock(AgentHelperP.Direction.Left);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Left);
                     Console.WriteLine("___________________________");
-                    agentHelper.PlaceBlock(AgentHelperP.Direction.Right);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Right);
                     Console.WriteLine("___________________________");
-                    agentHelper.PlaceBlock(AgentHelperP.Direction.Back);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Back);
                     runonce = true;
                 }
 
