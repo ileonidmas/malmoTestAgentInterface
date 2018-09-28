@@ -130,16 +130,17 @@ class Program
                 var ypos = observationJson.GetValue("YPos");
                 var zpos = observationJson.GetValue("ZPos");
 
-
                 if (!runonce)
                 {
-                    agentHelper.PlaceBlock(AgentHelper.Direction.Front);
-                    Console.WriteLine("___________________________");
-                    agentHelper.PlaceBlock(AgentHelper.Direction.Left);
-                    Console.WriteLine("___________________________");
-                    agentHelper.PlaceBlock(AgentHelper.Direction.Right);
-                    Console.WriteLine("___________________________");
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Front);
+                    //Console.WriteLine("___________________________");
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Left);
+                    //Console.WriteLine("___________________________");
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Right);
+                    //Console.WriteLine("___________________________");
                     agentHelper.PlaceBlock(AgentHelper.Direction.Back);
+
+                    agentHelper.strafeLeftTest();
                     runonce = true;
                 }
 

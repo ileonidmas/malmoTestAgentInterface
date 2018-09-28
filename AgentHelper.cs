@@ -28,8 +28,11 @@ namespace RunMission
         #region Private methods
         private void UpdateDirection(double desiredYaw, double desiredPitch, double precision = 1)
         {
-            var currentYaw = 0d;
-            var currentPitch = 0d;
+            Thread.Sleep(100);
+            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+
+            var currentYaw = (double)observations.GetValue("Yaw");
+            var currentPitch = (double)observations.GetValue("Pitch");
             var deltaYaw = 0d;
             var deltaPitch = 0d;
             do
@@ -37,7 +40,7 @@ namespace RunMission
                 try
                 {
                     Thread.Sleep(100);
-                    var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+                    observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
 
                     currentYaw = (double)observations.GetValue("Yaw");
                     currentPitch = (double)observations.GetValue("Pitch");
@@ -80,7 +83,7 @@ namespace RunMission
             var perTickPitch = 18;
             
             //Yaw control
-            if (Math.Abs(deltaYaw) > 1)
+            if (Math.Abs(deltaYaw) > precision)
             {
                 if (Math.Abs(deltaYaw) - perTickYaw > 0)
                 {
@@ -223,6 +226,143 @@ namespace RunMission
             
             agentHost.sendCommand("attack 1");
             agentHost.sendCommand("attack 0");
+        }
+
+        public void strafeLeftTest(double precision = 0.015)
+        {
+            Thread.Sleep(100);
+            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+
+            var currentYaw = (double)observations.GetValue("Yaw");
+
+            var currentXPos = (double)observations.GetValue("XPos");
+            var currentZPos = (double)observations.GetValue("ZPos");
+            var desiredXPos = 0d;
+            var desiredZPos = 0d;
+            var deltaXPos = 1d;
+            var deltaZPos = 1d;
+
+            if (currentYaw > -1 && currentYaw < 1)
+            {
+                desiredXPos = currentXPos + 1d;
+
+                do
+                {
+                    try
+                    {
+                        observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+                        currentXPos = (double)observations.GetValue("XPos");
+                        deltaXPos = desiredXPos - currentXPos;
+
+                        if (deltaXPos > precision)
+                        {
+                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.2)));
+                        }
+
+                        if (deltaXPos < 0)
+                        {
+                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.06)));
+                        }
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        Debug.WriteLine("error reading observations in Agent helper");
+                    }
+                } while (deltaXPos > precision || deltaXPos < 0);
+                agentHost.sendCommand("strafe " + 0);
+            }
+
+            if (currentYaw < -89 && currentYaw > -91)
+            {
+                desiredZPos = currentZPos - 1d;
+
+                do
+                {
+                    try
+                    {
+                        observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+                        currentZPos = (double)observations.GetValue("ZPos");
+                        deltaZPos = desiredZPos - currentZPos;
+
+                        if (deltaZPos < 0)
+                        {
+                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.2)));
+                        }
+
+                        if (deltaZPos > precision)
+                        {
+                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.06)));
+                        }
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        Debug.WriteLine("error reading observations in Agent helper");
+                    }
+                } while (deltaZPos > precision || deltaZPos < 0);
+                agentHost.sendCommand("strafe " + 0);
+            }
+
+            if (currentYaw > 179 && currentYaw < 181)
+            {
+                desiredXPos = currentXPos - 1d;
+
+                do
+                {
+                    try
+                    {
+                        observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+                        currentXPos = (double)observations.GetValue("XPos");
+                        deltaXPos = desiredXPos - currentXPos;
+
+                        Console.WriteLine(deltaXPos);
+
+                        if (deltaXPos < 0)
+                        {
+                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.2)));
+                        }
+
+                        if (deltaXPos > precision)
+                        {
+                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.06)));
+                        }
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        Debug.WriteLine("error reading observations in Agent helper");
+                    }
+                } while (deltaXPos > precision || deltaXPos < 0);
+                agentHost.sendCommand("strafe " + 0);
+            }
+
+            if (currentYaw > 89 && currentYaw < 91)
+            {
+                desiredZPos = currentZPos + 1d;
+
+                do
+                {
+                    try
+                    {
+                        observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+                        currentZPos = (double)observations.GetValue("ZPos");
+                        deltaZPos = desiredZPos - currentZPos;
+
+                        if (deltaZPos > precision)
+                        {
+                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.2)));
+                        }
+
+                        if (deltaZPos < 0)
+                        {
+                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.06)));
+                        }
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        Debug.WriteLine("error reading observations in Agent helper");
+                    }
+                } while (deltaZPos > precision || deltaZPos < 0);
+                agentHost.sendCommand("strafe " + 0);
+            }
         }
         #endregion
     }
