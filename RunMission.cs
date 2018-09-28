@@ -64,7 +64,13 @@ class Program
 
         //https://microsoft.github.io/malmo/0.14.0/Schemas/Mission.html#element_AgentStart
         //https://microsoft.github.io/malmo/0.14.0/Schemas/Mission.html#element_InventoryItem
-        var xml = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\2018-ThesisTest\myworld.xml");
+      
+        string xml;
+        if (System.Environment.UserName == "lema") 
+            xml = System.IO.File.ReadAllText(@"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\myworld.xml");
+        else
+            xml = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\2018-ThesisTest\myworld.xml");
+
         MissionSpec mission = new MissionSpec(xml, false);
         mission.setModeToCreative();
         int attempts = 0;
@@ -129,20 +135,33 @@ class Program
                 var xpos = observationJson.GetValue("XPos");
                 var ypos = observationJson.GetValue("YPos");
                 var zpos = observationJson.GetValue("ZPos");
+                Console.WriteLine(String.Format("XPOS {0} | ZPOS {1}",xpos, zpos));                             
+               if (!runonce)
+               {
 
-                if (!runonce)
-                {
+                    agentHelper.Move(AgentHelper.Direction.Left);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    agentHelper.DestroyBlock(AgentHelper.Direction.Under);
+                    agentHelper.DestroyBlock(AgentHelper.Direction.Under);
+                    agentHelper.DestroyBlock(AgentHelper.Direction.Under);
                     //agentHelper.PlaceBlock(AgentHelper.Direction.Front);
                     //Console.WriteLine("___________________________");
                     //agentHelper.PlaceBlock(AgentHelper.Direction.Left);
                     //Console.WriteLine("___________________________");
                     //agentHelper.PlaceBlock(AgentHelper.Direction.Right);
                     //Console.WriteLine("___________________________");
-                    agentHelper.PlaceBlock(AgentHelper.Direction.Back);
-
-                    agentHelper.strafeLeftTest();
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Back);
+                    //agentHelper.strafeLeftTest();                    
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
+                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
                     runonce = true;
-                }
+               }
 
             }
             catch (ArgumentOutOfRangeException ex)

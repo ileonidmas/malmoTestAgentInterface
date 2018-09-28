@@ -117,6 +117,108 @@ namespace RunMission
             }
         }
 
+
+        // going to the right ( x pos becomes negative )
+        // going to the left ( x pos becomes positive) 
+        // going forward ( z pos becomes positive)
+        // moving backward ( z begomes negative ) 
+        private void MoveTo(double deltaXPos, double deltaZPos, double yaw, double precision)
+        {
+
+            if (yaw > 180)
+                yaw -= 360;
+            if (yaw < -180)
+                yaw += 360;
+
+            if (deltaXPos > precision)
+            {
+                if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
+                {
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.1)));
+                }
+                else if (yaw < 5 && yaw > -5)
+                {
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.1)));
+                }
+                else if (yaw < -85 && yaw > -95)
+                {
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(0.1)));
+                }
+                else if (yaw < 95 && yaw > 85)
+                {
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.1)));
+                }
+            }
+            else
+            {
+                if (deltaXPos < -0.1)
+                {
+                    if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
+                    {
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.1)));
+                    }
+                    else if (yaw < 5 && yaw > -5)
+                    {
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.1)));
+                    }
+                    else if (yaw < -85 && yaw > -95)
+                    {
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.1)));
+                    }
+                    else if (yaw < 95 && yaw > 85)
+                    {
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(0.1)));
+                    }
+                }
+            }
+
+
+
+            if(deltaZPos > precision)
+            {
+                if ((yaw < -175 && yaw > -185)||(yaw < 185 && yaw > 175))
+                {
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.1)));
+                }
+                else if (yaw < 5 && yaw > -5)
+                {
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(0.1)));
+                }
+                else if (yaw < -85 && yaw > -95)
+                {
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.1)));
+                }
+                else if (yaw < 95 && yaw > 85)
+                {
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.1)));
+                }
+            }
+            else
+            {
+                if (deltaZPos < -0.1)
+                {
+                    if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
+                    {
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(0.1)));
+                    }
+                    else if (yaw < 5 && yaw > -5)
+                    {
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.1)));
+                    }
+                    else if (yaw < -85 && yaw > -95)
+                    {
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.1)));
+                    }
+                    else if (yaw < 95 && yaw > 85)
+                    {
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.1)));
+                    }
+                }
+            }
+
+
+        }
+
         private string FormatValue(double value)
         {
             return value.ToString(CultureInfo.InvariantCulture);
@@ -174,7 +276,9 @@ namespace RunMission
 
             agentHost.sendCommand("use 1");
             if(where == Direction.Under)
-                Thread.Sleep(500);
+                Thread.Sleep(300);
+            agentHost.sendCommand("use 0");
+            agentHost.sendCommand("use 0");
             agentHost.sendCommand("use 0");
             agentHost.sendCommand("jump 0");
         }
@@ -225,8 +329,70 @@ namespace RunMission
             }
             
             agentHost.sendCommand("attack 1");
+            Thread.Sleep(50);
+            agentHost.sendCommand("attack 0");
+            agentHost.sendCommand("attack 0");
             agentHost.sendCommand("attack 0");
         }
+
+
+
+        // going to the right ( x pos becomes negative )
+        // going to the left ( x pos becomes positive) 
+        // going forward ( z pos becomes positive)
+        // moving backward ( z begomes negative ) 
+        public void Move(Direction direction)
+        {
+            Thread.Sleep(100);
+            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            var precision = 0.15d;
+            var currentYaw = (double)observations.GetValue("Yaw");
+            var currentXPos = (double)observations.GetValue("XPos");
+            var currentZPos = (double)observations.GetValue("ZPos");
+            var desiredXPos = 0d;
+            var desiredZPos = 0d;
+            var deltaXPos = 1d;
+            var deltaZPos = 1d;
+
+            switch (direction)
+            {
+                case Direction.Left:
+                    desiredXPos = currentXPos + 1;
+                    desiredZPos = currentZPos;
+                    break;
+                case Direction.Front:
+                    desiredXPos = currentXPos;
+                    desiredZPos = currentZPos + 1;
+                    break;
+                case Direction.Right:
+                    desiredXPos = currentXPos - 1;
+                    desiredZPos = currentZPos;
+                    break;
+                case Direction.Back:
+                    desiredXPos = currentXPos;
+                    desiredZPos = currentZPos - 1;
+                    break;
+            }
+
+            do
+            {
+                Thread.Sleep(100);
+                deltaXPos = desiredXPos - currentXPos;
+                deltaZPos = desiredZPos - currentZPos;
+                MoveTo(deltaXPos,deltaZPos, currentYaw, precision);
+                observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+                currentXPos = (double)observations.GetValue("XPos");
+                currentZPos = (double)observations.GetValue("ZPos");
+            } while ((deltaXPos > precision || deltaXPos < -0.1) ^ (deltaZPos > precision || deltaZPos < -0.1));
+
+            agentHost.sendCommand("strafe 0");
+            agentHost.sendCommand("move 0");
+            Thread.Sleep(100);
+            agentHost.sendCommand("strafe 0");
+            agentHost.sendCommand("move 0");
+        }
+
+       
 
         public void strafeLeftTest(double precision = 0.015)
         {
@@ -234,7 +400,6 @@ namespace RunMission
             var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
 
             var currentYaw = (double)observations.GetValue("Yaw");
-
             var currentXPos = (double)observations.GetValue("XPos");
             var currentZPos = (double)observations.GetValue("ZPos");
             var desiredXPos = 0d;
