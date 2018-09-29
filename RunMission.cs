@@ -138,14 +138,16 @@ class Program
                 Console.WriteLine(String.Format("XPOS {0} | ZPOS {1}",xpos, zpos));                             
                if (!runonce)
                {
-
-                    agentHelper.Move(AgentHelper.Direction.Left);
-                    agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    agentHelper.DestroyBlock(AgentHelper.Direction.Under);
-                    agentHelper.DestroyBlock(AgentHelper.Direction.Under);
-                    agentHelper.DestroyBlock(AgentHelper.Direction.Under);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Left);
+                    agentHelper.Move(AgentHelper.Direction.Front);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Left);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Left);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
+                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
+                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
+                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
                     //agentHelper.PlaceBlock(AgentHelper.Direction.Front);
                     //Console.WriteLine("___________________________");
                     //agentHelper.PlaceBlock(AgentHelper.Direction.Left);

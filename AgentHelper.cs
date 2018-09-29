@@ -134,85 +134,77 @@ namespace RunMission
             {
                 if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
                 {
-                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.1)));
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(1.0)));
                 }
                 else if (yaw < 5 && yaw > -5)
                 {
-                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.1)));
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0)));
                 }
                 else if (yaw < -85 && yaw > -95)
                 {
-                    agentHost.sendCommand(String.Format("move {0}", FormatValue(0.1)));
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(1.0)));
                 }
                 else if (yaw < 95 && yaw > 85)
                 {
-                    agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.1)));
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0)));
                 }
-            }
-            else
+            } else if (deltaXPos < -precision)
             {
-                if (deltaXPos < -0.1)
+                if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
                 {
-                    if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
-                    {
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.1)));
-                    }
-                    else if (yaw < 5 && yaw > -5)
-                    {
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.1)));
-                    }
-                    else if (yaw < -85 && yaw > -95)
-                    {
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.1)));
-                    }
-                    else if (yaw < 95 && yaw > 85)
-                    {
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(0.1)));
-                    }
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0)));
+                }
+                else if (yaw < 5 && yaw > -5)
+                {
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(1.0)));
+                }
+                else if (yaw < -85 && yaw > -95)
+                {
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0)));
+                }
+                else if (yaw < 95 && yaw > 85)
+                {
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(1.0)));
                 }
             }
-
 
 
             if(deltaZPos > precision)
             {
                 if ((yaw < -175 && yaw > -185)||(yaw < 185 && yaw > 175))
                 {
-                    agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.1)));
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0)));
                 }
                 else if (yaw < 5 && yaw > -5)
                 {
-                    agentHost.sendCommand(String.Format("move {0}", FormatValue(0.1)));
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(1.0)));
                 }
                 else if (yaw < -85 && yaw > -95)
                 {
-                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.1)));
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(1.0)));
                 }
                 else if (yaw < 95 && yaw > 85)
                 {
-                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.1)));
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0)));
                 }
             }
-            else
+            else if (deltaZPos < -precision)
             {
-                if (deltaZPos < -0.1)
+                if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
                 {
-                    if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
-                    {
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(0.1)));
-                    }
-                    else if (yaw < 5 && yaw > -5)
-                    {
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.1)));
-                    }
-                    else if (yaw < -85 && yaw > -95)
-                    {
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.1)));
-                    }
-                    else if (yaw < 95 && yaw > 85)
-                    {
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.1)));
-                    }
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(1.0)));
+                }
+                else if (yaw < 5 && yaw > -5)
+                {
+                    agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0)));
+                }
+                else if (yaw < -85 && yaw > -95)
+                {
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0)));
+                }
+                else if (yaw < 95 && yaw > 85)
+                {
+                    agentHost.sendCommand(String.Format("strafe {0}", FormatValue(1.0)));
                 }
             }
 
@@ -345,7 +337,7 @@ namespace RunMission
         {
             Thread.Sleep(100);
             var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-            var precision = 0.15d;
+            var precision = 0.05d;
             var currentYaw = (double)observations.GetValue("Yaw");
             var currentXPos = (double)observations.GetValue("XPos");
             var currentZPos = (double)observations.GetValue("ZPos");
@@ -379,11 +371,11 @@ namespace RunMission
                 Thread.Sleep(100);
                 deltaXPos = desiredXPos - currentXPos;
                 deltaZPos = desiredZPos - currentZPos;
-                MoveTo(deltaXPos,deltaZPos, currentYaw, precision);
                 observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
                 currentXPos = (double)observations.GetValue("XPos");
                 currentZPos = (double)observations.GetValue("ZPos");
-            } while ((deltaXPos > precision || deltaXPos < -0.1) ^ (deltaZPos > precision || deltaZPos < -0.1));
+                MoveTo(deltaXPos,deltaZPos, currentYaw, precision);
+            } while ((deltaXPos > precision || deltaXPos < -precision) ^ (deltaZPos > precision || deltaZPos < -precision));
 
             agentHost.sendCommand("strafe 0");
             agentHost.sendCommand("move 0");
