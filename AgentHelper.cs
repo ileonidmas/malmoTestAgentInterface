@@ -453,6 +453,14 @@ namespace RunMission
         }
 
 
+        public void CheckSurroundings()
+        {
+            Thread.Sleep(100);
+            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            
+            var allBlocks = observations.GetValue("3x3x3");
+            Console.WriteLine("Blocks: " + allBlocks);
+        }
 
         public void strafeLeftTest(double precision = 0.015)
         {
