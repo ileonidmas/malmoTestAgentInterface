@@ -124,45 +124,13 @@ class Program
         {
             try
             {
-                Thread.Sleep(100);
-                worldState = agentHost.getWorldState();
-                var observations = worldState.observations[0].text;
-                var actualObservation = worldState.observations[0].text;
-                var observationJson = JObject.Parse(observations);
-
-
-                var yaw = observationJson.GetValue("Yaw");
-                var xpos = observationJson.GetValue("XPos");
-                var ypos = observationJson.GetValue("YPos");
-                var zpos = observationJson.GetValue("ZPos");
-                Console.WriteLine(String.Format("XPOS {0} | ZPOS {1}",xpos, zpos));                             
+                Thread.Sleep(100);                            
                if (!runonce)
-               {
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Left);
+               {                    
                     agentHelper.PlaceBlock(AgentHelper.Direction.Front);
-                    agentHelper.Move(AgentHelper.Direction.Front, true);
-                    agentHelper.PlaceBlock(AgentHelper.Direction.LeftUnder);
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Left);
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
-                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
-                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Front);
-                    //Console.WriteLine("___________________________");
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Left);
-                    //Console.WriteLine("___________________________");
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Right);
-                    //Console.WriteLine("___________________________");
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Back);
-                    //agentHelper.strafeLeftTest();                    
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    //agentHelper.PlaceBlock(AgentHelper.Direction.Under);
-                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
-                    //agentHelper.DestroyBlock(AgentHelper.Direction.Under);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.FrontTop);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Left);
+                    agentHelper.CheckSurroundings();
                     runonce = true;
                }
 

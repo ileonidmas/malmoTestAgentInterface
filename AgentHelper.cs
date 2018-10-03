@@ -457,9 +457,25 @@ namespace RunMission
         {
             Thread.Sleep(100);
             var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-            
-            var allBlocks = observations.GetValue("3x3x3");
-            Console.WriteLine("Blocks: " + allBlocks);
+            var allBlocks = observations.GetValue("floor3x3x3");
+            var something = allBlocks[0];
+            Console.WriteLine(String.Format(
+                "Under:{0}\n" +
+                "Back under:{1}\n" +
+                "Left under:{2}\n" +
+                "Front under:{3}\n" +
+                "Right under:{4}\n" + 
+                "Back:{5}\n" +
+                "Left:{6}\n" +
+                "Front:{7}\n" +
+                "Right:{8}\n" +
+                "Back top:{9}\n" +
+                "Left top:{10}\n" +
+                "Front top:{11}\n" +
+                "Right top:{12}\n",
+                allBlocks[4], allBlocks[1], allBlocks[5], allBlocks[7], allBlocks[3],
+                allBlocks[10], allBlocks[14], allBlocks[16], allBlocks[12],
+                allBlocks[19], allBlocks[23], allBlocks[25], allBlocks[21]));
         }
 
         public void strafeLeftTest(double precision = 0.015)
