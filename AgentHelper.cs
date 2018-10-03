@@ -319,6 +319,7 @@ namespace RunMission
             if(where == Direction.Under)
                 Thread.Sleep(300);
             agentHost.sendCommand("use 0");
+            Thread.Sleep(100);
             agentHost.sendCommand("use 0");
             agentHost.sendCommand("use 0");
             agentHost.sendCommand("jump 0");
@@ -382,17 +383,20 @@ namespace RunMission
         // going to the left ( x pos becomes positive) 
         // going forward ( z pos becomes positive)
         // moving backward ( z begomes negative ) 
-        public void Move(Direction direction)
+        public void Move(Direction direction, bool jump = false)
         {
             Thread.Sleep(100);
             var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
             var precision = 0.05d;
             var currentYaw = (double)observations.GetValue("Yaw");
             var currentXPos = (double)observations.GetValue("XPos");
+            var currentYPos = (double)observations.GetValue("YPos");
             var currentZPos = (double)observations.GetValue("ZPos");
             var desiredXPos = 0d;
+            var desiredYPos = currentYPos + 1;
             var desiredZPos = 0d;
             var deltaXPos = 1d;
+            var deltaYPos = 0d;
             var deltaZPos = 1d;
 
             switch (direction)
@@ -415,23 +419,34 @@ namespace RunMission
                     break;
             }
 
+
+
+            if (jump == true) { 
+                agentHost.sendCommand("jump 1");}
             do
             {
                 Thread.Sleep(100);
                 observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
                 currentXPos = (double)observations.GetValue("XPos");
+                currentYPos = (double)observations.GetValue("YPos");
                 currentZPos = (double)observations.GetValue("ZPos");
                 deltaXPos = desiredXPos - currentXPos;
+                deltaYPos = desiredYPos - currentYPos;
                 deltaZPos = desiredZPos - currentZPos;
-
                 MoveTo(deltaXPos, deltaZPos, currentYaw, precision);
+                if (deltaYPos > 0.5 && jump)
+                    agentHost.sendCommand("jump 1");
+                else
+                    agentHost.sendCommand("jump 0");
             } while ((deltaXPos > precision || deltaXPos < -precision) ^ (deltaZPos > precision || deltaZPos < -precision));
 
             agentHost.sendCommand("strafe 0");
             agentHost.sendCommand("move 0");
+            agentHost.sendCommand("jump 0");
             Thread.Sleep(100);
             agentHost.sendCommand("strafe 0");
             agentHost.sendCommand("move 0");
+            agentHost.sendCommand("jump 0");
 
             Console.WriteLine("XPOS: {0}", currentXPos);
             Console.WriteLine("ZPOS: {0}", currentZPos);
