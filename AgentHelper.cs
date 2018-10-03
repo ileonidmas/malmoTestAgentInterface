@@ -117,7 +117,6 @@ namespace RunMission
             }
         }
 
-
         // going to the right ( x pos becomes negative )
         // going to the left ( x pos becomes positive) 
         // going forward ( z pos becomes positive)
@@ -132,130 +131,89 @@ namespace RunMission
             if (yaw < -180)
                 yaw += 360;
 
-            if (deltaXPos > precision)
+            if (deltaXPos > 1)
             {
-                if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
-                {
-                    if (deltaXPos > perTickMove + overStep + precision)
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(1.0)));
-                    else
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.7)));
-                }
-                else if (yaw < 5 && yaw > -5)
-                {
-                    if (deltaXPos > perTickMove + overStep + precision)
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0)));
-                    else
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.7)));
-                }
-                else if (yaw < -85 && yaw > -95)
-                {
-                    if (deltaXPos > perTickMove + overStep + precision)
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(1.0)));
-                    else
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.4)));
-                }
-                else if (yaw < 95 && yaw > 85)
-                {
-                    if (deltaXPos > perTickMove + overStep + precision)
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0)));
-                    else
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(0.4)));
-                }
+                deltaXPos = 1;
             }
-            else if (deltaXPos < -precision)
+            else if (deltaXPos < -1)
+            {
+                deltaXPos = -1;
+            }
+
+            deltaXPos /= 5;
+
+            if (Math.Abs(deltaXPos) > precision)
             {
                 if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
                 {
-                    if (deltaXPos < -perTickMove - overStep - precision)
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0)));
+                    if (deltaXPos > 0)
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(Math.Abs(deltaXPos))));
                     else
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.7)));
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0 * Math.Abs(deltaXPos))));
                 }
                 else if (yaw < 5 && yaw > -5)
                 {
-                    if (deltaXPos < -perTickMove - overStep - precision)
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(1.0)));
+                    if (deltaXPos > 0)
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0 * Math.Abs(deltaXPos))));
                     else
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.7)));
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(Math.Abs(deltaXPos))));
                 }
                 else if (yaw < -85 && yaw > -95)
                 {
-                    if (deltaXPos < -perTickMove - overStep - precision)
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0)));
+                    if (deltaXPos > 0)
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(Math.Abs(deltaXPos))));
                     else
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(0.4)));
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0 * Math.Abs(deltaXPos))));
                 }
                 else if (yaw < 95 && yaw > 85)
                 {
-                    if (deltaXPos < -perTickMove - overStep - precision)
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(1.0)));
+                    if (deltaXPos > 0)
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0 * Math.Abs(deltaXPos))));
                     else
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.4)));
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(Math.Abs(deltaXPos))));
                 }
             }
 
 
-            if (deltaZPos > precision)
+            if(deltaZPos > 1)
             {
-                if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
-                {
-                    if (deltaZPos > perTickMove + overStep + precision)
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0)));
-                    else
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(0.4)));
-                }
-                else if (yaw < 5 && yaw > -5)
-                {
-                    if (deltaZPos > perTickMove + overStep + precision)
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(1.0)));
-                    else
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.4)));
-                }
-                else if (yaw < -85 && yaw > -95)
-                {
-                    if (deltaZPos > perTickMove + overStep + precision)
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(1.0)));
-                    else
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.7)));
-                }
-                else if (yaw < 95 && yaw > 85)
-                {
-                    if (deltaZPos > perTickMove + overStep + precision)
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0)));
-                    else
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.7)));
-                }
+                deltaZPos = 1;
+            } else if (deltaZPos < -1)
+            {
+                deltaZPos = -1;
             }
-            else if (deltaZPos < -precision)
+
+            deltaZPos /= 5;
+
+            if (Math.Abs(deltaZPos) > precision)
             {
                 if ((yaw < -175 && yaw > -185) || (yaw < 185 && yaw > 175))
                 {
-                    if (deltaZPos < -perTickMove - overStep - precision)
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(1.0)));
+                    if (deltaZPos > 0)
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0 * Math.Abs(deltaZPos))));
                     else
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-0.4)));
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(Math.Abs(deltaZPos))));
                 }
                 else if (yaw < 5 && yaw > -5)
                 {
-                    if (deltaZPos < -perTickMove - overStep - precision)
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0)));
+                    if (deltaZPos > 0)
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(Math.Abs(deltaZPos))));
                     else
-                        agentHost.sendCommand(String.Format("move {0}", FormatValue(0.4)));
+                        agentHost.sendCommand(String.Format("move {0}", FormatValue(-1.0 * Math.Abs(deltaZPos))));
                 }
                 else if (yaw < -85 && yaw > -95)
                 {
-                    if (deltaZPos < -perTickMove - overStep - precision)
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0)));
+                    if (deltaZPos > 0)
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(Math.Abs(deltaZPos))));
                     else
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.7)));
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0 * Math.Abs(deltaZPos))));
                 }
                 else if (yaw < 95 && yaw > 85)
                 {
-                    if (deltaZPos < -perTickMove - overStep - precision)
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(1.0)));
+                    if (deltaZPos > 0)
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-1.0 * Math.Abs(deltaZPos))));
                     else
-                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.7)));
+                        agentHost.sendCommand(String.Format("strafe {0}", FormatValue(Math.Abs(deltaZPos))));
                 }
             }
         }
@@ -310,7 +268,10 @@ namespace RunMission
                     UpdateDirection(270, 45);
                     break;
                 case Direction.Under:
-                    UpdateDirection(180, 90);
+                    var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+                    var currentYaw = (double)observations.GetValue("Yaw");
+
+                    UpdateDirection(currentYaw, 90);
                     agentHost.sendCommand("jump 1");
                     break;
             }
@@ -387,7 +348,7 @@ namespace RunMission
         {
             Thread.Sleep(100);
             var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-            var precision = 0.05d;
+            var precision = 0.08d;
             var currentYaw = (double)observations.GetValue("Yaw");
             var currentXPos = (double)observations.GetValue("XPos");
             var currentYPos = (double)observations.GetValue("YPos");
@@ -422,10 +383,24 @@ namespace RunMission
 
 
             if (jump == true) { 
-                agentHost.sendCommand("jump 1");}
+                agentHost.sendCommand("jump 1");
+            }
+
+            Thread.Sleep(100);
+            observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            currentXPos = (double)observations.GetValue("XPos");
+            currentYPos = (double)observations.GetValue("YPos");
+            currentZPos = (double)observations.GetValue("ZPos");
+            deltaXPos = desiredXPos - currentXPos;
+            deltaYPos = desiredYPos - currentYPos;
+            deltaZPos = desiredZPos - currentZPos;
+
             do
             {
                 Thread.Sleep(100);
+                
+                MoveTo(deltaXPos, deltaZPos, currentYaw, precision);
+
                 observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
                 currentXPos = (double)observations.GetValue("XPos");
                 currentYPos = (double)observations.GetValue("YPos");
@@ -433,12 +408,12 @@ namespace RunMission
                 deltaXPos = desiredXPos - currentXPos;
                 deltaYPos = desiredYPos - currentYPos;
                 deltaZPos = desiredZPos - currentZPos;
-                MoveTo(deltaXPos, deltaZPos, currentYaw, precision);
+
                 if (deltaYPos > 0.5 && jump)
                     agentHost.sendCommand("jump 1");
                 else
                     agentHost.sendCommand("jump 0");
-            } while ((deltaXPos > precision || deltaXPos < -precision) ^ (deltaZPos > precision || deltaZPos < -precision));
+            } while ((deltaXPos > precision || deltaXPos < -precision) ^ (Math.Abs(deltaZPos) > precision));
 
             agentHost.sendCommand("strafe 0");
             agentHost.sendCommand("move 0");
