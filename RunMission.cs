@@ -173,6 +173,10 @@ class Program
     static void ea_UpdateEvent(object sender, EventArgs e)
     {
         Console.WriteLine(string.Format("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, _ea.Statistics._maxFitness));
+
+
+        Console.WriteLine("Genome count " + _ea.GenomeList.Count);
+
         // Save the best genome to file
         var doc = NeatGenomeXmlIO.SaveComplete(new List<NeatGenome>() { _ea.CurrentChampGenome }, false);
         doc.Save(CHAMPION_FILE);
