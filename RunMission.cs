@@ -21,14 +21,34 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Xml;
 using Microsoft.Research.Malmo;
 using Newtonsoft.Json.Linq;
 using RunMission;
+using RunMission.Evolution;
+using SharpNeat.EvolutionAlgorithms;
+using SharpNeat.Genomes.Neat;
 
 class Program
 {
+    static NeatEvolutionAlgorithm<NeatGenome> _ea;
+
+    const string CHAMPION_FILE = "minecraft_champion.xml";
     public static void Main()
     {
+        // experiment
+        MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment();
+        // Load config XML.
+        XmlDocument xmlConfig = new XmlDocument();
+        xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
+        experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
+
+        _ea = experiment.CreateEvolutionAlgorithm();
+        _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
+        _ea.StartContinue();
+
+        //
+
         AgentHost agentHost = new AgentHost();
         AgentHelper agentHelper = new AgentHelper(agentHost);
         try
@@ -150,5 +170,11 @@ class Program
 
 
 
-    
+    static void ea_UpdateEvent(object sender, EventArgs e)
+    {
+        Console.WriteLine(string.Format("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, _ea.Statistics._maxFitness));
+        // Save the best genome to file
+        var doc = NeatGenomeXmlIO.SaveComplete(new List<NeatGenome>() { _ea.CurrentChampGenome }, false);
+        doc.Save(CHAMPION_FILE);
+    }
 }
