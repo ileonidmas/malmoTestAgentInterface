@@ -146,11 +146,18 @@ class Program
             {
                 Thread.Sleep(100);                            
                if (!runonce)
-               {                    
+               {
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Front);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.FrontTop);
+                    //agentHelper.PlaceBlock(AgentHelper.Direction.Left);
+                    //agentHelper.CheckSurroundings();
+
                     agentHelper.PlaceBlock(AgentHelper.Direction.Front);
-                    agentHelper.PlaceBlock(AgentHelper.Direction.FrontTop);
+                    agentHelper.Move(AgentHelper.Direction.Front, true);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.LeftUnder);
                     agentHelper.PlaceBlock(AgentHelper.Direction.Left);
-                    agentHelper.CheckSurroundings();
+                    agentHelper.Move(AgentHelper.Direction.Left, true);
+                    agentHelper.PlaceBlock(AgentHelper.Direction.Under);
                     runonce = true;
                }
 
