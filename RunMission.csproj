@@ -72,6 +72,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MalmoNET">
       <HintPath>.\MalmoNET.dll</HintPath>
     </Reference>
@@ -79,16 +82,17 @@
       <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpNeatDomains">
-      <HintPath>..\..\..\Desktop\School\NeatTicTacToe\lib\SharpNeatDomains.dll</HintPath>
+      <HintPath>packages\SharpNeat\SharpNeatDomains.dll</HintPath>
     </Reference>
     <Reference Include="SharpNeatLib">
-      <HintPath>..\..\..\Desktop\School\NeatTicTacToe\lib\SharpNeatLib.dll</HintPath>
+      <HintPath>packages\SharpNeat\SharpNeatLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentHelper.cs" />
+    <Compile Include="Evolution\MalmoClient.cs" />
     <Compile Include="Evolution\MinecraftBuilderEvaluator.cs" />
     <Compile Include="Evolution\MinecraftBuilderExperiment.cs" />
     <Compile Include="Evolution\NeatAgent.cs" />
