@@ -58,10 +58,15 @@ namespace RunMission.Evolution
 
         private void InitializeMission()
         {
-            string missionXMLpath = "C:\\Users\\Pierre\\Documents\\malmoTestAgentInterface\\";
-            missionXMLpath += "myworld.xml";
-            
-            string rawMissionXML = SaferRead(missionXMLpath);
+            // string xml;
+            string missionXMLpath = "";
+            if (System.Environment.UserName == "lema")
+                missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\myworld.xml");
+            else
+                missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\myworld.xml");
+            mission = new MissionSpec(missionXMLpath, false);
+
+            /*string rawMissionXML = SaferRead(missionXMLpath);
 
             try
             {
@@ -73,7 +78,7 @@ namespace RunMission.Evolution
                 System.Diagnostics.Debug.WriteLine("\nFatal error when starting a mission in ProgramMalmo: " + ex.Message);
                 Environment.Exit(1);
             }
-
+            */
             mission.setModeToCreative();
             mission.timeLimitInSeconds(10000);
         }

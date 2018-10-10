@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Xml;
-using log4net.Config;
 using Microsoft.Research.Malmo;
 using Newtonsoft.Json.Linq;
 using RunMission;
@@ -181,7 +180,14 @@ class Program
 
         //MalmoClient client = new MalmoClient();
         //client.RunMalmo();
-        
+
+        MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment();
+        XmlDocument xmlConfig = new XmlDocument();
+        xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
+        experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
+        var algorithm = experiment.CreateEvolutionAlgorithm();
+        algorithm.StartContinue();
+
         Console.ReadKey();
     }
 

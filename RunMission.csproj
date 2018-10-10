@@ -92,11 +92,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentHelper.cs" />
+    <Compile Include="Evolution\Enums\Direction.cs" />
     <Compile Include="Evolution\MalmoClient.cs" />
     <Compile Include="Evolution\MinecraftBuilderEvaluator.cs" />
     <Compile Include="Evolution\MinecraftBuilderExperiment.cs" />
-    <Compile Include="Evolution\NeatAgent.cs" />
     <Compile Include="Evolution\Abstract\SimpleNeatExperiment.cs" />
+    <Compile Include="Evolution\NeatAgentController.cs" />
     <Compile Include="RunMission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

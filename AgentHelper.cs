@@ -431,7 +431,12 @@ namespace RunMission
         public string[] CheckSurroundings()
         {
             Thread.Sleep(100);
-            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            WorldState worldState;
+            do
+            {
+                worldState = agentHost.getWorldState();
+            } while (worldState.observations.Count == 0);
+            var observations = JObject.Parse(worldState.observations[0].text);
             var allBlocks = observations.GetValue("floor3x3x3");
             var something = allBlocks[0];
             Console.WriteLine(String.Format(
@@ -467,7 +472,12 @@ namespace RunMission
         public bool IsThereABlock(Direction direction)
         {
             Thread.Sleep(100);
-            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            WorldState worldState;
+            do
+            {
+                worldState = agentHost.getWorldState();
+            } while (worldState.observations.Count == 0);
+            var observations = JObject.Parse(worldState.observations[0].text);
             var allBlocks = observations.GetValue("floor3x3x3");
             var something = allBlocks[0];
             switch (direction)
