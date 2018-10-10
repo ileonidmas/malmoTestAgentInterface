@@ -1,5 +1,6 @@
 ﻿using Microsoft.Research.Malmo;
 using Newtonsoft.Json.Linq;
+using RunMission.Evolution.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +15,6 @@ namespace RunMission
     {
         #region Private members
         private AgentHost agentHost;
-        public enum Direction { Front, Left, Right, Back, FrontUnder, LeftUnder, RightUnder, BackUnder, FrontTop, LeftTop, RightTop, BackTop, Under };
 
         #endregion
 
