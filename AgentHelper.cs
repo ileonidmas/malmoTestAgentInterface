@@ -428,7 +428,7 @@ namespace RunMission
         }
 
 
-        public void CheckSurroundings()
+        public string[] CheckSurroundings()
         {
             Thread.Sleep(100);
             var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
@@ -451,6 +451,11 @@ namespace RunMission
                 allBlocks[4], allBlocks[1], allBlocks[5], allBlocks[7], allBlocks[3],
                 allBlocks[10], allBlocks[14], allBlocks[16], allBlocks[12],
                 allBlocks[19], allBlocks[23], allBlocks[25], allBlocks[21]));
+
+            return new string[13]{
+                allBlocks[4].ToString(), allBlocks[1].ToString(), allBlocks[5].ToString(), allBlocks[7].ToString(), allBlocks[3].ToString(),
+                allBlocks[10].ToString(), allBlocks[14].ToString(), allBlocks[16].ToString(), allBlocks[12].ToString(),
+                allBlocks[19].ToString(), allBlocks[23].ToString(), allBlocks[25].ToString(), allBlocks[21].ToString() };
         }
 
         /// <summary>

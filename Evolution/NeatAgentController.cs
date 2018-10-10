@@ -1,4 +1,5 @@
-﻿using RunMission.Evolution.Enums;
+﻿using Microsoft.Research.Malmo;
+using RunMission.Evolution.Enums;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
@@ -13,46 +14,30 @@ namespace RunMission.Evolution
         /// The neural network that this player uses to make its decision.
         /// </summary>
         public IBlackBox Brain { get; set; }
-        private MalmoClient client;
         private AgentHelper agentHelper;
 
         /// <summary>
         /// Creates a new NEAT player with the specified brain.
         /// </summary>
-        public NeatAgentController(IBlackBox brain, MalmoClient malmoClient)
+        public NeatAgentController(IBlackBox brain, AgentHost agentHost)
         {
             Brain = brain;
-            client = malmoClient;
-
-            agentHelper = new AgentHelper(client.agentHost);
+            agentHelper = new AgentHelper(agentHost);
         }
 
-        /// <summary>
-        /// This method will take numbers and pass them as commands to MalmoClient.
-        /// Malmo works with dot as separator (0.9) and we must make sure
-        /// numbers are not printed using comas (0,9) which would not work.
-        /// </summary>
-        void SetDotAsDecimalSeparator()
-        {
-            System.Globalization.CultureInfo customCulture =
-                    (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
-            customCulture.NumberFormat.NumberDecimalSeparator = ".";
-            System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
-        }
 
-        public void GetAction(string[] observations)
+        public void PerformAction()
         {
             // Clear the network
             Brain.ResetState();
-
+            // Get observations
+            var observations = agentHelper.CheckSurroundings();
             // Convert the world observations into an input array for the network
             setInputSignalArray(Brain.InputSignalArray, observations);
-
             // Activate the network
             Brain.Activate();
-
-            // Find the highest-scoring available move
-
+            // Convert the action and perform the command
+            outputToCommands();
 
             //return Action;
         }

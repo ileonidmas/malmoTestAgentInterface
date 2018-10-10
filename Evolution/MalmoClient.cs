@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.Malmo;
+using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,9 +28,10 @@ namespace RunMission.Evolution
             clientPool.add(new ClientInfo("127.0.0.1", 10000));
         }
 
-        public void RunMalmo()
+        public void RunMalmo(IBlackBox brain)
         {
             agentHost = new AgentHost();
+            NeatAgentController neatPlayer = new NeatAgentController(brain, agentHost);
 
             InitializeMission();
 
@@ -46,6 +48,7 @@ namespace RunMission.Evolution
             while (worldState.is_mission_running)
             {
                 worldState = agentHost.getWorldState();
+                neatPlayer.PerformAction();
             }
 
             agentHost.Dispose();

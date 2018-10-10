@@ -179,8 +179,8 @@ class Program
         // Console.ReadKey();
 
 
-        MalmoClient client = new MalmoClient();
-        client.RunMalmo();
+        //MalmoClient client = new MalmoClient();
+        //client.RunMalmo();
         
         Console.ReadKey();
     }

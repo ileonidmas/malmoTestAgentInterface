@@ -44,10 +44,10 @@ namespace RunMission
             MalmoClient client = new MalmoClient();
 
             double fitness = 0;
-            NeatAgentController neatPlayer = new NeatAgentController(brain, client);
+            client.RunMalmo(brain);
 
             // Update the fitness score of the network
-            fitness += 1;
+            //fitness += 1;
 
             // Update the evaluation counter.
             _evalCount++;
