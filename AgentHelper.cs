@@ -524,6 +524,12 @@ namespace RunMission
             return false;
         }
 
+        public bool canMoveThisDirection(Direction direction)
+        {
+
+            return false;
+        }
+
         public void strafeLeftTest(double precision = 0.015)
         {
             Thread.Sleep(100);
