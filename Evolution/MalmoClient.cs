@@ -39,12 +39,14 @@ namespace RunMission.Evolution
             {
                 return;
             }
-
             ConsoleOutputWhileMissionLoads();
 
             Console.WriteLine("Mission has started!");
 
-            agentPerform();
+            while (worldState.is_mission_running)
+            {
+                worldState = agentHost.getWorldState();
+            }
 
             agentHost.Dispose();
 
@@ -110,41 +112,6 @@ namespace RunMission.Evolution
                 isWorldCreated = true;
             }
         }
-
-        private void agentPerform()
-        {
-            listOfCommands = new List<string>();
-            Thread.Sleep(100);
-
-            while(worldState.is_mission_running)
-            {
-                worldState = agentHost.getWorldState();
-                //ExecuteCommands();
-                listOfCommands = new List<string>();
-            }
-        }
-
-        public void AddCommandToList(string newCommand)
-        {
-            listOfCommands.Add(newCommand);
-        }
-
-        private void ExecuteCommands()
-        {
-            try
-            {
-                foreach (string command in listOfCommands)
-                {
-                    agentHost.sendCommand(command);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Error executing commands at ProgramMalmo: " + ex.Message);
-                string errorLine = "Error executing commands at ProgramMalmo: " + ex.Message;
-            }
-        }
-
         private void ConsoleOutputWhileMissionLoads()
         {
             worldState = agentHost.getWorldState();
@@ -155,5 +122,7 @@ namespace RunMission.Evolution
                 worldState = agentHost.getWorldState();
             }
         }
+
+
     }
 }
