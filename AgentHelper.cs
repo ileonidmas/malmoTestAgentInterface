@@ -524,9 +524,32 @@ namespace RunMission
             return false;
         }
 
-        public bool canMoveThisDirection(Direction direction)
+        public bool CanMoveThisDirection(Direction direction)
         {
-
+            Thread.Sleep(100);
+            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            var allBlocks = observations.GetValue("floor3x3x3");
+            var something = allBlocks[0];
+            switch (direction)
+            {
+                
+                case Direction.Back:
+                    if (allBlocks[19].ToString() == "air")
+                        return true;
+                    return false;
+                case Direction.Left:
+                    if (allBlocks[23].ToString() == "air")
+                        return true;
+                    return false;
+                case Direction.Front:
+                    if (allBlocks[25].ToString() == "air")
+                        return true;
+                    return false;
+                case Direction.Right:
+                    if (allBlocks[21].ToString() == "air")
+                        return true;
+                    return false;
+            }
             return false;
         }
 
