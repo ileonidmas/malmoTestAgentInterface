@@ -453,6 +453,12 @@ namespace RunMission
                 allBlocks[19], allBlocks[23], allBlocks[25], allBlocks[21]));
         }
 
+        public bool IsThereABlock(Direction direction)
+        {
+
+            return false;
+        }
+
         public void strafeLeftTest(double precision = 0.015)
         {
             Thread.Sleep(100);
