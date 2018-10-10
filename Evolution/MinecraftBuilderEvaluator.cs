@@ -39,10 +39,12 @@ namespace RunMission
         /// 
         /// A win is worth 10 points, a draw is worth 1 point, and a loss is worth 0 points.
         /// </summary>
-        public FitnessInfo Evaluate(IBlackBox box)
+        public FitnessInfo Evaluate(IBlackBox brain)
         {
+            MalmoClient client = new MalmoClient();
+
             double fitness = 0;
-            NeatAgent neatPlayer = new NeatAgent(box);            
+            NeatAgentController neatPlayer = new NeatAgentController(brain, client);
 
             // Update the fitness score of the network
             fitness += 1;

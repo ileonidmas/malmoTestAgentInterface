@@ -10,14 +10,14 @@ namespace RunMission.Evolution
 {
     public class MalmoClient
     {
-        private AgentHost agentHost;
+        public AgentHost agentHost { get; set; }
         private MissionSpec mission;
         private WorldState worldState;
         private ClientPool clientPool;
 
         private bool isWorldCreated = false;
 
-        private List<string> listOfCommmands;
+        private List<string> listOfCommands;
 
         public MalmoClient()
         {
@@ -113,22 +113,27 @@ namespace RunMission.Evolution
 
         private void agentPerform()
         {
-            listOfCommmands = new List<string>();
+            listOfCommands = new List<string>();
             Thread.Sleep(100);
 
             while(worldState.is_mission_running)
             {
                 worldState = agentHost.getWorldState();
-                ExecuteCommands();
-                listOfCommmands = new List<string>();
+                //ExecuteCommands();
+                listOfCommands = new List<string>();
             }
+        }
+
+        public void AddCommandToList(string newCommand)
+        {
+            listOfCommands.Add(newCommand);
         }
 
         private void ExecuteCommands()
         {
             try
             {
-                foreach (string command in listOfCommmands)
+                foreach (string command in listOfCommands)
                 {
                     agentHost.sendCommand(command);
                 }

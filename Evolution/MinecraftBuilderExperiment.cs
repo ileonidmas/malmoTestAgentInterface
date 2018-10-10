@@ -31,7 +31,7 @@ namespace RunMission.Evolution
         /// </summary>
         public override int OutputCount
         {
-            get { return 2; }
+            get { return 4; }
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace RunMission.Evolution
         /// </summary>
         public override bool EvaluateParents
         {
-            get { return true; }
+            get { return false; }
         }
     }
 }
