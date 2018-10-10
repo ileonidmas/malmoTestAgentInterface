@@ -453,8 +453,73 @@ namespace RunMission
                 allBlocks[19], allBlocks[23], allBlocks[25], allBlocks[21]));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+
         public bool IsThereABlock(Direction direction)
         {
+            Thread.Sleep(100);
+            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            var allBlocks = observations.GetValue("floor3x3x3");
+            var something = allBlocks[0];
+            switch (direction)
+            {
+                case Direction.Under:
+                    if (allBlocks[4].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.BackUnder:
+                    if (allBlocks[1].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.LeftUnder:
+                    if (allBlocks[5].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.FrontUnder:
+                    if (allBlocks[7].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.RightUnder:
+                    if (allBlocks[3].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.Back:
+                    if (allBlocks[10].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.Left:
+                    if (allBlocks[14].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.Front:
+                    if (allBlocks[16].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.Right:
+                    if (allBlocks[12].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.BackTop:
+                    if (allBlocks[19].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.LeftTop:
+                    if (allBlocks[23].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.FrontTop:
+                    if (allBlocks[25].ToString() == "air")
+                        return false;
+                    return true;
+                case Direction.RightTop:
+                    if (allBlocks[21].ToString() == "air")
+                        return false;
+                    return true;
+            }
 
             return false;
         }
