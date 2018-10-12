@@ -6,7 +6,7 @@
    <ServerSection>
       <ServerHandlers>
          <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1" />
-         <ServerQuitFromTimeUp timeLimitMs="15000" />
+         <ServerQuitFromTimeUp timeLimitMs="25000" />
          <ServerQuitWhenAnyAgentFinishes />
       </ServerHandlers>
    </ServerSection>
@@ -24,6 +24,10 @@
             <Grid name="floor3x3x3">
                <min x="-1" y="-1" z="-1" />
                <max x="1" y="1" z="1" />
+            </Grid>
+            <Grid name="floor5x5x5">
+               <min x="-2" y="0" z="-2" />
+               <max x="2" y="5" z="2" />
             </Grid>
          </ObservationFromGrid>
          <ContinuousMovementCommands />

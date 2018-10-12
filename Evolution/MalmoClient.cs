@@ -11,6 +11,7 @@ namespace RunMission.Evolution
 {
     public class MalmoClient
     {
+        public NeatAgentController neatPlayer { get; set; }
         public AgentHost agentHost { get; set; }
         private MissionSpec mission;
         private WorldState worldState;
@@ -32,7 +33,7 @@ namespace RunMission.Evolution
         public void RunMalmo(IBlackBox brain)
         {
             agentHost = new AgentHost();
-            NeatAgentController neatPlayer = new NeatAgentController(brain, agentHost);
+            neatPlayer = new NeatAgentController(brain, agentHost);
 
             InitializeMission();
 
@@ -47,8 +48,15 @@ namespace RunMission.Evolution
             while (worldState.is_mission_running)
             {
                 worldState = agentHost.getWorldState();
+                if (worldState.observations.Count == 0)
+                {
+                     continue;
+                }
+                neatPlayer.AgentHelper.ConstantObservations = worldState.observations;
+                neatPlayer.UpdateFitness();
                 neatPlayer.PerformAction();
             }
+                Thread.Sleep(2000);
             }
             agentHost.Dispose();
 
@@ -64,8 +72,7 @@ namespace RunMission.Evolution
             else
                 missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\myworld.xml");
             mission = new MissionSpec(missionXMLpath, false);
-            mission.setModeToCreative();
-            mission.timeLimitInSeconds(10000);
+            mission.setModeToCreative();            
         }
 
         public static object MyLock;
@@ -111,7 +118,7 @@ namespace RunMission.Evolution
             worldState = agentHost.getWorldState();
             while (!worldState.has_mission_begun)
             {
-                Console.Write(".");
+                //Console.Write(".");
                 Thread.Sleep(100);
                 worldState = agentHost.getWorldState();
             }

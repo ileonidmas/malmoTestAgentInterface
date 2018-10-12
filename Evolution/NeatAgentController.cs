@@ -10,11 +10,17 @@ namespace RunMission.Evolution
 {
     public class NeatAgentController
     {
+        public double Fitness { get; set; }
         /// <summary>
         /// The neural network that this player uses to make its decision.
         /// </summary>
         public IBlackBox Brain { get; set; }
         private AgentHelper agentHelper;
+        public AgentHelper AgentHelper
+        {
+            get => agentHelper;
+            set => agentHelper = value;
+        }
 
         /// <summary>
         /// Creates a new NEAT player with the specified brain.
@@ -28,6 +34,7 @@ namespace RunMission.Evolution
 
         public void PerformAction()
         {
+                                                   
             // Clear the network
             Brain.ResetState();
             // Get observations
@@ -39,7 +46,6 @@ namespace RunMission.Evolution
             // Convert the action and perform the command
             outputToCommands();
 
-            //return Action;
         }
 
         // Method for passing observations as inputs for the ANN
@@ -143,15 +149,18 @@ namespace RunMission.Evolution
                     agentHelper.Move(direction, agentHelper.ShouldJumpDirection(direction));
 
                     actionIsPerformed = true;
+
+                    Console.WriteLine(String.Format("Move action"));
                 } 
 
             } else if (placeBlock > destroyBlock)
             {
                 if (!agentHelper.IsThereABlock(direction))
-                {
+                {                    
                     agentHelper.PlaceBlock(direction);
-
                     actionIsPerformed = true;
+                    Console.WriteLine(String.Format("Place action"));
+
                 }
             } else
             {
@@ -159,9 +168,20 @@ namespace RunMission.Evolution
                 {
                     agentHelper.DestroyBlock(direction);
 
+                    Console.WriteLine(String.Format("Destroy action"));
+
                     actionIsPerformed = true;
                 }
             }
+            if (!actionIsPerformed)
+            {
+                Console.WriteLine(String.Format("No action"));
+            }
+        }
+
+        public void UpdateFitness()
+        {
+            Fitness = agentHelper.CalculateGrid();
         }
     }
 }

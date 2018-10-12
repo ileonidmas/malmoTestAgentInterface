@@ -11,11 +11,24 @@ using System.Threading;
 
 namespace RunMission
 {
-    class AgentHelper
+    public class AgentHelper
     {
         #region Private members
         private AgentHost agentHost;
+        private TimestampedStringVector constanteObservations;
+        #endregion
 
+        #region Public members
+        public AgentHost AgentHost
+        {
+            get => agentHost;
+            set => agentHost = value;
+        }
+        public TimestampedStringVector ConstantObservations
+        {
+            get => constanteObservations;
+            set => constanteObservations = value;
+        }
         #endregion
 
         #region Constructor
@@ -26,11 +39,11 @@ namespace RunMission
         #endregion
 
         #region Private methods
+        
+
         private void UpdateDirection(double desiredYaw, double desiredPitch, double precision = 1)
         {
-            Thread.Sleep(100);
-            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-
+            var observations = JObject.Parse(constanteObservations[0].text);
             var currentYaw = (double)observations.GetValue("Yaw");
             var currentPitch = (double)observations.GetValue("Pitch");
             var deltaYaw = 0d;
@@ -45,27 +58,23 @@ namespace RunMission
                     currentYaw = (double)observations.GetValue("Yaw");
                     currentPitch = (double)observations.GetValue("Pitch");
 
-                    Console.WriteLine(String.Format("Yaw: {0} Pitch: {1}", currentYaw, currentPitch));
-                    if (observations == null)
-                        continue;
-                    else
-                    {
 
-                        //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
-                        deltaYaw = desiredYaw - currentYaw;
-                        if (deltaYaw > 180)
-                            deltaYaw -= 360;
-                        if (deltaYaw < -180)
-                            deltaYaw += 360;
 
-                        deltaPitch = desiredPitch - currentPitch;
-                        if (deltaPitch > 180)
-                            deltaPitch -= 360;
-                        if (deltaPitch < -180)
-                            deltaPitch += 360;
+                    //https://stackoverflow.com/questions/38407584/continuous-aim-to-target-in-malmo
+                    deltaYaw = desiredYaw - currentYaw;
+                    if (deltaYaw > 180)
+                        deltaYaw -= 360;
+                    if (deltaYaw < -180)
+                        deltaYaw += 360;
 
-                        Look(currentYaw, deltaYaw, currentPitch, deltaPitch);
-                    }
+                    deltaPitch = desiredPitch - currentPitch;
+                    if (deltaPitch > 180)
+                        deltaPitch -= 360;
+                    if (deltaPitch < -180)
+                        deltaPitch += 360;
+
+                    Look(currentYaw, deltaYaw, currentPitch, deltaPitch);
+
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
@@ -268,9 +277,8 @@ namespace RunMission
                     UpdateDirection(270, 45);
                     break;
                 case Direction.Under:
-                    var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+                    var observations = JObject.Parse(constanteObservations[0].text);
                     var currentYaw = (double)observations.GetValue("Yaw");
-
                     UpdateDirection(currentYaw, 90);
                     agentHost.sendCommand("jump 1");
                     break;
@@ -346,8 +354,7 @@ namespace RunMission
         // moving backward ( z begomes negative ) 
         public void Move(Direction direction, bool jump = false)
         {
-            Thread.Sleep(100);
-            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            var observations = JObject.Parse(constanteObservations[0].text);
             var precision = 0.08d;
             var currentYaw = (double)observations.GetValue("Yaw");
             var currentXPos = (double)observations.GetValue("XPos");
@@ -386,8 +393,7 @@ namespace RunMission
                 agentHost.sendCommand("jump 1");
             }
 
-            Thread.Sleep(100);
-            observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            observations = JObject.Parse(constanteObservations[0].text);
             currentXPos = (double)observations.GetValue("XPos");
             currentYPos = (double)observations.GetValue("YPos");
             currentZPos = (double)observations.GetValue("ZPos");
@@ -397,10 +403,8 @@ namespace RunMission
 
             do
             {
-                Thread.Sleep(100);
-                
+                Thread.Sleep(100);                
                 MoveTo(deltaXPos, deltaZPos, currentYaw, precision);
-
                 observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
                 currentXPos = (double)observations.GetValue("XPos");
                 currentYPos = (double)observations.GetValue("YPos");
@@ -422,18 +426,12 @@ namespace RunMission
             agentHost.sendCommand("strafe 0");
             agentHost.sendCommand("move 0");
             agentHost.sendCommand("jump 0");
-
-            Console.WriteLine("XPOS: {0}", currentXPos);
-            Console.WriteLine("ZPOS: {0}", currentZPos);
         }
 
 
         public string[] CheckSurroundings()
         {
-            Thread.Sleep(100);
-            WorldState worldState;
-            worldState = agentHost.getWorldState();
-            var observations = JObject.Parse(worldState.observations[0].text);
+            var observations = JObject.Parse(constanteObservations[0].text);
             var allBlocks = observations.GetValue("floor3x3x3");
             var something = allBlocks[0];
            
@@ -451,10 +449,7 @@ namespace RunMission
 
         public bool IsThereABlock(Direction direction)
         {
-            Thread.Sleep(100);
-            WorldState worldState;
-            worldState = agentHost.getWorldState();
-            var observations = JObject.Parse(worldState.observations[0].text);
+            var observations = JObject.Parse(constanteObservations[0].text);
             var allBlocks = observations.GetValue("floor3x3x3");
             var something = allBlocks[0];
             switch (direction)
@@ -518,8 +513,7 @@ namespace RunMission
 
         public bool CanMoveThisDirection(Direction direction)
         {
-            Thread.Sleep(100);
-            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            var observations = JObject.Parse(constanteObservations[0].text);
             var allBlocks = observations.GetValue("floor3x3x3");
             var something = allBlocks[0];
             switch (direction)
@@ -547,8 +541,7 @@ namespace RunMission
 
         public bool ShouldJumpDirection(Direction direction)
         {
-            Thread.Sleep(100);
-            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
+            var observations = JObject.Parse(constanteObservations[0].text);
             var allBlocks = observations.GetValue("floor3x3x3");
             var something = allBlocks[0];
             switch (direction)
@@ -574,141 +567,63 @@ namespace RunMission
             return false;
         }
 
-        public void strafeLeftTest(double precision = 0.015)
+        
+        public double CalculateGrid()
         {
-            Thread.Sleep(100);
-            var observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-
-            var currentYaw = (double)observations.GetValue("Yaw");
-            var currentXPos = (double)observations.GetValue("XPos");
-            var currentZPos = (double)observations.GetValue("ZPos");
-            var desiredXPos = 0d;
-            var desiredZPos = 0d;
-            var deltaXPos = 1d;
-            var deltaZPos = 1d;
-
-            if (currentYaw > -1 && currentYaw < 1)
+            double fitness = 0d;
+            var observations = JObject.Parse(constanteObservations[0].text);
+            var allBlocks = observations.GetValue("floor5x5x5");
+            for(int i = 0; i<125; i++)
             {
-                desiredXPos = currentXPos + 1d;
-
-                do
+                if(i< 25)
                 {
-                    try
+                    if (allBlocks[i].ToString() != "air")
                     {
-                        observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-                        currentXPos = (double)observations.GetValue("XPos");
-                        deltaXPos = desiredXPos - currentXPos;
-
-                        if (deltaXPos > precision)
+                        fitness += 1;
+                    }
+                }
+                else
+                {
+                    if(i < 50)
+                    {
+                        if (allBlocks[i].ToString() != "air")
                         {
-                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.2)));
+                            fitness += 2;
                         }
-
-                        if (deltaXPos < 0)
+                    } else
+                    {
+                        if (i < 75)
                         {
-                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.06)));
+                            if (allBlocks[i].ToString() != "air")
+                            {
+                                fitness += 3;
+                            }
+                        } else
+                        {
+                            if (i < 100)
+                            {
+                                if (allBlocks[i].ToString() != "air")
+                                {
+                                    fitness += 4;
+                                }
+                            } else
+                            {
+                                if (i < 125)
+                                {
+                                    if (allBlocks[i].ToString() != "air")
+                                    {
+                                        fitness += 5;
+                                    }
+                                }
+                            }
                         }
                     }
-                    catch (ArgumentOutOfRangeException ex)
-                    {
-                        Debug.WriteLine("error reading observations in Agent helper");
-                    }
-                } while (deltaXPos > precision || deltaXPos < 0);
-                agentHost.sendCommand("strafe " + 0);
+                }
             }
 
-            if (currentYaw < -89 && currentYaw > -91)
-            {
-                desiredZPos = currentZPos - 1d;
-
-                do
-                {
-                    try
-                    {
-                        observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-                        currentZPos = (double)observations.GetValue("ZPos");
-                        deltaZPos = desiredZPos - currentZPos;
-
-                        if (deltaZPos < 0)
-                        {
-                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.2)));
-                        }
-
-                        if (deltaZPos > precision)
-                        {
-                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.06)));
-                        }
-                    }
-                    catch (ArgumentOutOfRangeException ex)
-                    {
-                        Debug.WriteLine("error reading observations in Agent helper");
-                    }
-                } while (deltaZPos > precision || deltaZPos < 0);
-                agentHost.sendCommand("strafe " + 0);
-            }
-
-            if (currentYaw > 179 && currentYaw < 181)
-            {
-                desiredXPos = currentXPos - 1d;
-
-                do
-                {
-                    try
-                    {
-                        observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-                        currentXPos = (double)observations.GetValue("XPos");
-                        deltaXPos = desiredXPos - currentXPos;
-
-                        Console.WriteLine(deltaXPos);
-
-                        if (deltaXPos < 0)
-                        {
-                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.2)));
-                        }
-
-                        if (deltaXPos > precision)
-                        {
-                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.06)));
-                        }
-                    }
-                    catch (ArgumentOutOfRangeException ex)
-                    {
-                        Debug.WriteLine("error reading observations in Agent helper");
-                    }
-                } while (deltaXPos > precision || deltaXPos < 0);
-                agentHost.sendCommand("strafe " + 0);
-            }
-
-            if (currentYaw > 89 && currentYaw < 91)
-            {
-                desiredZPos = currentZPos + 1d;
-
-                do
-                {
-                    try
-                    {
-                        observations = JObject.Parse(agentHost.getWorldState().observations[0].text);
-                        currentZPos = (double)observations.GetValue("ZPos");
-                        deltaZPos = desiredZPos - currentZPos;
-
-                        if (deltaZPos > precision)
-                        {
-                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(-0.2)));
-                        }
-
-                        if (deltaZPos < 0)
-                        {
-                            agentHost.sendCommand(String.Format("strafe {0}", FormatValue(0.06)));
-                        }
-                    }
-                    catch (ArgumentOutOfRangeException ex)
-                    {
-                        Debug.WriteLine("error reading observations in Agent helper");
-                    }
-                } while (deltaZPos > precision || deltaZPos < 0);
-                agentHost.sendCommand("strafe " + 0);
-            }
+            return fitness;
         }
+
         #endregion
     }
 }
