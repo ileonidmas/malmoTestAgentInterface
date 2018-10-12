@@ -82,43 +82,43 @@ namespace RunMission.Evolution
 
             Direction direction = Direction.Under;
 
-            if(directionRaw < (double)(1 / 13))
+            if(directionRaw < (1d / 13d))
             {
                 direction = Direction.Under;
-            } else if (directionRaw >= (double)(1 / 13) && directionRaw < (double)(2 / 13))
+            } else if (directionRaw >= (1d / 13d) && directionRaw < (2d / 13d))
             {
                 direction = Direction.BackUnder;
-            } else if (directionRaw >= (double)(2 / 13) && directionRaw < (double)(3 / 13))
+            } else if (directionRaw >= (2d / 13d) && directionRaw < (3d / 13d))
             {
                 direction = Direction.LeftUnder;
-            } else if (directionRaw >= (double)(3 / 13) && directionRaw < (double)(4 / 13))
+            } else if (directionRaw >= (3d / 13d) && directionRaw < (4d / 13d))
             {
                 direction = Direction.FrontUnder;
-            } else if (directionRaw >= (double)(4 / 13) && directionRaw < (double)(5 / 13))
+            } else if (directionRaw >= (4d / 13d) && directionRaw < (5d / 13d))
             {
                 direction = Direction.RightUnder;
-            } else if (directionRaw >= (double)(5 / 13) && directionRaw < (double)(6 / 13))
+            } else if (directionRaw >= (5d / 13d) && directionRaw < (6d / 13d))
             {
                 direction = Direction.Back;
-            } else if (directionRaw >= (double)(6 / 13) && directionRaw < (double)(7 / 13))
+            } else if (directionRaw >= (6d / 13d) && directionRaw < (7d / 13d))
             {
                 direction = Direction.Left;
-            } else if (directionRaw >= (double)(7 / 13) && directionRaw < (double)(8 / 13))
+            } else if (directionRaw >= (7d / 13d) && directionRaw < (8d / 13d))
             {
                 direction = Direction.Front;
-            } else if (directionRaw >= (double)(8 / 13) && directionRaw < (double)(9 / 13))
+            } else if (directionRaw >= (8d / 13d) && directionRaw < (9d / 13d))
             {
                 direction = Direction.Right;
-            } else if (directionRaw >= (double)(9 / 13) && directionRaw < (double)(10 / 13))
+            } else if (directionRaw >= (9d / 13d) && directionRaw < (10d / 13d))
             {
                 direction = Direction.BackTop;
-            } else if (directionRaw >= (double)(10 / 13) && directionRaw < (double)(11 / 13))
+            } else if (directionRaw >= (10d / 13d) && directionRaw < (11d / 13d))
             {
                 direction = Direction.LeftTop;
-            } else if (directionRaw >= (double)(11 / 13) && directionRaw < (double)(12 / 13))
+            } else if (directionRaw >= (11d / 13d) && directionRaw < (12d / 13d))
             {
                 direction = Direction.FrontTop;
-            } else if (directionRaw >= (double)(12 / 13) && directionRaw < (double)(13 / 13))
+            } else if (directionRaw >= (12d / 13d) && directionRaw < (13d / 13d))
             {
                 direction = Direction.RightTop;
             }

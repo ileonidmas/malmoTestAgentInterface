@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Config>
-  <PopulationSize>1</PopulationSize>
+  <PopulationSize>2</PopulationSize>
   <SpecieCount>1</SpecieCount>
   <Activation>
     <Scheme>FixedIters</Scheme>

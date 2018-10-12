@@ -28,6 +28,7 @@ namespace RunMission.Evolution
             clientPool.add(new ClientInfo("127.0.0.1", 10000));
         }
 
+        private static readonly Object obj = new Object();
         public void RunMalmo(IBlackBox brain)
         {
             agentHost = new AgentHost();
@@ -36,11 +37,9 @@ namespace RunMission.Evolution
             InitializeMission();
 
             CreateWorld();
-
-            if (!TryStartMission())
-            {
-                return;
-            }
+            lock(obj){
+            TryStartMission();
+                        
             ConsoleOutputWhileMissionLoads();
 
             Console.WriteLine("Mission has started!");
@@ -50,7 +49,7 @@ namespace RunMission.Evolution
                 worldState = agentHost.getWorldState();
                 neatPlayer.PerformAction();
             }
-
+            }
             agentHost.Dispose();
 
             Console.WriteLine("Mission has ended!");
@@ -65,38 +64,25 @@ namespace RunMission.Evolution
             else
                 missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\myworld.xml");
             mission = new MissionSpec(missionXMLpath, false);
-
-            /*string rawMissionXML = SaferRead(missionXMLpath);
-
-            try
-            {
-                mission = new MissionSpec(rawMissionXML, true);
-            }
-            catch (Exception ex)
-            {
-                string errorLine = "Fatal error when starting a mission in ProgramMalmo: " + ex.Message;
-                System.Diagnostics.Debug.WriteLine("\nFatal error when starting a mission in ProgramMalmo: " + ex.Message);
-                Environment.Exit(1);
-            }
-            */
             mission.setModeToCreative();
             mission.timeLimitInSeconds(10000);
         }
 
-        private bool TryStartMission()
-        {
-            bool returnValue = true;
+        public static object MyLock;
+        private void TryStartMission()
+        {                                                                               
+            
             try
             {
                 agentHost.startMission(mission, clientPool, new MissionRecordSpec(), 0, "Test Builder");
-            }
-            catch (Exception ex)
-            {
+                
+             }
+             catch (Exception ex)
+             {
                 string errorLine = "Fatal error when starting a mission in ProgramMalmo: " + ex.Message;
                 Console.WriteLine("Error starting mission: {0}", ex.Message);
                 Environment.Exit(1);
-            }
-            return returnValue;
+             } 
         }
 
         private string SaferRead(string path)
