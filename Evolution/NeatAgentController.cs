@@ -156,7 +156,25 @@ namespace RunMission.Evolution
             } else if (placeBlock > destroyBlock)
             {
                 if (!agentHelper.IsThereABlock(direction))
-                {                    
+                {
+                    if (direction == Direction.BackTop && !agentHelper.IsThereABlock(Direction.Back))
+                    {
+                        Console.WriteLine(String.Format("No action"));
+                        return;
+                    } else if (direction == Direction.RightTop && !agentHelper.IsThereABlock(Direction.Right))
+                    {
+                        Console.WriteLine(String.Format("No action"));
+                        return;
+                    } else if (direction == Direction.FrontTop && !agentHelper.IsThereABlock(Direction.Front))
+                    {
+                        Console.WriteLine(String.Format("No action"));
+                        return;
+                    } else if (direction == Direction.LeftTop && !agentHelper.IsThereABlock(Direction.Left))
+                    {
+                        Console.WriteLine(String.Format("No action"));
+                        return;
+                    }
+
                     agentHelper.PlaceBlock(direction);
                     actionIsPerformed = true;
                     Console.WriteLine(String.Format("Place action"));
