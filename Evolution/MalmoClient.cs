@@ -15,21 +15,17 @@ namespace RunMission.Evolution
         public AgentHost agentHost { get; set; }
         private MissionSpec mission;
         private WorldState worldState;
-        private ClientPool clientPool;
+        private ClientPool availableClients;
 
         private bool isWorldCreated = false;
 
-        private List<string> listOfCommands;
-
-        public MalmoClient()
+        public MalmoClient(ClientPool clientPool)
         {
             isWorldCreated = false;
 
-            clientPool = new ClientPool();
-            clientPool.add(new ClientInfo("127.0.0.1", 10000));
+            availableClients = clientPool;
         }
-
-        private static readonly Object obj = new Object();
+        
         public void RunMalmo(IBlackBox brain)
         {
             agentHost = new AgentHost();
@@ -38,7 +34,6 @@ namespace RunMission.Evolution
             InitializeMission();
 
             CreateWorld();
-            lock(obj){
             TryStartMission();
                         
             ConsoleOutputWhileMissionLoads();
@@ -56,8 +51,8 @@ namespace RunMission.Evolution
                 neatPlayer.UpdateFitness();
                 neatPlayer.PerformAction();
             }
-                Thread.Sleep(2000);
-            }
+
+            Thread.Sleep(2000);
             agentHost.Dispose();
 
             Console.WriteLine("Mission has ended!");
@@ -74,14 +69,13 @@ namespace RunMission.Evolution
             mission = new MissionSpec(missionXMLpath, false);
             mission.setModeToCreative();            
         }
-
-        public static object MyLock;
+        
         private void TryStartMission()
         {                                                                               
             
             try
             {
-                agentHost.startMission(mission, clientPool, new MissionRecordSpec(), 0, "Test Builder");
+                agentHost.startMission(mission, availableClients, new MissionRecordSpec(), 0, "Test Builder");
                 
              }
              catch (Exception ex)
@@ -123,7 +117,5 @@ namespace RunMission.Evolution
                 worldState = agentHost.getWorldState();
             }
         }
-
-
     }
 }

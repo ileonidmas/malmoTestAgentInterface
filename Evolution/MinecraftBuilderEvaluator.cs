@@ -13,6 +13,12 @@ namespace RunMission
     {
         private ulong _evalCount;
         private bool _stopConditionSatisfied;
+        private MalmoClientPool clientPool;
+
+        public MinecraftBuilderEvaluator()
+        {
+            clientPool = new MalmoClientPool(2);
+        }
 
         /// <summary>
         /// Gets the total number of evaluations that have been performed.
@@ -41,10 +47,9 @@ namespace RunMission
         /// </summary>
         public FitnessInfo Evaluate(IBlackBox brain)
         {
-            MalmoClient client = new MalmoClient();
+            clientPool.RunAvailableClient(brain);
 
             double fitness = 0;
-            client.RunMalmo(brain);
 
             // Update the fitness score of the network
             //fitness += 1;

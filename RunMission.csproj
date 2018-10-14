@@ -94,6 +94,7 @@
     <Compile Include="AgentHelper.cs" />
     <Compile Include="Evolution\Enums\Direction.cs" />
     <Compile Include="Evolution\MalmoClient.cs" />
+    <Compile Include="Evolution\MalmoClientPool.cs" />
     <Compile Include="Evolution\MinecraftBuilderEvaluator.cs" />
     <Compile Include="Evolution\MinecraftBuilderExperiment.cs" />
     <Compile Include="Evolution\Abstract\SimpleNeatExperiment.cs" />
