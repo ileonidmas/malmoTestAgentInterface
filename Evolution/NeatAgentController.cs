@@ -197,9 +197,9 @@ namespace RunMission.Evolution
             }
         }
 
-        public void UpdateFitness()
-        {
-            Fitness = agentHelper.CalculateGrid();
-        }
+        //public void UpdateFitness()
+        //{
+        //    Fitness = agentHelper.CalculateGrid();
+        //}
     }
 }

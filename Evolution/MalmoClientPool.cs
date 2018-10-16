@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.Malmo;
+using Newtonsoft.Json.Linq;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
@@ -28,18 +29,22 @@ namespace RunMission.Evolution
             }
         }
 
-        public void RunAvailableClient(IBlackBox brain)
+        public JToken RunAvailableClient(IBlackBox brain)
         {
+            MalmoClient client = null;
+
             semaphore.Wait();
             try
             {
-                MalmoClient client = new MalmoClient(availableClients);
+                client = new MalmoClient(availableClients);
                 client.RunMalmo(brain);
             } catch(Exception ex)
             {
-                Console.WriteLine("RACE CONDITION!!!!!!!!!!!");
+                Console.WriteLine("Client exception (Highly due to stopping while performing movement)!");
             }
             semaphore.Release();
+
+            return client.GetFitnessGrid();
         }
     }
 }

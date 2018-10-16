@@ -1,4 +1,5 @@
-﻿using SharpNeat.Core;
+﻿using Newtonsoft.Json.Linq;
+using SharpNeat.Core;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
@@ -47,9 +48,9 @@ namespace RunMission
         /// </summary>
         public FitnessInfo Evaluate(IBlackBox brain)
         {
-            clientPool.RunAvailableClient(brain);
+            JToken fitnessGrid = clientPool.RunAvailableClient(brain);
 
-            double fitness = 0;
+            double fitness = calculateFitness(fitnessGrid);
 
             // Update the fitness score of the network
             //fitness += 1;
@@ -57,13 +58,92 @@ namespace RunMission
             // Update the evaluation counter.
             _evalCount++;
 
-            // If the network plays perfectly, it will beat the random player
-            // and draw the optimal player.
-            if (fitness >= 1002)
+            Console.WriteLine("EvalCount: " + _evalCount);
+            Console.WriteLine("Fitness: " + fitness);
+
+            // If the networks reaches a fitness of 30, stop evaluation
+            if (fitness >= 30)
                 _stopConditionSatisfied = true;
 
             // Return the fitness score
             return new FitnessInfo(fitness, fitness);
+        }
+
+        private double calculateFitness(JToken fitnessGrid)
+        {
+            bool blockOnIndex = false;
+
+            double fitness = 0.0;
+            int gridWHL = 5;
+
+            for (int i = 0; i < fitnessGrid.Count(); i++)
+            {
+                //Check if current block is a gold ore and increase fitness if so
+                if (fitnessGrid[i].ToString() == "gold_ore")
+                {
+                    fitness += 1.0;
+
+                    blockOnIndex = true;
+                }
+
+                //Check if there is a block to the right of current block
+                if (i - 1 >= 0)
+                {
+                    if (fitnessGrid[i - 1].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block to the left of current block
+                if (i + 1 <= fitnessGrid.Count() - 1)
+                {
+                    if (fitnessGrid[i + 1].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block in back of current block
+                if (i - gridWHL >= 0)
+                {
+                    if (fitnessGrid[i - gridWHL].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block in front of current block
+                if (i + gridWHL <= fitnessGrid.Count() - 1)
+                {
+                    if (fitnessGrid[i + gridWHL].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block below current block
+                if (i - (gridWHL * gridWHL) >= 0)
+                {
+                    if (fitnessGrid[i - (gridWHL * gridWHL)].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 2.0;
+                    }
+                }
+
+                //Check if there is a block on top of current block
+                if (i + (gridWHL * gridWHL) <= fitnessGrid.Count() - 1)
+                {
+                    if (fitnessGrid[i + (gridWHL * gridWHL)].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 2.0;
+                    }
+                }
+
+                blockOnIndex = false;
+            }
+
+            return fitness;
         }
 
         /// <summary>

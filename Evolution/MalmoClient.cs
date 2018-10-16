@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.Malmo;
+using Newtonsoft.Json.Linq;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
@@ -48,14 +49,24 @@ namespace RunMission.Evolution
                      continue;
                 }
                 neatPlayer.AgentHelper.ConstantObservations = worldState.observations;
-                neatPlayer.UpdateFitness();
+                //neatPlayer.UpdateFitness();
                 neatPlayer.PerformAction();
+
+                if (worldState.observations != null)
+                {
+                    neatPlayer.AgentHelper.FitnessGrid = JObject.Parse(worldState.observations[0].text).GetValue("floor5x5x5");
+                }
             }
 
             Thread.Sleep(2000);
             agentHost.Dispose();
 
             Console.WriteLine("Mission has ended!");
+        }
+
+        public JToken GetFitnessGrid()
+        {
+            return neatPlayer.AgentHelper.FitnessGrid;
         }
 
         private void InitializeMission()
