@@ -84,10 +84,62 @@ namespace RunMission.Evolution
             double placeBlock = Brain.OutputSignalArray[1];
             double destroyBlock = Brain.OutputSignalArray[2];
 
-            double directionRaw = Brain.OutputSignalArray[3];
-
             Direction direction = Direction.Under;
+            var highestDirection = 15;
+            var highestValue = 0d;
+            // find direction
+            for(int i = 3; i < 16; i++)
+            {
+                if(Brain.OutputSignalArray[i] > highestValue)
+                {
+                    highestValue = Brain.OutputSignalArray[i];
+                    highestDirection = i;
+                }
+            }
+            switch (highestDirection)
+            {
+                case 3:
+                    direction = Direction.LeftUnder;
+                    break;
+                case 4:
+                    direction = Direction.FrontUnder;
+                    break;
+                case 5:
+                    direction = Direction.RightUnder;
+                    break;
+                case 6:
+                    direction = Direction.BackUnder;
+                    break;
+                case 7:
+                    direction = Direction.Left;
+                    break;
+                case 8:
+                    direction = Direction.Front;
+                    break;
+                case 9:
+                    direction = Direction.Right;
+                    break;
+                case 10:
+                    direction = Direction.Back;
+                    break;
+                case 11:
+                    direction = Direction.LeftTop;
+                    break;
+                case 12:
+                    direction = Direction.FrontTop;
+                    break;
+                case 13:
+                    direction = Direction.RightTop;
+                    break;
+                case 14:
+                    direction = Direction.BackTop;
+                    break;
+                case 15:
+                    direction = Direction.Under;
+                    break;
+            }
 
+            /*
             if(directionRaw < (1d / 13d))
             {
                 direction = Direction.Under;
@@ -127,7 +179,7 @@ namespace RunMission.Evolution
             } else if (directionRaw >= (12d / 13d) && directionRaw < (13d / 13d))
             {
                 direction = Direction.RightTop;
-            }
+            }*/
 
             if (move > placeBlock && move > destroyBlock && direction != Direction.Under)
             {
@@ -154,7 +206,7 @@ namespace RunMission.Evolution
                     Console.WriteLine(String.Format("Move action performed"));
                 } 
 
-            } else if (placeBlock > destroyBlock)
+            } else if (placeBlock >= destroyBlock)
             {
                 Console.WriteLine("Trying to place block  " + direction);
                 if (!agentHelper.IsThereABlock(direction) || direction == Direction.Under)
