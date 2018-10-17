@@ -114,6 +114,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Evolution\Results\" />
+  </ItemGroup>
   <Choose>
     <When Condition="Exists('.\MalmoNETNative.dll')">
       <ItemGroup>

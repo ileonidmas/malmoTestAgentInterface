@@ -3,6 +3,7 @@ using SharpNeat.Core;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -16,7 +17,7 @@ namespace RunMission
         private bool _stopConditionSatisfied;
         private MalmoClientPool clientPool;
         private List<double> fitnessList = new List<double>(10);
-        private int populationNumber = 1;
+        private int generation = 1;
 
         public MinecraftBuilderEvaluator()
         {
@@ -67,20 +68,35 @@ namespace RunMission
             if (fitness >= 30)
                 _stopConditionSatisfied = true;
 
-            // add fitness to the list before new population
+            // add fitness to the list before new evaluation
             if (fitnessList.Count < 10)
                 fitnessList.Add(fitness);
 
-            // if whole population got evaluated, output max fitness
-            if(fitnessList.Count == 10)
+            // if whole population got evaluated, write generation and max fitness to result file
+            String path = "";
+            if(System.Environment.UserName == "lema")
+                path = @"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\Results\results.csv";
+            else
+                path = @"C:\Users\Pierre\Documents\malmoTestAgentInterface\Evolution\Results\results.csv";
+
+            if (fitnessList.Count == 10)
             {
-                var maxFitness = fitnessList.Max();                
-                Console.WriteLine("Maximum fitness = " + maxFitness + " in population number " + populationNumber);
+                var maxFitness = fitnessList.Max();
+
+                using (StreamWriter outputFile = new StreamWriter(path, true))
+                {
+                    if (generation == 1)
+                    {
+                        outputFile.WriteLine("Generation, Fitness");
+                    }
+
+                    outputFile.WriteLine(String.Format("{0}, {1}", generation, maxFitness));
+                }
+
+                //Console.WriteLine("Maximum fitness = " + maxFitness + " in population number " + populationNumber);
                 fitnessList.Clear();
-                populationNumber++;
+                generation++;
             }
-
-
 
             // Return the fitness score
             return new FitnessInfo(fitness, fitness);
