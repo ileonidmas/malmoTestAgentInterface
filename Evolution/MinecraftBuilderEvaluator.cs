@@ -15,6 +15,8 @@ namespace RunMission
         private ulong _evalCount;
         private bool _stopConditionSatisfied;
         private MalmoClientPool clientPool;
+        private List<double> fitnessList = new List<double>(10);
+        private int populationNumber = 1;
 
         public MinecraftBuilderEvaluator()
         {
@@ -64,6 +66,21 @@ namespace RunMission
             // If the networks reaches a fitness of 30, stop evaluation
             if (fitness >= 30)
                 _stopConditionSatisfied = true;
+
+            // add fitness to the list before new population
+            if (fitnessList.Count < 10)
+                fitnessList.Add(fitness);
+
+            // if whole population got evaluated, output max fitness
+            if(fitnessList.Count == 10)
+            {
+                var maxFitness = fitnessList.Max();                
+                Console.WriteLine("Maximum fitness = " + maxFitness + " in population number " + populationNumber);
+                fitnessList.Clear();
+                populationNumber++;
+            }
+
+
 
             // Return the fitness score
             return new FitnessInfo(fitness, fitness);

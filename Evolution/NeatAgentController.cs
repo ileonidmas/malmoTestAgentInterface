@@ -131,6 +131,7 @@ namespace RunMission.Evolution
 
             if (move > placeBlock && move > destroyBlock && direction != Direction.Under)
             {
+                Console.WriteLine("Trying to move " + direction);
                 if (direction == Direction.BackUnder || direction == Direction.BackTop)
                 {
                     direction = Direction.Back;                
@@ -150,62 +151,64 @@ namespace RunMission.Evolution
 
                     actionIsPerformed = true;
 
-                    Console.WriteLine(String.Format("Move action"));
+                    Console.WriteLine(String.Format("Move action performed"));
                 } 
 
             } else if (placeBlock > destroyBlock)
             {
-                if (!agentHelper.IsThereABlock(direction))
+                Console.WriteLine("Trying to place block  " + direction);
+                if (!agentHelper.IsThereABlock(direction) || direction == Direction.Under)
                 {
                     if (direction == Direction.BackTop && !agentHelper.IsThereABlock(Direction.Back))
                     {
-                        Console.WriteLine(String.Format("No action"));
+                        //Console.WriteLine(String.Format("No action"));
                         return;
                     } else if (direction == Direction.RightTop && !agentHelper.IsThereABlock(Direction.Right))
                     {
-                        Console.WriteLine(String.Format("No action"));
+                        //Console.WriteLine(String.Format("No action"));
                         return;
                     } else if (direction == Direction.FrontTop && !agentHelper.IsThereABlock(Direction.Front))
                     {
-                        Console.WriteLine(String.Format("No action"));
+                        //Console.WriteLine(String.Format("No action"));
                         return;
                     } else if (direction == Direction.LeftTop && !agentHelper.IsThereABlock(Direction.Left))
                     {
-                        Console.WriteLine(String.Format("No action"));
+                        //Console.WriteLine(String.Format("No action"));
                         return;
                     } else if (direction == Direction.Back && !agentHelper.IsThereABlock(Direction.BackUnder))
                     {
-                        Console.WriteLine(String.Format("No action"));
+                        //Console.WriteLine(String.Format("No action"));
                         return;
                     }
                     else if (direction == Direction.Right && !agentHelper.IsThereABlock(Direction.RightUnder))
                     {
-                        Console.WriteLine(String.Format("No action"));
+                        //Console.WriteLine(String.Format("No action"));
                         return;
                     }
                     else if (direction == Direction.Front && !agentHelper.IsThereABlock(Direction.FrontUnder))
                     {
-                        Console.WriteLine(String.Format("No action"));
+                        //Console.WriteLine(String.Format("No action"));
                         return;
                     }
                     else if (direction == Direction.Left && !agentHelper.IsThereABlock(Direction.LeftUnder))
                     {
-                        Console.WriteLine(String.Format("No action"));
+                        //Console.WriteLine(String.Format("No action"));
                         return;
                     }
 
                     agentHelper.PlaceBlock(direction);
                     actionIsPerformed = true;
-                    Console.WriteLine(String.Format("Place action"));
+                    Console.WriteLine(String.Format("Place action performed"));
 
                 }
             } else
             {
+                Console.WriteLine("Trying to destroy block  " + direction);
                 if (agentHelper.IsThereABlock(direction))
                 {
                     agentHelper.DestroyBlock(direction);
 
-                    Console.WriteLine(String.Format("Destroy action"));
+                    Console.WriteLine(String.Format("Destroy action performed"));
 
                     actionIsPerformed = true;
                 }

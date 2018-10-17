@@ -342,7 +342,10 @@ namespace RunMission
                     UpdateDirection(270, 45);
                     break;
                 case Direction.Under:
-                    UpdateDirection(180, 90);
+                    var observations = JObject.Parse(constanteObservations[0].text);
+                    var currentYaw = (double)observations.GetValue("Yaw");
+                    UpdateDirection(currentYaw, 90);
+                    agentHost.sendCommand("jump 1");
                     break;
             }
             
@@ -574,61 +577,7 @@ namespace RunMission
             return false;
         }
 
-        //public double CalculateGrid()
-        //{
-        //    double fitness = 0d;
-        //    var observations = JObject.Parse(constanteObservations[0].text);
-        //    var allBlocks = observations.GetValue("floor5x5x5");
-        //    for(int i = 0; i<125; i++)
-        //    {
-        //        if(i< 25)
-        //        {
-        //            if (allBlocks[i].ToString() != "air")
-        //            {
-        //                fitness += 1;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if(i < 50)
-        //            {
-        //                if (allBlocks[i].ToString() != "air")
-        //                {
-        //                    fitness += 2;
-        //                }
-        //            } else
-        //            {
-        //                if (i < 75)
-        //                {
-        //                    if (allBlocks[i].ToString() != "air")
-        //                    {
-        //                        fitness += 3;
-        //                    }
-        //                } else
-        //                {
-        //                    if (i < 100)
-        //                    {
-        //                        if (allBlocks[i].ToString() != "air")
-        //                        {
-        //                            fitness += 4;
-        //                        }
-        //                    } else
-        //                    {
-        //                        if (i < 125)
-        //                        {
-        //                            if (allBlocks[i].ToString() != "air")
-        //                            {
-        //                                fitness += 5;
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return fitness;
-        //}
+        
 
         #endregion
     }
