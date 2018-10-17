@@ -20,6 +20,8 @@ namespace RunMission.Evolution
 
         private bool isWorldCreated = false;
 
+        private AgentPosition agentPosition;
+
         public MalmoClient(ClientPool clientPool)
         {
             isWorldCreated = false;
@@ -41,6 +43,8 @@ namespace RunMission.Evolution
 
             Console.WriteLine("Mission has started!");
 
+            agentPosition = new AgentPosition();
+
             while (worldState.is_mission_running)
             {
                 worldState = agentHost.getWorldState();
@@ -54,7 +58,13 @@ namespace RunMission.Evolution
 
                 if (worldState.observations != null)
                 {
-                    neatPlayer.AgentHelper.FitnessGrid = JObject.Parse(worldState.observations[0].text).GetValue("floor5x5x5");
+                    var observations = JObject.Parse(worldState.observations[0].text);
+
+                    agentPosition.x = (double)observations.GetValue("XPos");
+                    agentPosition.y = (double)observations.GetValue("YPos");
+                    agentPosition.z = (double)observations.GetValue("ZPos");
+
+                    neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("floor9x9x9");
                 }
             }
 
@@ -67,6 +77,11 @@ namespace RunMission.Evolution
         public JToken GetFitnessGrid()
         {
             return neatPlayer.AgentHelper.FitnessGrid;
+        }
+
+        public AgentPosition GetAgentPosition()
+        {
+            return agentPosition;
         }
 
         private void InitializeMission()

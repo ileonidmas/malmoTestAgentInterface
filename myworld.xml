@@ -13,7 +13,7 @@
    <AgentSection>
       <Name>A default agent</Name>
       <AgentStart>
-         <Placement x="0.5" y="227.5" z="0.5" yaw="0" pitch="0" />
+         <Placement x="0.5" y="227" z="0.5" yaw="0" pitch="0" />
          <Inventory>
             <InventoryBlock slot="0" type="gold_ore" quantity="63" />
          </Inventory>
@@ -25,9 +25,9 @@
                <min x="-1" y="-1" z="-1" />
                <max x="1" y="1" z="1" />
             </Grid>
-            <Grid name="floor5x5x5">
-               <min x="-2" y="0" z="-2" />
-               <max x="2" y="5" z="2" />
+            <Grid name="floor9x9x9">
+               <min x="-4" y="-4" z="-4" />
+               <max x="4" y="4" z="4" />
             </Grid>
          </ObservationFromGrid>
          <ContinuousMovementCommands />

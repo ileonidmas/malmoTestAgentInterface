@@ -50,9 +50,9 @@ namespace RunMission
         /// </summary>
         public FitnessInfo Evaluate(IBlackBox brain)
         {
-            JToken fitnessGrid = clientPool.RunAvailableClient(brain);
+            Tuple<JToken, AgentPosition> clientInfo = clientPool.RunAvailableClient(brain);
 
-            double fitness = calculateFitness(fitnessGrid);
+            double fitness = calculateFitness(clientInfo.Item1, clientInfo.Item2);
 
             // Update the fitness score of the network
             //fitness += 1;
@@ -86,14 +86,32 @@ namespace RunMission
             return new FitnessInfo(fitness, fitness);
         }
 
-        private double calculateFitness(JToken fitnessGrid)
+        private double calculateFitness(JToken fitnessGrid, AgentPosition agentPosition)
         {
             bool blockOnIndex = false;
 
             double fitness = 0.0;
-            int gridWHL = 5;
+            int gridWLH = 9;
 
-            for (int i = 0; i < fitnessGrid.Count(); i++)
+            //The agents current Y position
+            double agentYPos = agentPosition.y;
+
+            //The agent starts at Y position 227.
+            int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));
+
+            //Disregard blocks below ground level by turning them to air.
+            int disregardBlocks = 0;
+            if (layersBelowGroundLevel > 0)
+            {
+                disregardBlocks = (layersBelowGroundLevel * (gridWLH * gridWLH));
+                for (int i = 0; i < disregardBlocks; i++)
+                {
+                    fitnessGrid[i].Replace("air");
+                }
+            }
+
+            //Disregard blocks below groundlevel
+            for (int i = disregardBlocks; i < fitnessGrid.Count(); i++)
             {
                 //Check if current block is a gold ore and increase fitness if so
                 if (fitnessGrid[i].ToString() == "gold_ore")
@@ -122,36 +140,36 @@ namespace RunMission
                 }
 
                 //Check if there is a block in back of current block
-                if (i - gridWHL >= 0)
+                if (i - gridWLH >= 0)
                 {
-                    if (fitnessGrid[i - gridWHL].ToString() == "gold_ore" && blockOnIndex)
+                    if (fitnessGrid[i - gridWLH].ToString() == "gold_ore" && blockOnIndex)
                     {
                         fitness += 1.0;
                     }
                 }
 
                 //Check if there is a block in front of current block
-                if (i + gridWHL <= fitnessGrid.Count() - 1)
+                if (i + gridWLH <= fitnessGrid.Count() - 1)
                 {
-                    if (fitnessGrid[i + gridWHL].ToString() == "gold_ore" && blockOnIndex)
+                    if (fitnessGrid[i + gridWLH].ToString() == "gold_ore" && blockOnIndex)
                     {
                         fitness += 1.0;
                     }
                 }
 
                 //Check if there is a block below current block
-                if (i - (gridWHL * gridWHL) >= 0)
+                if (i - (gridWLH * gridWLH) >= 0)
                 {
-                    if (fitnessGrid[i - (gridWHL * gridWHL)].ToString() == "gold_ore" && blockOnIndex)
+                    if (fitnessGrid[i - (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
                     {
                         fitness += 2.0;
                     }
                 }
 
                 //Check if there is a block on top of current block
-                if (i + (gridWHL * gridWHL) <= fitnessGrid.Count() - 1)
+                if (i + (gridWLH * gridWLH) <= fitnessGrid.Count() - 1)
                 {
-                    if (fitnessGrid[i + (gridWHL * gridWHL)].ToString() == "gold_ore" && blockOnIndex)
+                    if (fitnessGrid[i + (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
                     {
                         fitness += 2.0;
                     }
