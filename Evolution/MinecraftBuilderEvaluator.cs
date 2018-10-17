@@ -103,6 +103,8 @@ namespace RunMission
             int disregardBlocks = 0;
             if (layersBelowGroundLevel > 0)
             {
+                if (layersBelowGroundLevel > gridWLH)
+                    layersBelowGroundLevel = gridWLH;
                 disregardBlocks = (layersBelowGroundLevel * (gridWLH * gridWLH));
                 for (int i = 0; i < disregardBlocks; i++)
                 {
