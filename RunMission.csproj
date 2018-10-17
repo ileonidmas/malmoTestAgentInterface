@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentHelper.cs" />
+    <Compile Include="Evolution\AgentPosition.cs" />
     <Compile Include="Evolution\Enums\Direction.cs" />
     <Compile Include="Evolution\MalmoClient.cs" />
     <Compile Include="Evolution\MalmoClientPool.cs" />
