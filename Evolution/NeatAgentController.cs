@@ -173,6 +173,25 @@ namespace RunMission.Evolution
                     {
                         Console.WriteLine(String.Format("No action"));
                         return;
+                    } else if (direction == Direction.Back && !agentHelper.IsThereABlock(Direction.BackUnder))
+                    {
+                        Console.WriteLine(String.Format("No action"));
+                        return;
+                    }
+                    else if (direction == Direction.Right && !agentHelper.IsThereABlock(Direction.RightUnder))
+                    {
+                        Console.WriteLine(String.Format("No action"));
+                        return;
+                    }
+                    else if (direction == Direction.Front && !agentHelper.IsThereABlock(Direction.FrontUnder))
+                    {
+                        Console.WriteLine(String.Format("No action"));
+                        return;
+                    }
+                    else if (direction == Direction.Left && !agentHelper.IsThereABlock(Direction.LeftUnder))
+                    {
+                        Console.WriteLine(String.Format("No action"));
+                        return;
                     }
 
                     agentHelper.PlaceBlock(direction);
