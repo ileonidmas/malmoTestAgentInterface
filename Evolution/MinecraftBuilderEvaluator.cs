@@ -75,7 +75,7 @@ namespace RunMission
             // if whole population got evaluated, write generation and max fitness to result file
             String path = "";
             if(System.Environment.UserName == "lema")
-                path = @"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\Results\results.csv";
+                path = @"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\Evolution\Results\results.csv";
             else
                 path = @"C:\Users\Pierre\Documents\malmoTestAgentInterface\Evolution\Results\results.csv";
 
