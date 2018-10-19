@@ -306,6 +306,28 @@ namespace RunMission.Evolution
             //If round to 1 destroy a block, else dont destroy a block
             agentHelper.SendCommand("attack", Math.Round(destroyBlock));
 
+            //Pitch left if less than 0.5, else Pitch right
+            if (pitch < 0.5)
+            {
+                agentHelper.SendCommand("pitch", -1);
+            }
+            else
+            {
+                agentHelper.SendCommand("pitch", 1);
+            }
+
+            //Yaw left if less than 0.5, else Yaw right
+            if (yaw < 0.5)
+            {
+                agentHelper.SendCommand("yaw", -1);
+            }
+            else
+            {
+                agentHelper.SendCommand("yaw", 1);
+            }
+
+            //If round to 1 jump, else dont jump
+            agentHelper.SendCommand("attack", Math.Round(destroyBlock));
 
             //agentHelper.SendCommand("move " + move);
             //agentHelper.SendCommand("strafe " + strafe);
