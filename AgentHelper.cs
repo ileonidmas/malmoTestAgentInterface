@@ -243,6 +243,7 @@ namespace RunMission
 
         #region Public methods
 
+        // ****************************************************** CONTROLLER 1 ***********************************************
         public void PlaceBlock(Direction where)
         {
             switch (where)
@@ -577,8 +578,11 @@ namespace RunMission
             return false;
         }
 
-        
-
+        // ****************************************************** CONTROLLER 2 ***********************************************
+        public void SendCommand(string command, double value)
+        {
+            agentHost.sendCommand(String.Format("{0} {1}", command, value));
+        }
         #endregion
     }
 }

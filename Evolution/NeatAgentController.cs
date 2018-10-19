@@ -33,8 +33,7 @@ namespace RunMission.Evolution
 
 
         public void PerformAction()
-        {
-                                                   
+        {                                   
             // Clear the network
             Brain.ResetState();
             // Get observations
@@ -44,7 +43,8 @@ namespace RunMission.Evolution
             // Activate the network
             Brain.Activate();
             // Convert the action and perform the command
-            outputToCommands();
+            //outputToCommands();
+            outputToCommandsCont();
 
         }
 
@@ -269,6 +269,48 @@ namespace RunMission.Evolution
             {
                 Console.WriteLine(String.Format("No action"));
             }
+        }
+
+        // Method for passing outputs of the neural network to the client (second method)
+        private void outputToCommandsCont()
+        {
+            double move = Brain.OutputSignalArray[0];// 0 to 1
+            double strafe = Brain.OutputSignalArray[1];// 0 to 1
+            double placeBlock = Brain.OutputSignalArray[2]; //  0 or 1
+            double destroyBlock = Brain.OutputSignalArray[3]; //  0 or 1
+            double pitch = Brain.OutputSignalArray[4];// 0 to 1
+            double yaw = Brain.OutputSignalArray[5];// 0 to 1
+            double jump = Brain.OutputSignalArray[6];// 0 or 1
+
+            //Move backwards if less than 0.5, else forward
+            if(move < 0.5)
+            {
+                agentHelper.SendCommand("move", -1);
+            } else
+            {
+                agentHelper.SendCommand("move", 1);
+            }
+
+            //Strafe left if less than 0.5, else strafe right
+            if(strafe < 0.5)
+            {
+                agentHelper.SendCommand("strafe", -1);
+            } else
+            {
+                agentHelper.SendCommand("strafe", 1);
+            }
+
+            //If round to 1 place a block, else dont place a block
+            agentHelper.SendCommand("use", Math.Round(placeBlock));
+
+            //If round to 1 destroy a block, else dont destroy a block
+            agentHelper.SendCommand("attack", Math.Round(destroyBlock));
+
+
+            //agentHelper.SendCommand("move " + move);
+            //agentHelper.SendCommand("strafe " + strafe);
+            //agentHelper.SendCommand("use " + Math.Round(placeBlock));
+
         }
 
         //public void UpdateFitness()
