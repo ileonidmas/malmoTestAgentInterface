@@ -299,12 +299,30 @@ namespace RunMission.Evolution
             {
                 agentHelper.SendCommand("strafe", 1);
             }
-
-            //If round to 1 place a block, else dont place a block
-            agentHelper.SendCommand("use", Math.Round(placeBlock));
-
-            //If round to 1 destroy a block, else dont destroy a block
-            agentHelper.SendCommand("attack", Math.Round(destroyBlock));
+            // place or destroy
+            if (placeBlock >= destroyBlock)
+            {
+                //If round to 1 place a block, else dont place a block
+                if (placeBlock < 0.5)
+                {
+                    agentHelper.SendCommand("use", 0);
+                } else
+                {
+                    agentHelper.SendCommand("use", 1);
+                }
+            }
+            else
+            {
+                //If round to 1 destroy a block, else dont destroy a block
+                if (placeBlock < 0.5)
+                {
+                    agentHelper.SendCommand("attack", 0);
+                }
+                else
+                {
+                    agentHelper.SendCommand("attack", 1);
+                }
+            }
 
             //Pitch left if less than 0.5, else Pitch right
             if (pitch < 0.5)
@@ -327,8 +345,15 @@ namespace RunMission.Evolution
             }
 
             //If round to 1 jump, else dont jump
-            agentHelper.SendCommand("attack", Math.Round(destroyBlock));
-
+            if(jump < 0.5)
+            {
+                agentHelper.SendCommand("jump", 0);
+            } else
+            {
+                agentHelper.SendCommand("jump", 1);
+            }
+            
+            //Console.WriteLine(String.Format("Move:{0} Strafee:{1} Place:{2} Destroy:{3} Yaw:{4} Pitch:{5} Jump:{6}", move,strafe,placeBlock,destroyBlock,yaw,pitch,jump));
             //agentHelper.SendCommand("move " + move);
             //agentHelper.SendCommand("strafe " + strafe);
             //agentHelper.SendCommand("use " + Math.Round(placeBlock));
