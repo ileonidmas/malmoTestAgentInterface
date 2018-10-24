@@ -53,7 +53,7 @@ namespace RunMission
         {
             Tuple<JToken, AgentPosition> clientInfo = clientPool.RunAvailableClient(brain);
 
-            double fitness = calculateFitness(clientInfo.Item1, clientInfo.Item2);
+            double fitness = calculateFitnessWall(clientInfo.Item1, clientInfo.Item2);
 
             // Update the fitness score of the network
             //fitness += 1;
@@ -102,15 +102,121 @@ namespace RunMission
             return new FitnessInfo(fitness, fitness);
         }
 
-        private double calculateFitness(JToken fitnessGrid, AgentPosition agentPosition)
+        //Fitness function for calculating fitness of building a wall
+        private double calculateFitnessWall(JToken fitnessGrid, AgentPosition agentPosition)
         {
             bool blockOnIndex = false;
 
             double fitness = 0.0;
             int gridWLH = 9;
 
+            //Overstep boundary of 30 blocks, return fitness of -1.0 to indicate that overstepping is worse than not building anything
+            if(Math.Abs(agentPosition.startX - agentPosition.endX) > 30 || Math.Abs(agentPosition.startZ - agentPosition.endZ) > 30)
+            {
+                return -1.0;
+            }
+
             //The agents current Y position
-            double agentYPos = agentPosition.y;
+            double agentYPos = agentPosition.endY;
+
+            //The agent starts at Y position 227.
+            int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));
+
+            //Disregard blocks below ground level by turning them to air.
+            int disregardBlocks = 0;
+            if (layersBelowGroundLevel > 0)
+            {
+                if (layersBelowGroundLevel > gridWLH)
+                    layersBelowGroundLevel = gridWLH;
+                disregardBlocks = (layersBelowGroundLevel * (gridWLH * gridWLH));
+                for (int i = 0; i < disregardBlocks; i++)
+                {
+                    fitnessGrid[i].Replace("air");
+                }
+            }
+
+            //Keeps track of height of the wall and assigns fitness according to
+            //the height the block is placed at
+            int currentLayer = 1;
+            int currentBlockInLayer = 0;
+            int blocksPerLayer = gridWLH * gridWLH;
+
+            //Disregard blocks below groundlevel
+            for (int i = disregardBlocks; i < fitnessGrid.Count(); i++)
+            {
+                //Check if current block is a gold ore and increase fitness if so
+                if (fitnessGrid[i].ToString() == "gold_ore")
+                {
+                    fitness += currentLayer;
+
+                    blockOnIndex = true;
+                }
+
+                //Check if there is a block to the right of current block
+                if (i - 1 >= 0)
+                {
+                    if (fitnessGrid[i - 1].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block to the left of current block
+                if (i + 1 <= fitnessGrid.Count() - 1)
+                {
+                    if (fitnessGrid[i + 1].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block below current block
+                if (i - (gridWLH * gridWLH) >= 0)
+                {
+                    if (fitnessGrid[i - (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block on top of current block
+                if (i + (gridWLH * gridWLH) <= fitnessGrid.Count() - 1)
+                {
+                    if (fitnessGrid[i + (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Increase current layer count and reset current block in layer position
+                //if last block in layer has been checked
+                if(currentBlockInLayer == blocksPerLayer - 1)
+                {
+                    currentLayer++;
+                    currentBlockInLayer = 0;
+                } else
+                {
+                    currentBlockInLayer++;
+                }
+
+                blockOnIndex = false;
+            }
+            
+            return fitness;
+        }
+
+
+        //Fitness function for calculating fitness of connected structures
+        private double calculateFitnessConStruct(JToken fitnessGrid, AgentPosition agentPosition)
+        {
+
+            bool blockOnIndex = false;
+
+            double fitness = 0.0;
+            int gridWLH = 9;
+
+            //The agents current Y position
+            double agentYPos = agentPosition.endY;
 
             //The agent starts at Y position 227.
             int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));

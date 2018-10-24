@@ -42,11 +42,13 @@ namespace RunMission.Evolution
             ConsoleOutputWhileMissionLoads();
 
             Console.WriteLine("Mission has started!");
-
+            
             agentPosition = new AgentPosition();
+            bool gotStartPosition = false;
 
             while (worldState.is_mission_running)
             {
+                //Give observations to agent and let agent perform actions according to these
                 worldState = agentHost.getWorldState();
                 if (worldState.observations.Count == 0)
                 {
@@ -56,13 +58,23 @@ namespace RunMission.Evolution
                 //neatPlayer.UpdateFitness();
                 neatPlayer.PerformAction();
 
+                //Get end position and fitness grid after every performed action by the agent
                 if (worldState.observations != null)
                 {
                     var observations = JObject.Parse(worldState.observations[0].text);
 
-                    agentPosition.x = (double)observations.GetValue("XPos");
-                    agentPosition.y = (double)observations.GetValue("YPos");
-                    agentPosition.z = (double)observations.GetValue("ZPos");
+                    if(!gotStartPosition)
+                    {
+                        agentPosition.startX = (double)observations.GetValue("XPos");
+                        agentPosition.startY = (double)observations.GetValue("YPos");
+                        agentPosition.startZ = (double)observations.GetValue("ZPos");
+
+                        gotStartPosition = true;
+                    }
+
+                    agentPosition.endX = (double)observations.GetValue("XPos");
+                    agentPosition.endY = (double)observations.GetValue("YPos");
+                    agentPosition.endZ = (double)observations.GetValue("ZPos");
 
                     neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("floor9x9x9");
                 }

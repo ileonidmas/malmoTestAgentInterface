@@ -452,6 +452,15 @@ namespace RunMission
                 allBlocks[19].ToString(), allBlocks[23].ToString(), allBlocks[25].ToString(), allBlocks[21].ToString() };
         }
 
+        public double[] GetAgentPosition()
+        {
+            var observations = JObject.Parse(constanteObservations[0].text);
+            var xPos = observations.GetValue("XPos");
+            var zPos = observations.GetValue("ZPos");
+
+            return new double[2] { (double)xPos, (double)zPos };
+        }
+
         /// <summary>
         /// 
         /// </summary>

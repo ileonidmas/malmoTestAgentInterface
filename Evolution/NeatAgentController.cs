@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 
 namespace RunMission.Evolution
 {
@@ -34,13 +33,16 @@ namespace RunMission.Evolution
 
 
         public void PerformAction()
-        {                                   
+        {
             // Clear the network
             Brain.ResetState();
+
             // Get observations
             var observations = agentHelper.CheckSurroundings();
+            var xzPos = agentHelper.GetAgentPosition();
+
             // Convert the world observations into an input array for the network
-            setInputSignalArray(Brain.InputSignalArray, observations);
+            setInputSignalArray(Brain.InputSignalArray, observations, xzPos);
             // Activate the network
             Brain.Activate();
             // Convert the action and perform the command
@@ -50,7 +52,7 @@ namespace RunMission.Evolution
         }
 
         // Method for passing observations as inputs for the ANN
-        private void setInputSignalArray(ISignalArray inputArr, string[] board)
+        private void setInputSignalArray(ISignalArray inputArr, string[] board, double[] agentPosition)
         {
             inputArr[0] = blockToInt(board[0]);
             inputArr[1] = blockToInt(board[1]);
@@ -66,6 +68,8 @@ namespace RunMission.Evolution
             inputArr[11] = blockToInt(board[11]);
             inputArr[12] = blockToInt(board[12]);
 
+            inputArr[13] = agentPosition[0];
+            inputArr[14] = agentPosition[1];
         }
 
         private int blockToInt(string block)
@@ -283,10 +287,10 @@ namespace RunMission.Evolution
             double yaw = Brain.OutputSignalArray[5];// 0 to 1
             double jump = Brain.OutputSignalArray[6];// 0 or 1
 
-            //Move backwards if less than 0.4, else forward
-            if(move < 0.8)
+            //Move backwards if less than 0.5, else forward
+            if(move < 0.6)
             {
-                if(move < 0.4)
+                if(move < 0.3)
                 {
                     agentHelper.SendCommand("move", -1);
                 } else
@@ -298,10 +302,10 @@ namespace RunMission.Evolution
                 agentHelper.SendCommand("move", 0);
             }
 
-            //Strafe left if less than 0.4, else strafe right
-            if(strafe < 0.8)
+            //Strafe left if less than 0.5, else strafe right
+            if(strafe < 0.6)
             {
-                if(strafe < 0.8)
+                if(strafe < 0.3)
                 {
                     agentHelper.SendCommand("strafe", -1);
                 } else
@@ -317,18 +321,31 @@ namespace RunMission.Evolution
             if (placeBlock >= destroyBlock)
             {
                 //If round to 1 place a block, else dont place a block
-                agentHelper.SendCommand("use", Math.Round(placeBlock));
+                if (placeBlock > 0.5)
+                {
+                    agentHelper.SendCommand("use", 1);
+                } else
+                {
+                    agentHelper.SendCommand("use", 0);
+                }
             }
             else
             {
                 //If round to 1 destroy a block, else dont destroy a block
-                agentHelper.SendCommand("attack", Math.Round(destroyBlock));
+                if (destroyBlock > 0.5)
+                {
+                    agentHelper.SendCommand("attack", 1);
+                }
+                else
+                {
+                    agentHelper.SendCommand("attack", 0);
+                }
             }
 
-            //Pitch left if less than 0.4, else Pitch right
-            if (pitch < 0.8)
+            //Pitch left if less than 0.5, else Pitch right
+            if (pitch < 0.6)
             {
-                if(pitch < 0.4)
+                if(pitch < 0.3)
                 {
                     agentHelper.SendCommand("pitch", -1);
                 } else
@@ -341,10 +358,10 @@ namespace RunMission.Evolution
                 agentHelper.SendCommand("pitch", 0);
             }
 
-            //Yaw left if less than 0.4, else Yaw right
-            if (yaw < 0.8)
+            //Yaw left if less than 0.5, else Yaw right
+            if (yaw < 0.6)
             {
-                if (yaw < 0.4)
+                if (yaw < 0.3)
                 {
                     agentHelper.SendCommand("yaw", -1);
                 } else
@@ -358,8 +375,6 @@ namespace RunMission.Evolution
             }
 
             //If round to 1 jump, else dont jump
-            agentHelper.SendCommand("jump", Math.Round(jump));
-            
             if(jump < 0.5)
             {
                 agentHelper.SendCommand("jump", 0);
@@ -367,16 +382,7 @@ namespace RunMission.Evolution
             {
                 agentHelper.SendCommand("jump", 1);
             }
-
-            // stop all actions
-            Thread.Sleep(10);
-            agentHelper.SendCommand("move", 0);
-            agentHelper.SendCommand("strafe", 0);
-            agentHelper.SendCommand("use", 0);
-            agentHelper.SendCommand("attack", 0);
-            agentHelper.SendCommand("jump", 0);
-            agentHelper.SendCommand("yaw", 0);
-            agentHelper.SendCommand("pitch", 0);
+            
             //Console.WriteLine(String.Format("Move:{0} Strafee:{1} Place:{2} Destroy:{3} Yaw:{4} Pitch:{5} Jump:{6}", move,strafe,placeBlock,destroyBlock,yaw,pitch,jump));
             //agentHelper.SendCommand("move " + move);
             //agentHelper.SendCommand("strafe " + strafe);
