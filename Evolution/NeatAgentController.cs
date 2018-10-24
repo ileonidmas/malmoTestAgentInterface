@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace RunMission.Evolution
 {
@@ -359,6 +360,23 @@ namespace RunMission.Evolution
             //If round to 1 jump, else dont jump
             agentHelper.SendCommand("jump", Math.Round(jump));
             
+            if(jump < 0.5)
+            {
+                agentHelper.SendCommand("jump", 0);
+            } else
+            {
+                agentHelper.SendCommand("jump", 1);
+            }
+
+            // stop all actions
+            Thread.Sleep(10);
+            agentHelper.SendCommand("move", 0);
+            agentHelper.SendCommand("strafe", 0);
+            agentHelper.SendCommand("use", 0);
+            agentHelper.SendCommand("attack", 0);
+            agentHelper.SendCommand("jump", 0);
+            agentHelper.SendCommand("yaw", 0);
+            agentHelper.SendCommand("pitch", 0);
             //Console.WriteLine(String.Format("Move:{0} Strafee:{1} Place:{2} Destroy:{3} Yaw:{4} Pitch:{5} Jump:{6}", move,strafe,placeBlock,destroyBlock,yaw,pitch,jump));
             //agentHelper.SendCommand("move " + move);
             //agentHelper.SendCommand("strafe " + strafe);
