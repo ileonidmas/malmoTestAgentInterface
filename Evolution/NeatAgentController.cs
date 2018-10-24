@@ -282,76 +282,82 @@ namespace RunMission.Evolution
             double yaw = Brain.OutputSignalArray[5];// 0 to 1
             double jump = Brain.OutputSignalArray[6];// 0 or 1
 
-            //Move backwards if less than 0.5, else forward
-            if(move < 0.5)
+            //Move backwards if less than 0.4, else forward
+            if(move < 0.8)
             {
-                agentHelper.SendCommand("move", -1);
+                if(move < 0.4)
+                {
+                    agentHelper.SendCommand("move", -1);
+                } else
+                {
+                    agentHelper.SendCommand("move", 1);
+                }
             } else
             {
-                agentHelper.SendCommand("move", 1);
+                agentHelper.SendCommand("move", 0);
             }
 
-            //Strafe left if less than 0.5, else strafe right
-            if(strafe < 0.5)
+            //Strafe left if less than 0.4, else strafe right
+            if(strafe < 0.8)
             {
-                agentHelper.SendCommand("strafe", -1);
+                if(strafe < 0.8)
+                {
+                    agentHelper.SendCommand("strafe", -1);
+                } else
+                {
+                    agentHelper.SendCommand("strafe", 1);
+                }
             } else
             {
-                agentHelper.SendCommand("strafe", 1);
+                agentHelper.SendCommand("strafe", 0);
             }
+
             // place or destroy
             if (placeBlock >= destroyBlock)
             {
                 //If round to 1 place a block, else dont place a block
-                if (placeBlock < 0.5)
-                {
-                    agentHelper.SendCommand("use", 0);
-                } else
-                {
-                    agentHelper.SendCommand("use", 1);
-                }
+                agentHelper.SendCommand("use", Math.Round(placeBlock));
             }
             else
             {
                 //If round to 1 destroy a block, else dont destroy a block
-                if (placeBlock < 0.5)
-                {
-                    agentHelper.SendCommand("attack", 0);
-                }
-                else
-                {
-                    agentHelper.SendCommand("attack", 1);
-                }
+                agentHelper.SendCommand("attack", Math.Round(destroyBlock));
             }
 
-            //Pitch left if less than 0.5, else Pitch right
-            if (pitch < 0.5)
+            //Pitch left if less than 0.4, else Pitch right
+            if (pitch < 0.8)
             {
-                agentHelper.SendCommand("pitch", -1);
+                if(pitch < 0.4)
+                {
+                    agentHelper.SendCommand("pitch", -1);
+                } else
+                {
+                    agentHelper.SendCommand("pitch", 1);
+                }
             }
             else
             {
-                agentHelper.SendCommand("pitch", 1);
+                agentHelper.SendCommand("pitch", 0);
             }
 
-            //Yaw left if less than 0.5, else Yaw right
-            if (yaw < 0.5)
+            //Yaw left if less than 0.4, else Yaw right
+            if (yaw < 0.8)
             {
-                agentHelper.SendCommand("yaw", -1);
+                if (yaw < 0.4)
+                {
+                    agentHelper.SendCommand("yaw", -1);
+                } else
+                {
+                    agentHelper.SendCommand("yaw", 1);
+                }
             }
             else
             {
-                agentHelper.SendCommand("yaw", 1);
+                agentHelper.SendCommand("yaw", 0);
             }
 
             //If round to 1 jump, else dont jump
-            if(jump < 0.5)
-            {
-                agentHelper.SendCommand("jump", 0);
-            } else
-            {
-                agentHelper.SendCommand("jump", 1);
-            }
+            agentHelper.SendCommand("jump", Math.Round(jump));
             
             //Console.WriteLine(String.Format("Move:{0} Strafee:{1} Place:{2} Destroy:{3} Yaw:{4} Pitch:{5} Jump:{6}", move,strafe,placeBlock,destroyBlock,yaw,pitch,jump));
             //agentHelper.SendCommand("move " + move);
