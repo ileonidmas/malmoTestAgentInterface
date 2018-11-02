@@ -247,6 +247,8 @@ namespace RunMission
                 }
             }
 
+            getStructureGrid(fitnessGrid, agentPosition);
+
             //Keeps track of height of the wall and assigns fitness according to
             //the height the block is placed at
             int currentLayer = 1;
@@ -316,6 +318,17 @@ namespace RunMission
             }
 
             return fitness;
+        }
+
+
+        private void getStructureGrid(JToken fitnessGrid, AgentPosition agentPosition)
+        {
+            //Find how far the agent has moved from its initial position
+            int deltaX = (int)Math.Abs(agentPosition.currentX - agentPosition.initialX);
+            int deltaY = (int)Math.Abs(agentPosition.currentY - agentPosition.initialY);
+            int deltaZ = (int)Math.Abs(agentPosition.currentZ - agentPosition.initialZ);
+
+            
         }
         #endregion
 
