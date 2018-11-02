@@ -226,7 +226,7 @@ namespace RunMission
             bool blockOnIndex = false;
 
             double fitness = 0.0;
-            int gridWLH = 59;
+            int gridWLH = 20;
 
             //The agents current Y position
             double agentYPos = agentPosition.currentY;

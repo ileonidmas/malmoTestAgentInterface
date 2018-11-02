@@ -591,6 +591,12 @@ namespace RunMission
         {
             agentHost.sendCommand(String.Format("{0} {1}", command, value));            
         }
+
+        // ****************************************************** CONTROLLER 3 ***********************************************
+        public void SendAbsoluteCommand(string command, double value)
+        {
+            agentHost.sendCommand(String.Format("{0} {1}", command, FormatValue(value)));
+        }
         #endregion
     }
 }
