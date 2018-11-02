@@ -11,8 +11,6 @@ namespace RunMission.Evolution
 {
     public class NeatAgentController
     {
-        private Boolean test = false;
-
         public double Fitness { get; set; }
         /// <summary>
         /// The neural network that this player uses to make its decision.
