@@ -105,10 +105,50 @@ namespace RunMission.Evolution
                 missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\myworld.xml");
             else
                 missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\myworld.xml");
+
             mission = new MissionSpec(missionXMLpath, false);
+            AddBlocks(mission);
             mission.setModeToCreative();         
         }
-        
+        private void AddBlocks(MissionSpec mission)
+        {
+            int x1 = -10;
+            for (int z1 = -10; z1 < 10; z1++)
+            {
+                for (int y = 227; y < 227 + 10; y++)
+                {
+                    mission.drawBlock(x1, y, z1, "cobblestone");
+                }
+            }
+
+            int z2 = -10;
+            for (int x2 = -10; x2 < 10; x2++)
+            {
+                for (int y = 227; y < 227 + 10; y++)
+                {
+                    mission.drawBlock(x2, y, z2, "cobblestone");
+                }
+            }
+
+            int x3 = 10;
+            for (int z3 = -10; z3 < 10; z3++)
+            {
+                for (int y = 227; y < 227 + 10; y++)
+                {
+                    mission.drawBlock(x3, y, z3, "cobblestone");
+                }
+            }
+
+            int z4 = 10;
+            for (int x4 = -10; x4 < 10; x4++)
+            {
+                for (int y = 227; y < 227 + 10; y++)
+                {
+                    mission.drawBlock(x4, y, z4, "cobblestone");
+                }
+            }
+
+        }
         private void TryStartMission()
         {                                                                               
             
@@ -143,6 +183,7 @@ namespace RunMission.Evolution
             if (!isWorldCreated)
             {
                 //mission.forceWorldReset();
+                //AddBlocks(mission);
                 isWorldCreated = true;
             }
         }
