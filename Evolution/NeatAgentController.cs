@@ -83,6 +83,7 @@ namespace RunMission.Evolution
         }
 
         // Method for passing outputs of the neural network to the client
+        //***************************************************** FIRST CONTROLLER ***********************************************
         private void outputToCommands()
         {
             bool actionIsPerformed = false;
@@ -279,6 +280,7 @@ namespace RunMission.Evolution
         }
 
         // Method for passing outputs of the neural network to the client (second method)
+        //***************************************************** SECOND CONTROLLER ***********************************************
         private void outputToCommandsCont()
         {
             double move = Brain.OutputSignalArray[0];// 0 to 1

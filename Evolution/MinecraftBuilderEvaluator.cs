@@ -102,104 +102,25 @@ namespace RunMission
             return new FitnessInfo(fitness, fitness);
         }
 
-        //Fitness function for calculating fitness of building a wall
-        private double calculateFitnessWall(JToken fitnessGrid, AgentPosition agentPosition)
+        /// <summary>
+        /// Returns the score for a game. Scoring is 10 for a win, 1 for a draw
+        /// and 0 for a loss. Note that scores cannot be smaller than 0 because
+        /// NEAT requires the fitness score to be positive.
+        /// </summary>
+        private int getScore()
         {
-            bool blockOnIndex = false;
-
-            double fitness = 0.0;
-            int gridWLH = 9;
-
-            //The agents current Y position
-            double agentYPos = agentPosition.currentY;
-
-            //The agent starts at Y position 227.
-            int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));
-
-            //Disregard blocks below ground level by turning them to air.
-            int disregardBlocks = 0;
-            if (layersBelowGroundLevel > 0)
-            {
-                if (layersBelowGroundLevel > gridWLH)
-                    layersBelowGroundLevel = gridWLH;
-                disregardBlocks = (layersBelowGroundLevel * (gridWLH * gridWLH));
-                for (int i = 0; i < disregardBlocks; i++)
-                {
-                    fitnessGrid[i].Replace("air");
-                }
-            }
-
-            //Keeps track of height of the wall and assigns fitness according to
-            //the height the block is placed at
-            int currentLayer = 1;
-            int currentBlockInLayer = 0;
-            int blocksPerLayer = gridWLH * gridWLH;
-
-            //Disregard blocks below groundlevel
-            for (int i = disregardBlocks; i < fitnessGrid.Count(); i++)
-            {
-                //Check if current block is a gold ore and increase fitness if so
-                if (fitnessGrid[i].ToString() == "gold_ore")
-                {
-                    fitness += currentLayer;
-
-                    blockOnIndex = true;
-                }
-
-                //Check if there is a block to the right of current block
-                if (i - 1 >= 0)
-                {
-                    if (fitnessGrid[i - 1].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block to the left of current block
-                if (i + 1 <= fitnessGrid.Count() - 1)
-                {
-                    if (fitnessGrid[i + 1].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block below current block
-                if (i - (gridWLH * gridWLH) >= 0)
-                {
-                    if (fitnessGrid[i - (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block on top of current block
-                if (i + (gridWLH * gridWLH) <= fitnessGrid.Count() - 1)
-                {
-                    if (fitnessGrid[i + (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Increase current layer count and reset current block in layer position
-                //if last block in layer has been checked
-                if(currentBlockInLayer == blocksPerLayer - 1)
-                {
-                    currentLayer++;
-                    currentBlockInLayer = 0;
-                } else
-                {
-                    currentBlockInLayer++;
-                }
-
-                blockOnIndex = false;
-            }
-            
-            return fitness;
+            return 0;
         }
 
+        /// <summary>
+        /// Reset the internal state of the evaluation scheme if any exists.
+        /// Note. The TicTacToe problem domain has no internal state. This method does nothing.
+        /// </summary>
+        public void Reset()
+        {
+        }
 
+        #region fitnessFuncs
         //Fitness function for calculating fitness of connected structures
         private double calculateFitnessConStruct(JToken fitnessGrid, AgentPosition agentPosition)
         {
@@ -299,23 +220,105 @@ namespace RunMission
             return fitness;
         }
 
-        /// <summary>
-        /// Returns the score for a game. Scoring is 10 for a win, 1 for a draw
-        /// and 0 for a loss. Note that scores cannot be smaller than 0 because
-        /// NEAT requires the fitness score to be positive.
-        /// </summary>
-        private int getScore()
+        //Fitness function for calculating fitness of building a wall
+        private double calculateFitnessWall(JToken fitnessGrid, AgentPosition agentPosition)
         {
-            return 0;
-        }
+            bool blockOnIndex = false;
 
-        /// <summary>
-        /// Reset the internal state of the evaluation scheme if any exists.
-        /// Note. The TicTacToe problem domain has no internal state. This method does nothing.
-        /// </summary>
-        public void Reset()
-        {
+            double fitness = 0.0;
+            int gridWLH = 59;
+
+            //The agents current Y position
+            double agentYPos = agentPosition.currentY;
+
+            //The agent starts at Y position 227. Find all layers of block below current Y position
+            int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));
+
+            //Disregard blocks below ground level by turning them to air.
+            int disregardBlocks = 0;
+            if (layersBelowGroundLevel > 0)
+            {
+                if (layersBelowGroundLevel > gridWLH)
+                    layersBelowGroundLevel = gridWLH;
+                disregardBlocks = (layersBelowGroundLevel * (gridWLH * gridWLH));
+                for (int i = 0; i < disregardBlocks; i++)
+                {
+                    fitnessGrid[i].Replace("air");
+                }
+            }
+
+            //Keeps track of height of the wall and assigns fitness according to
+            //the height the block is placed at
+            int currentLayer = 1;
+            int currentBlockInLayer = 0;
+            int blocksPerLayer = gridWLH * gridWLH;
+
+            //Disregard blocks below groundlevel
+            for (int i = disregardBlocks; i < fitnessGrid.Count(); i++)
+            {
+                //Check if current block is a gold ore and increase fitness if so
+                if (fitnessGrid[i].ToString() == "gold_ore")
+                {
+                    fitness += currentLayer;
+
+                    blockOnIndex = true;
+                }
+
+                //Check if there is a block to the right of current block
+                if (i - 1 >= 0)
+                {
+                    if (fitnessGrid[i - 1].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block to the left of current block
+                if (i + 1 <= fitnessGrid.Count() - 1)
+                {
+                    if (fitnessGrid[i + 1].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block below current block
+                if (i - (gridWLH * gridWLH) >= 0)
+                {
+                    if (fitnessGrid[i - (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Check if there is a block on top of current block
+                if (i + (gridWLH * gridWLH) <= fitnessGrid.Count() - 1)
+                {
+                    if (fitnessGrid[i + (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
+                    {
+                        fitness += 1.0;
+                    }
+                }
+
+                //Increase current layer count and reset current block in layer position
+                //if last block in layer has been checked
+                if (currentBlockInLayer == blocksPerLayer - 1)
+                {
+                    currentLayer++;
+                    currentBlockInLayer = 0;
+                }
+                else
+                {
+                    currentBlockInLayer++;
+                }
+
+                blockOnIndex = false;
+            }
+
+            return fitness;
         }
+        #endregion
+
         #endregion
     }
 }

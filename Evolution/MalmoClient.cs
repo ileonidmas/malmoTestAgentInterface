@@ -63,16 +63,16 @@ namespace RunMission.Evolution
 
                     if(!gotStartPosition)
                     {
-                        agentPosition.startX = (double)observations.GetValue("XPos");
-                        agentPosition.startY = (double)observations.GetValue("YPos");
-                        agentPosition.startZ = (double)observations.GetValue("ZPos");
+                        agentPosition.initialX = (double)observations.GetValue("XPos");
+                        agentPosition.initialY = (double)observations.GetValue("YPos");
+                        agentPosition.initialZ = (double)observations.GetValue("ZPos");
 
                         gotStartPosition = true;
                     }
 
-                    agentPosition.endX = (double)observations.GetValue("XPos");
-                    agentPosition.endY = (double)observations.GetValue("YPos");
-                    agentPosition.endZ = (double)observations.GetValue("ZPos");
+                    agentPosition.currentX = (double)observations.GetValue("XPos");
+                    agentPosition.currentY = (double)observations.GetValue("YPos");
+                    agentPosition.currentZ = (double)observations.GetValue("ZPos");
 
                     //neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("floor9x9x9");
                     neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("agent60x30x60");
