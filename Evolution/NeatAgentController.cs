@@ -5,11 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace RunMission.Evolution
 {
     public class NeatAgentController
     {
+        private Boolean test = false;
+
         public double Fitness { get; set; }
         /// <summary>
         /// The neural network that this player uses to make its decision.
@@ -39,10 +42,10 @@ namespace RunMission.Evolution
 
             // Get observations
             var observations = agentHelper.CheckSurroundings();
-            var xzPos = agentHelper.GetAgentPosition();
+            var agentPosition = agentHelper.AgentPosition;
 
             // Convert the world observations into an input array for the network
-            setInputSignalArray(Brain.InputSignalArray, observations, xzPos);
+            setInputSignalArray(Brain.InputSignalArray, observations, agentPosition);
             // Activate the network
             Brain.Activate();
             // Convert the action and perform the command
@@ -52,7 +55,7 @@ namespace RunMission.Evolution
         }
 
         // Method for passing observations as inputs for the ANN
-        private void setInputSignalArray(ISignalArray inputArr, string[] board, double[] agentPosition)
+        private void setInputSignalArray(ISignalArray inputArr, string[] board, AgentPosition agentPosition)
         {
             inputArr[0] = blockToInt(board[0]);
             inputArr[1] = blockToInt(board[1]);
@@ -68,8 +71,9 @@ namespace RunMission.Evolution
             inputArr[11] = blockToInt(board[11]);
             inputArr[12] = blockToInt(board[12]);
 
-            inputArr[13] = agentPosition[0];
-            inputArr[14] = agentPosition[1];
+            inputArr[13] = agentPosition.currentX - agentPosition.initialX; // Difference of current x position and initial x position
+            inputArr[14] = agentPosition.currentY - agentPosition.initialY; // Difference of current y position and initial y position
+            inputArr[15] = agentPosition.currentZ - agentPosition.initialZ; // Difference of current z position and initial z position
         }
 
         private int blockToInt(string block)
@@ -288,31 +292,35 @@ namespace RunMission.Evolution
             double jump = Brain.OutputSignalArray[6];// 0 or 1
 
             //Move backwards if less than 0.5, else forward
-            if(move < 0.6)
+            if (move < 0.5)
             {
-                if(move < 0.3)
+                if (move < 0.25)
                 {
                     agentHelper.SendCommand("move", -1);
-                } else
+                }
+                else
                 {
                     agentHelper.SendCommand("move", 1);
                 }
-            } else
+            }
+            else
             {
                 agentHelper.SendCommand("move", 0);
             }
 
             //Strafe left if less than 0.5, else strafe right
-            if(strafe < 0.6)
+            if (strafe < 0.5)
             {
-                if(strafe < 0.3)
+                if (strafe < 0.25)
                 {
                     agentHelper.SendCommand("strafe", -1);
-                } else
+                }
+                else
                 {
                     agentHelper.SendCommand("strafe", 1);
                 }
-            } else
+            }
+            else
             {
                 agentHelper.SendCommand("strafe", 0);
             }
@@ -324,7 +332,8 @@ namespace RunMission.Evolution
                 if (placeBlock > 0.5)
                 {
                     agentHelper.SendCommand("use", 1);
-                } else
+                }
+                else
                 {
                     agentHelper.SendCommand("use", 0);
                 }
@@ -345,10 +354,11 @@ namespace RunMission.Evolution
             //Pitch left if less than 0.5, else Pitch right
             if (pitch < 0.6)
             {
-                if(pitch < 0.3)
+                if (pitch < 0.3)
                 {
                     agentHelper.SendCommand("pitch", -1);
-                } else
+                }
+                else
                 {
                     agentHelper.SendCommand("pitch", 1);
                 }
@@ -364,7 +374,8 @@ namespace RunMission.Evolution
                 if (yaw < 0.3)
                 {
                     agentHelper.SendCommand("yaw", -1);
-                } else
+                }
+                else
                 {
                     agentHelper.SendCommand("yaw", 1);
                 }
@@ -375,14 +386,15 @@ namespace RunMission.Evolution
             }
 
             //If round to 1 jump, else dont jump
-            if(jump < 0.5)
+            if (jump < 0.5)
             {
                 agentHelper.SendCommand("jump", 0);
-            } else
+            }
+            else
             {
                 agentHelper.SendCommand("jump", 1);
             }
-            
+
             //Console.WriteLine(String.Format("Move:{0} Strafee:{1} Place:{2} Destroy:{3} Yaw:{4} Pitch:{5} Jump:{6}", move,strafe,placeBlock,destroyBlock,yaw,pitch,jump));
             //agentHelper.SendCommand("move " + move);
             //agentHelper.SendCommand("strafe " + strafe);

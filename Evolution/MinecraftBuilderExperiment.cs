@@ -22,7 +22,7 @@ namespace RunMission.Evolution
         /// </summary>
         public override int InputCount
         {
-            get { return 15; }
+            get { return 16; }
         }
 
         /// <summary>

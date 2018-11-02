@@ -7,12 +7,12 @@ namespace RunMission.Evolution
 {
     public struct AgentPosition
     {
-        public double startX;
-        public double startY;
-        public double startZ;
+        public double initialX;
+        public double initialY;
+        public double initialZ;
 
-        public double endX;
-        public double endY;
-        public double endZ;
+        public double currentX;
+        public double currentY;
+        public double currentZ;
     }
 }

@@ -21,7 +21,7 @@ namespace RunMission
 
         public MinecraftBuilderEvaluator()
         {
-            clientPool = new MalmoClientPool(2);
+            clientPool = new MalmoClientPool(1);
         }
 
         /// <summary>
@@ -110,14 +110,8 @@ namespace RunMission
             double fitness = 0.0;
             int gridWLH = 9;
 
-            //Overstep boundary of 30 blocks, return fitness of -1.0 to indicate that overstepping is worse than not building anything
-            if(Math.Abs(agentPosition.startX - agentPosition.endX) > 30 || Math.Abs(agentPosition.startZ - agentPosition.endZ) > 30)
-            {
-                return -1.0;
-            }
-
             //The agents current Y position
-            double agentYPos = agentPosition.endY;
+            double agentYPos = agentPosition.currentY;
 
             //The agent starts at Y position 227.
             int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));
@@ -216,7 +210,7 @@ namespace RunMission
             int gridWLH = 9;
 
             //The agents current Y position
-            double agentYPos = agentPosition.endY;
+            double agentYPos = agentPosition.currentY;
 
             //The agent starts at Y position 227.
             int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));

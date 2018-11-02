@@ -1,5 +1,6 @@
 ﻿using Microsoft.Research.Malmo;
 using Newtonsoft.Json.Linq;
+using RunMission.Evolution;
 using RunMission.Evolution.Enums;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace RunMission
         private AgentHost agentHost;
         private TimestampedStringVector constanteObservations;
         private JToken fitnessGrid;
+        private AgentPosition agentPosition;
         #endregion
 
         #region Public members
@@ -35,6 +37,12 @@ namespace RunMission
         {
             get => fitnessGrid;
             set => fitnessGrid = value;
+        }
+
+        public AgentPosition AgentPosition
+        {
+            get => agentPosition;
+            set => agentPosition = value;
         }
         #endregion
 
@@ -450,15 +458,6 @@ namespace RunMission
                 allBlocks[4].ToString(), allBlocks[1].ToString(), allBlocks[5].ToString(), allBlocks[7].ToString(), allBlocks[3].ToString(),
                 allBlocks[10].ToString(), allBlocks[14].ToString(), allBlocks[16].ToString(), allBlocks[12].ToString(),
                 allBlocks[19].ToString(), allBlocks[23].ToString(), allBlocks[25].ToString(), allBlocks[21].ToString() };
-        }
-
-        public double[] GetAgentPosition()
-        {
-            var observations = JObject.Parse(constanteObservations[0].text);
-            var xPos = observations.GetValue("XPos");
-            var zPos = observations.GetValue("ZPos");
-
-            return new double[2] { (double)xPos, (double)zPos };
         }
 
         /// <summary>

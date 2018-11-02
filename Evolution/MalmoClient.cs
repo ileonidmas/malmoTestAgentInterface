@@ -20,8 +20,6 @@ namespace RunMission.Evolution
 
         private bool isWorldCreated = false;
 
-        private AgentPosition agentPosition;
-
         public MalmoClient(ClientPool clientPool)
         {
             isWorldCreated = false;
@@ -43,7 +41,7 @@ namespace RunMission.Evolution
 
             Console.WriteLine("Mission has started!");
             
-            agentPosition = new AgentPosition();
+            var agentPosition = new AgentPosition();
             bool gotStartPosition = false;
 
             while (worldState.is_mission_running)
@@ -76,9 +74,12 @@ namespace RunMission.Evolution
                     agentPosition.endY = (double)observations.GetValue("YPos");
                     agentPosition.endZ = (double)observations.GetValue("ZPos");
 
-                    neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("floor9x9x9");
+                    //neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("floor9x9x9");
+                    neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("agent60x30x60");
                 }
             }
+
+            neatPlayer.AgentHelper.AgentPosition = agentPosition;
 
             Thread.Sleep(2000);
             agentHost.Dispose();
@@ -93,7 +94,7 @@ namespace RunMission.Evolution
 
         public AgentPosition GetAgentPosition()
         {
-            return agentPosition;
+            return neatPlayer.AgentHelper.AgentPosition;
         }
 
         private void InitializeMission()
@@ -105,7 +106,7 @@ namespace RunMission.Evolution
             else
                 missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\myworld.xml");
             mission = new MissionSpec(missionXMLpath, false);
-            mission.setModeToCreative();            
+            mission.setModeToCreative();         
         }
         
         private void TryStartMission()
@@ -141,7 +142,7 @@ namespace RunMission.Evolution
         {
             if (!isWorldCreated)
             {
-                mission.forceWorldReset();
+                //mission.forceWorldReset();
                 isWorldCreated = true;
             }
         }
