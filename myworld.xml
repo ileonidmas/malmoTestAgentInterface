@@ -30,7 +30,7 @@
                <min x="-4" y="-4" z="-4" />
                <max x="4" y="4" z="4" />
             </Grid>
-            <Grid name="agent20x20x20">
+            <Grid name="agent41x41x41">
                <min x="-20" y="-20" z="-20" />
                <max x="20" y="20" z="20" />
             </Grid>

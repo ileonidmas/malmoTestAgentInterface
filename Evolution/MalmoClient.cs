@@ -75,7 +75,7 @@ namespace RunMission.Evolution
                     agentPosition.currentZ = (double)observations.GetValue("ZPos");
 
                     //neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("floor9x9x9");
-                    neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("agent59x59x59");
+                    neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("agent41x41x41");
                 }
             }
 
