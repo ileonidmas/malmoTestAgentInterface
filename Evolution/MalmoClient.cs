@@ -110,28 +110,29 @@ namespace RunMission.Evolution
             AddBlocks(mission);
             mission.setModeToCreative();         
         }
+
         private void AddBlocks(MissionSpec mission)
         {
-            int x1 = -10;
-            for (int z1 = -10; z1 < 10; z1++)
+            int x1 = -1;
+            for (int z1 = -1; z1 < 20; z1++)
             {
-                for (int y = 227; y < 227 + 10; y++)
+                for (int y = 227; y <= 227 + 10; y++)
                 {
                     mission.drawBlock(x1, y, z1, "cobblestone");
                 }
             }
 
-            int z2 = -10;
-            for (int x2 = -10; x2 < 10; x2++)
+            int z2 = -1;
+            for (int x2 = -1; x2 < 20; x2++)
             {
-                for (int y = 227; y < 227 + 10; y++)
+                for (int y = 227; y <= 227 + 10; y++)
                 {
                     mission.drawBlock(x2, y, z2, "cobblestone");
                 }
             }
 
-            int x3 = 10;
-            for (int z3 = -10; z3 < 10; z3++)
+            int x3 = 20;
+            for (int z3 = 0; z3 < 20; z3++)
             {
                 for (int y = 227; y < 227 + 10; y++)
                 {
@@ -139,8 +140,8 @@ namespace RunMission.Evolution
                 }
             }
 
-            int z4 = 10;
-            for (int x4 = -10; x4 < 10; x4++)
+            int z4 = 20;
+            for (int x4 = 0; x4 < 20; x4++)
             {
                 for (int y = 227; y < 227 + 10; y++)
                 {
