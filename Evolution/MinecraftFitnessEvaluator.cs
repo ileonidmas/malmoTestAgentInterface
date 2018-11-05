@@ -68,35 +68,7 @@ namespace RunMission
             if (fitness >= 30)
                 _stopConditionSatisfied = true;
 
-            // add fitness to the list before new evaluation
-            if (fitnessList.Count < 10)
-                fitnessList.Add(fitness);
-
-            // if whole population got evaluated, write generation and max fitness to result file
-            String path = "";
-            if(System.Environment.UserName == "lema")
-                path = @"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\Evolution\Results\results.csv";
-            else
-                path = @"C:\Users\Pierre\Documents\malmoTestAgentInterface\Evolution\Results\results.csv";
-
-            if (fitnessList.Count == 10)
-            {
-                var maxFitness = fitnessList.Max();
-
-                using (StreamWriter outputFile = new StreamWriter(path, true))
-                {
-                    if (generation == 1)
-                    {
-                        outputFile.WriteLine("Generation, Fitness");
-                    }
-
-                    outputFile.WriteLine(String.Format("{0}, {1}", generation, maxFitness));
-                }
-
-                //Console.WriteLine("Maximum fitness = " + maxFitness + " in population number " + populationNumber);
-                fitnessList.Clear();
-                generation++;
-            }
+            //writeToFile(fitness);
 
             // Return the fitness score
             return new FitnessInfo(fitness, fitness);
@@ -120,8 +92,43 @@ namespace RunMission
         {
         }
 
+        private void writeToFile(int fitness)
+        {
+            // add fitness to the list before new evaluation
+            if (fitnessList.Count < 10)
+                fitnessList.Add(fitness);
+
+            // if whole population got evaluated, write generation and max fitness to result file
+            String path = "";
+            if (System.Environment.UserName == "lema")
+                path = @"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\Evolution\Results\results.csv";
+            else
+                path = @"C:\Users\Pierre\Documents\malmoTestAgentInterface\Evolution\Results\results.csv";
+
+            if (fitnessList.Count == 10)
+            {
+                var maxFitness = fitnessList.Max();
+
+                using (StreamWriter outputFile = new StreamWriter(path, true))
+                {
+                    if (generation == 1)
+                    {
+                        outputFile.WriteLine("Generation, Fitness");
+                    }
+
+                    outputFile.WriteLine(String.Format("{0}, {1}", generation, maxFitness));
+                }
+
+                //Console.WriteLine("Maximum fitness = " + maxFitness + " in population number " + populationNumber);
+                fitnessList.Clear();
+                generation++;
+            }
+        }
+
         #region fitnessFuncs
-        //Fitness function for calculating fitness of building a wall
+
+
+        //Fitness function for calculating fitness of building a wall (old version)
         private double calculateFitnessWall(JToken fitnessGrid, AgentPosition agentPosition)
         {
             bool blockOnIndex = false;
@@ -317,6 +324,7 @@ namespace RunMission
 
         //    return fitness;
         //}
+        #endregion
 
         //Method for getting the 20x20x20 grid of the confined area according to agent position, from the 41x41x41 grid
         private bool[] getStructureGrid(JToken fitnessGrid, AgentPosition agentPosition, int gridWLH)
@@ -378,9 +386,6 @@ namespace RunMission
 
             return flattenedFitnessGrid;
         }
-        #endregion
-
-
 
         #endregion
     }

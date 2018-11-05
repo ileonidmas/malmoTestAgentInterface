@@ -1,4 +1,5 @@
-﻿using SharpNeat.Core;
+﻿using RunMission.Evolution.RunMission.Evolution;
+using SharpNeat.Core;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,16 @@ namespace RunMission.Evolution
         public override IPhenomeEvaluator<IBlackBox> PhenomeEvaluator
         {
             get {
-
                 if (evaluatorType == "Fitness")
                 {
                     MinecraftFitnessEvaluator evaluator = new MinecraftFitnessEvaluator();
+                    evaluator.ClientPool = malmoClientPool;
+                    return evaluator;
+                }
+
+                if (evaluatorType == "Novelty")
+                {
+                    MinecraftNoveltyEvaluator evaluator = new MinecraftNoveltyEvaluator();
                     evaluator.ClientPool = malmoClientPool;
                     return evaluator;
                 }

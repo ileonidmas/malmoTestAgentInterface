@@ -99,6 +99,7 @@
     <Compile Include="Evolution\MinecraftFitnessEvaluator.cs" />
     <Compile Include="Evolution\MinecraftBuilderExperiment.cs" />
     <Compile Include="Evolution\Abstract\SimpleNeatExperiment.cs" />
+    <Compile Include="Evolution\MinecraftNoveltyEvaluator.cs" />
     <Compile Include="Evolution\NeatAgentController.cs" />
     <Compile Include="RunMission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

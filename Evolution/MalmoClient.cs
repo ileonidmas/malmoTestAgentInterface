@@ -61,7 +61,7 @@ namespace RunMission.Evolution
                 {
                     var observations = JObject.Parse(worldState.observations[0].text);
 
-                    if(!gotStartPosition)
+                    if (!gotStartPosition)
                     {
                         agentPosition.initialX = (double)observations.GetValue("XPos");
                         agentPosition.initialY = (double)observations.GetValue("YPos");
@@ -183,7 +183,7 @@ namespace RunMission.Evolution
         {
             if (!isWorldCreated)
             {
-                //mission.forceWorldReset();
+                mission.forceWorldReset();
                 //AddBlocks(mission);
                 isWorldCreated = true;
             }
