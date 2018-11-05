@@ -11,7 +11,6 @@ namespace RunMission.Evolution
 {
     public class NeatAgentController
     {
-        public double Fitness { get; set; }
         /// <summary>
         /// The neural network that this player uses to make its decision.
         /// </summary>
@@ -32,7 +31,7 @@ namespace RunMission.Evolution
             agentHelper = new AgentHelper(agentHost);
         }
 
-
+        bool runOnce = true;
         public void PerformAction()
         {
             // Clear the network
@@ -48,7 +47,14 @@ namespace RunMission.Evolution
             Brain.Activate();
             // Convert the action and perform the command
             //outputToCommands();
-            outputToCommandsCont();
+
+            if(runOnce)
+            {
+                agentHelper.PlaceBlockAbsolute(Direction.Front);
+                agentHelper.setGridPosition(Direction.Front, true);
+                runOnce = false;
+            }
+            outputToCommandsAbs();
 
         }
 
@@ -559,6 +565,8 @@ namespace RunMission.Evolution
                     actionIsPerformed = true;
                     Console.WriteLine(String.Format("Place action performed"));
 
+                    agentHelper.setGridPosition(direction, true);
+
                 }
             }
             else
@@ -571,6 +579,8 @@ namespace RunMission.Evolution
                     Console.WriteLine(String.Format("Destroy action performed"));
 
                     actionIsPerformed = true;
+
+                    agentHelper.setGridPosition(direction, false);
                 }
             }
 

@@ -51,9 +51,9 @@ namespace RunMission
         /// </summary>
         public FitnessInfo Evaluate(IBlackBox brain)
         {
-            Tuple<JToken, AgentPosition> clientInfo = ClientPool.RunAvailableClient(brain);
+            bool[] clientInfo = ClientPool.RunAvailableClient(brain);
 
-            double fitness = calculateFitnessWall(clientInfo.Item1, clientInfo.Item2);
+            double fitness = calculateFitnessWall(clientInfo);
 
             // Update the fitness score of the network
             //fitness += 1;
@@ -129,102 +129,72 @@ namespace RunMission
 
 
         //Fitness function for calculating fitness of building a wall (old version)
-        private double calculateFitnessWall(JToken fitnessGrid, AgentPosition agentPosition)
+        private double calculateFitnessWall(bool[] fitnessGrid)
         {
-            bool blockOnIndex = false;
+            int fitness = 0;
 
-            double fitness = 0.0;
-            int gridWLH = 41;
-
-            //The agents current Y position
-            double agentYPos = agentPosition.currentY;
-
-            //The agent starts at Y position 227. Find all layers of block below current Y position
-            int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));
-
-            //Disregard blocks below ground level by turning them to air.
-            int disregardBlocks = 0;
-            if (layersBelowGroundLevel > 0)
+            for(int i = 0; i < fitnessGrid.Length; i++)
             {
-                if (layersBelowGroundLevel > gridWLH)
-                    layersBelowGroundLevel = gridWLH;
-                disregardBlocks = (layersBelowGroundLevel * (gridWLH * gridWLH));
-                for (int i = 0; i < disregardBlocks; i++)
+                if(fitnessGrid[i] == true)
                 {
-                    fitnessGrid[i].Replace("air");
+                    Console.WriteLine(i);
+                    fitness += 1 + (i / (20 * 20));
                 }
-            }
-
-
-            //Keeps track of height of the wall and assigns fitness according to
-            //the height the block is placed at
-            int currentLayer = 1;
-            int currentBlockInLayer = 0;
-            int blocksPerLayer = gridWLH * gridWLH;
-
-            //Disregard blocks below groundlevel
-            for (int i = disregardBlocks; i < fitnessGrid.Count(); i++)
-            {
-                //Check if current block is a gold ore and increase fitness if so
-                if (fitnessGrid[i].ToString() == "gold_ore")
-                {
-                    fitness += currentLayer;
-
-                    blockOnIndex = true;
-                }
-
-                //Check if there is a block to the right of current block
-                if (i - 1 >= 0)
-                {
-                    if (fitnessGrid[i - 1].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block to the left of current block
-                if (i + 1 <= fitnessGrid.Count() - 1)
-                {
-                    if (fitnessGrid[i + 1].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block below current block
-                if (i - (gridWLH * gridWLH) >= 0)
-                {
-                    if (fitnessGrid[i - (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block on top of current block
-                if (i + (gridWLH * gridWLH) <= fitnessGrid.Count() - 1)
-                {
-                    if (fitnessGrid[i + (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Increase current layer count and reset current block in layer position
-                //if last block in layer has been checked
-                if (currentBlockInLayer == blocksPerLayer - 1)
-                {
-                    currentLayer++;
-                    currentBlockInLayer = 0;
-                }
-                else
-                {
-                    currentBlockInLayer++;
-                }
-
-                blockOnIndex = false;
             }
 
             return fitness;
+
+            ////check if there is a block to the right of current block
+            //if (i - 1 >= 0)
+            //{
+            //    if (fitnessgrid[i - 1].tostring() == "gold_ore" && blockonindex)
+            //    {
+            //        fitness += 1.0;
+            //    }
+            //}
+
+            ////check if there is a block to the left of current block
+            //if (i + 1 <= fitnessgrid.count() - 1)
+            //{
+            //    if (fitnessgrid[i + 1].tostring() == "gold_ore" && blockonindex)
+            //    {
+            //        fitness += 1.0;
+            //    }
+            //}
+
+            ////check if there is a block below current block
+            //if (i - (gridwlh * gridwlh) >= 0)
+            //{
+            //    if (fitnessgrid[i - (gridwlh * gridwlh)].tostring() == "gold_ore" && blockonindex)
+            //    {
+            //        fitness += 1.0;
+            //    }
+            //}
+
+            ////check if there is a block on top of current block
+            //if (i + (gridwlh * gridwlh) <= fitnessgrid.count() - 1)
+            //{
+            //    if (fitnessgrid[i + (gridwlh * gridwlh)].tostring() == "gold_ore" && blockonindex)
+            //    {
+            //        fitness += 1.0;
+            //    }
+            //}
+
+            ////increase current layer count and reset current block in layer position
+            ////if last block in layer has been checked
+            //if (currentblockinlayer == blocksperlayer - 1)
+            //{
+            //    currentlayer++;
+            //    currentblockinlayer = 0;
+            //}
+            //else
+            //{
+            //    currentblockinlayer++;
+            //}
+
+            //blockonindex = false;
+
+            //return fitness;
         }
 
         //Fitness function for calculating fitness of connected structures

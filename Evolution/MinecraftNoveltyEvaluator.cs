@@ -59,9 +59,7 @@ namespace RunMission.Evolution
             /// </summary>
             public FitnessInfo Evaluate(IBlackBox brain)
             {
-                Tuple<JToken, AgentPosition> clientInfo = ClientPool.RunAvailableClient(brain);
-
-                novelBehaviourArchive.Add(getStructureGrid(clientInfo.Item1, clientInfo.Item2, 41));
+                bool[] clientInfo = ClientPool.RunAvailableClient(brain);
 
                 int fitness = 0;
 
@@ -94,7 +92,7 @@ namespace RunMission.Evolution
             }
 
             //Method for getting the 20x20x20 grid of the confined area according to agent position, from the 41x41x41 grid
-            private bool[] getStructureGrid(JToken fitnessGrid, AgentPosition agentPosition, int gridWLH)
+            private bool[] getStructureGrid(bool[] fitnessGrid, AgentPosition agentPosition, int gridWLH)
             {
                 //The area in which the agent may place blocks are at most 20x20x20
                 bool[] flattenedFitnessGrid = new bool[20 * 20 * 20];

@@ -17,7 +17,7 @@ namespace RunMission
         #region Private members
         private AgentHost agentHost;
         private TimestampedStringVector constanteObservations;
-        private JToken fitnessGrid;
+        private bool[] fitnessGrid;
         private AgentPosition agentPosition;
         #endregion
 
@@ -33,7 +33,7 @@ namespace RunMission
             set => constanteObservations = value;
         }
 
-        public JToken FitnessGrid
+        public bool[] FitnessGrid
         {
             get => fitnessGrid;
             set => fitnessGrid = value;
@@ -49,12 +49,84 @@ namespace RunMission
         #region Constructor
         public AgentHelper(AgentHost agentHost)
         {
+            fitnessGrid = new bool[20 * 20 * 20];
             this.agentHost = agentHost;
         }
         #endregion
 
         #region Private methods
-        
+        // going to the right ( x pos becomes negative )
+        // going to the left ( x pos becomes positive) 
+        // going forward ( z pos becomes positive)
+        // moving backward ( z begomes negative ) 
+        public void setGridPosition(Direction direction, bool value)
+        {
+            var observations = JObject.Parse(constanteObservations[0].text);
+            var x = (int)((double)observations.GetValue("XPos") + 0.5);
+            var y = (int)observations.GetValue("YPos");
+            var z = (int)((double)observations.GetValue("ZPos") + 0.5);
+
+            switch (direction)
+            {
+                case Direction.Back:
+                    z--;
+                    break;
+                case Direction.Front:
+                    z++;
+                    break;
+                case Direction.Left:
+                    x++;
+                    break;
+                case Direction.Right:
+                    x--;
+                    break;
+                case Direction.BackTop:
+                    z--;
+                    y++;
+                    break;
+                case Direction.FrontTop:
+                    z++;
+                    y++;
+                    break;
+                case Direction.LeftTop:
+                    x++;
+                    y++;
+                    break;
+                case Direction.RightTop:
+                    x--;
+                    y++;
+                    break;
+                case Direction.BackUnder:
+                    z--;
+                    y--;
+                    break;
+                case Direction.FrontUnder:
+                    z++;
+                    y--;
+                    break;
+                case Direction.LeftUnder:
+                    x++;
+                    y--;
+                    break;
+                case Direction.RightUnder:
+                    x--;
+                    y--;
+                    break;
+                case Direction.Under:
+                    if (!value)
+                        y--;
+                    break;
+            }
+
+            y -= 227;
+
+            if((x < 0 || y < 0 || z < 0) || (x > 20 || y > 20 || z > 20)) {
+                return;
+            }
+
+            var position = x + (z * 20) + (y * 20 * 20);
+            fitnessGrid[position] = value;
+        }
 
         private void UpdateDirection(double desiredYaw, double desiredPitch, double precision = 1)
         {
@@ -622,7 +694,7 @@ namespace RunMission
         public void SendAbsoluteCommand(string command, double value)
         {
             agentHost.sendCommand(String.Format("{0} {1}", command, FormatValue(value)));
-            Thread.Sleep(100);
+            Thread.Sleep(200);
         }
 
         public void Teleport(Direction direction)

@@ -57,7 +57,7 @@ namespace RunMission.Evolution
         /// </summary>
         public override int OutputCount
         {
-            get { return 7; }
+            get { return 16; }
         }
 
         /// <summary>

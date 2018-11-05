@@ -29,7 +29,7 @@ namespace RunMission.Evolution
             }
         }
 
-        public Tuple<JToken, AgentPosition> RunAvailableClient(IBlackBox brain)
+        public bool[] RunAvailableClient(IBlackBox brain)
         {
             MalmoClient client = null;
 
@@ -45,7 +45,7 @@ namespace RunMission.Evolution
             semaphore.Release();
 
 
-            return new Tuple<JToken, AgentPosition>(client.GetFitnessGrid(), client.GetAgentPosition());
+            return client.GetFitnessGrid();
         }
     }
 }

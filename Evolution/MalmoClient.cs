@@ -73,9 +73,6 @@ namespace RunMission.Evolution
                     agentPosition.currentX = (double)observations.GetValue("XPos");
                     agentPosition.currentY = (double)observations.GetValue("YPos");
                     agentPosition.currentZ = (double)observations.GetValue("ZPos");
-
-                    //neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("floor9x9x9");
-                    neatPlayer.AgentHelper.FitnessGrid = observations.GetValue("agent41x41x41");
                 }
             }
 
@@ -87,7 +84,7 @@ namespace RunMission.Evolution
             Console.WriteLine("Mission has ended!");
         }
 
-        public JToken GetFitnessGrid()
+        public bool[] GetFitnessGrid()
         {
             return neatPlayer.AgentHelper.FitnessGrid;
         }

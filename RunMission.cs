@@ -19,8 +19,8 @@ class Program
     const string CHAMPION_FILE = "minecraft_champion.xml";
     public static void Main()
     {
-        Test();
-        //Run();
+        //Test();
+        Run();
         
     }
 
