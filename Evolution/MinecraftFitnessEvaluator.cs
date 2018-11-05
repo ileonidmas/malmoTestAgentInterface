@@ -155,10 +155,7 @@ namespace RunMission
                 }
             }
 
-<<<<<<< HEAD:Evolution/MinecraftBuilderEvaluator.cs
 
-=======
->>>>>>> f54751fd21767ad98a054bf200fbbb511fcf803f:Evolution/MinecraftFitnessEvaluator.cs
             //Keeps track of height of the wall and assigns fitness according to
             //the height the block is placed at
             int currentLayer = 1;
