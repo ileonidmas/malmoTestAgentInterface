@@ -26,12 +26,18 @@ class Program
 
 
 
+<<<<<<< HEAD
 
     //********************* Run Evaluator ***********************************
 
     private static void Run()
     {
         MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment();
+=======
+        MalmoClientPool clientPool = new MalmoClientPool(1);
+
+        MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Fitness");
+>>>>>>> f54751fd21767ad98a054bf200fbbb511fcf803f
         XmlDocument xmlConfig = new XmlDocument();
         xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
         experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
