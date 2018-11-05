@@ -247,7 +247,6 @@ namespace RunMission
                 }
             }
 
-            getStructureGrid(fitnessGrid, agentPosition);
 
             //Keeps track of height of the wall and assigns fitness according to
             //the height the block is placed at

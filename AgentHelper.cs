@@ -365,7 +365,7 @@ namespace RunMission
             agentHost.sendCommand("attack 0");
         }
 
-
+        
 
         // going to the right ( x pos becomes negative )
         // going to the left ( x pos becomes positive) 
@@ -534,10 +534,36 @@ namespace RunMission
         {
             var observations = JObject.Parse(constanteObservations[0].text);
             var allBlocks = observations.GetValue("floor3x3x3");
-            var something = allBlocks[0];
             switch (direction)
             {
                 
+                case Direction.Back:
+                    if (allBlocks[19].ToString() == "air")
+                        return true;
+                    return false;
+                case Direction.Left:
+                    if (allBlocks[23].ToString() == "air")
+                        return true;
+                    return false;
+                case Direction.Front:
+                    if (allBlocks[25].ToString() == "air")
+                        return true;
+                    return false;
+                case Direction.Right:
+                    if (allBlocks[21].ToString() == "air")
+                        return true;
+                    return false;
+            }
+            return false;
+        }
+
+        public bool CanTeleportThisDirection(Direction direction)
+        {
+            var observations = JObject.Parse(constanteObservations[0].text);
+            var allBlocks = observations.GetValue("floor3x3x3");
+            switch (direction)
+            {
+
                 case Direction.Back:
                     if (allBlocks[19].ToString() == "air")
                         return true;
@@ -596,7 +622,167 @@ namespace RunMission
         public void SendAbsoluteCommand(string command, double value)
         {
             agentHost.sendCommand(String.Format("{0} {1}", command, FormatValue(value)));
+            Thread.Sleep(100);
         }
+
+        public void Teleport(Direction direction)
+        {
+            var observations = JObject.Parse(constanteObservations[0].text);
+            var currentXPos = (double)observations.GetValue("XPos");
+            var currentYPos = (double)observations.GetValue("YPos");
+            var currentZPos = (double)observations.GetValue("ZPos");
+
+            if (ShouldJumpDirection(direction))
+            {
+                SendAbsoluteCommand("tpy", currentYPos + 1);
+            }
+
+            switch (direction)
+            {
+                case Direction.Left:
+                    SendAbsoluteCommand("tpx", currentXPos + 1);
+                    break;
+                case Direction.Front:
+                    SendAbsoluteCommand("tpz", currentZPos + 1);
+                    break;
+                case Direction.Right:
+                    SendAbsoluteCommand("tpx", currentXPos - 1);
+                    break;
+                case Direction.Back:
+                    SendAbsoluteCommand("tpz", currentZPos - 1);
+                    break;
+            }
+
+
+
+        }
+
+        public void PlaceBlockAbsolute(Direction where)
+        {
+            switch (where)
+            {
+                case Direction.Front:
+                    SendAbsoluteCommand("setYaw", 0);
+                    SendAbsoluteCommand("setPitch", 60);
+                    break;
+                case Direction.Right:
+                    SendAbsoluteCommand("setYaw", 90);
+                    SendAbsoluteCommand("setPitch", 60);
+                    break;
+                case Direction.Back:
+                    SendAbsoluteCommand("setYaw", 180);
+                    SendAbsoluteCommand("setPitch", 60);
+                    break;
+                case Direction.Left:
+                    SendAbsoluteCommand("setYaw", 270);
+                    SendAbsoluteCommand("setPitch", 60);
+                    break;
+                case Direction.FrontUnder:
+                    SendAbsoluteCommand("setYaw", 0);
+                    SendAbsoluteCommand("setPitch", 70);
+                    break;
+                case Direction.RightUnder:
+                    SendAbsoluteCommand("setYaw", 90);
+                    SendAbsoluteCommand("setPitch", 70);
+                    break;
+                case Direction.BackUnder:
+                    SendAbsoluteCommand("setYaw", 180);
+                    SendAbsoluteCommand("setPitch", 70);
+                    break;
+                case Direction.LeftUnder:
+                    SendAbsoluteCommand("setYaw", 270);
+                    SendAbsoluteCommand("setPitch", 70);
+                    break;
+                case Direction.FrontTop:
+                    SendAbsoluteCommand("setYaw", 0);
+                    SendAbsoluteCommand("setPitch", 45);
+                    break;
+                case Direction.RightTop:
+                    SendAbsoluteCommand("setYaw", 90);
+                    SendAbsoluteCommand("setPitch", 45);
+                    break;
+                case Direction.BackTop:
+                    SendAbsoluteCommand("setYaw", 180);
+                    SendAbsoluteCommand("setPitch", 45);
+                    break;
+                case Direction.LeftTop:
+                    SendAbsoluteCommand("setYaw", 270);
+                    SendAbsoluteCommand("setPitch", 45);
+                    break;
+                case Direction.Under:
+                    var observations = JObject.Parse(constanteObservations[0].text);
+                    var currentYPos = (double)observations.GetValue("YPos");
+                    SendAbsoluteCommand("setYaw", 0);
+                    SendAbsoluteCommand("setPitch", 90);
+                    SendAbsoluteCommand("tpy", currentYPos + 3);
+                    break;
+            }
+            SendAbsoluteCommand("use", 1);
+        }
+
+        public void DestroyBlockAbsolute(Direction where)
+        {
+            switch (where)
+            {
+                case Direction.Front:
+                    SendAbsoluteCommand("setYaw", 0);
+                    SendAbsoluteCommand("setPitch", 60);
+                    break;
+                case Direction.Right:
+                    SendAbsoluteCommand("setYaw", 90);
+                    SendAbsoluteCommand("setPitch", 60);
+                    break;
+                case Direction.Back:
+                    SendAbsoluteCommand("setYaw", 180);
+                    SendAbsoluteCommand("setPitch", 60);
+                    break;
+                case Direction.Left:
+                    SendAbsoluteCommand("setYaw", 270);
+                    SendAbsoluteCommand("setPitch", 60);
+                    break;
+                case Direction.FrontUnder:
+                    SendAbsoluteCommand("setYaw", 0);
+                    SendAbsoluteCommand("setPitch", 70);
+                    break;
+                case Direction.RightUnder:
+                    SendAbsoluteCommand("setYaw", 90);
+                    SendAbsoluteCommand("setPitch", 70);
+                    break;
+                case Direction.BackUnder:
+                    SendAbsoluteCommand("setYaw", 180);
+                    SendAbsoluteCommand("setPitch", 70);
+                    break;
+                case Direction.LeftUnder:
+                    SendAbsoluteCommand("setYaw", 270);
+                    SendAbsoluteCommand("setPitch", 70);
+                    break;
+                case Direction.FrontTop:
+                    SendAbsoluteCommand("setYaw", 0);
+                    SendAbsoluteCommand("setPitch", 45);
+                    break;
+                case Direction.RightTop:
+                    SendAbsoluteCommand("setYaw", 90);
+                    SendAbsoluteCommand("setPitch", 45);
+                    break;
+                case Direction.BackTop:
+                    SendAbsoluteCommand("setYaw", 180);
+                    SendAbsoluteCommand("setPitch", 45);
+                    break;
+                case Direction.LeftTop:
+                    SendAbsoluteCommand("setYaw", 270);
+                    SendAbsoluteCommand("setPitch", 45);
+                    break;
+                case Direction.Under:
+                    var observations = JObject.Parse(constanteObservations[0].text);
+                    var currentYPos = (double)observations.GetValue("YPos");
+                    SendAbsoluteCommand("setYaw", 0);
+                    SendAbsoluteCommand("setPitch", 90);
+                    break;
+            }
+
+            agentHost.sendCommand("attack 1");
+        }
+
         #endregion
     }
 }
