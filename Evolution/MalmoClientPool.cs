@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace RunMission.Evolution
 {
-    class MalmoClientPool
+    public class MalmoClientPool
     {
         private static SemaphoreSlim semaphore;
         private ClientPool availableClients;

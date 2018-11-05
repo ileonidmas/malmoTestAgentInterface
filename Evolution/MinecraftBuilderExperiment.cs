@@ -9,12 +9,31 @@ namespace RunMission.Evolution
 {
     class MinecraftBuilderExperiment : SimpleNeatExperiment
     {
+        public MalmoClientPool malmoClientPool;
+        private string evaluatorType;
+
+        public MinecraftBuilderExperiment(MalmoClientPool clientPool, string evaluator)
+        {
+            malmoClientPool = clientPool;
+            evaluatorType = evaluator;
+        }
+
         /// <summary>
         /// Gets the MinecraftBuilder evaluator that scores individuals.
         /// </summary>
         public override IPhenomeEvaluator<IBlackBox> PhenomeEvaluator
         {
-            get { return new MinecraftBuilderEvaluator(); }
+            get {
+
+                if (evaluatorType == "Fitness")
+                {
+                    MinecraftFitnessEvaluator evaluator = new MinecraftFitnessEvaluator();
+                    evaluator.ClientPool = malmoClientPool;
+                    return evaluator;
+                }
+
+                return new MinecraftFitnessEvaluator();
+            }
         }
         /// <summary>
         /// Defines the number of input nodes in the neural network.

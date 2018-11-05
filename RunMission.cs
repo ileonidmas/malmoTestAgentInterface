@@ -162,7 +162,9 @@ class Program
         //MalmoClient client = new MalmoClient();
         //client.RunMalmo();
 
-        MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment();
+        MalmoClientPool clientPool = new MalmoClientPool(1);
+
+        MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Fitness");
         XmlDocument xmlConfig = new XmlDocument();
         xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
         experiment.Initialize("Minecraft", xmlConfig.DocumentElement);

@@ -11,18 +11,18 @@ namespace RunMission
         #region IPhenomeEvaluator<IBlackBox> Members
 .Evolution
 {
-    public class MinecraftBuilderEvaluator: IPhenomeEvaluator<IBlackBox>
+    public class MinecraftFitnessEvaluator: IPhenomeEvaluator<IBlackBox>
     {
         private ulong _evalCount;
         private bool _stopConditionSatisfied;
         private MalmoClientPool clientPool;
+        public MalmoClientPool ClientPool {
+            get => clientPool;
+            set => clientPool = value;
+        }
+
         private List<double> fitnessList = new List<double>(10);
         private int generation = 1;
-
-        public MinecraftBuilderEvaluator()
-        {
-            clientPool = new MalmoClientPool(1);
-        }
 
         /// <summary>
         /// Gets the total number of evaluations that have been performed.
@@ -51,7 +51,7 @@ namespace RunMission
         /// </summary>
         public FitnessInfo Evaluate(IBlackBox brain)
         {
-            Tuple<JToken, AgentPosition> clientInfo = clientPool.RunAvailableClient(brain);
+            Tuple<JToken, AgentPosition> clientInfo = ClientPool.RunAvailableClient(brain);
 
             double fitness = calculateFitnessWall(clientInfo.Item1, clientInfo.Item2);
 
@@ -121,112 +121,13 @@ namespace RunMission
         }
 
         #region fitnessFuncs
-        //Fitness function for calculating fitness of connected structures
-        private double calculateFitnessConStruct(JToken fitnessGrid, AgentPosition agentPosition)
-        {
-
-            bool blockOnIndex = false;
-
-            double fitness = 0.0;
-            int gridWLH = 9;
-
-            //The agents current Y position
-            double agentYPos = agentPosition.currentY;
-
-            //The agent starts at Y position 227.
-            int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));
-
-            //Disregard blocks below ground level by turning them to air.
-            int disregardBlocks = 0;
-            if (layersBelowGroundLevel > 0)
-            {
-                if (layersBelowGroundLevel > gridWLH)
-                    layersBelowGroundLevel = gridWLH;
-                disregardBlocks = (layersBelowGroundLevel * (gridWLH * gridWLH));
-                for (int i = 0; i < disregardBlocks; i++)
-                {
-                    fitnessGrid[i].Replace("air");
-                }
-            }
-
-            //Disregard blocks below groundlevel
-            for (int i = disregardBlocks; i < fitnessGrid.Count(); i++)
-            {
-                //Check if current block is a gold ore and increase fitness if so
-                if (fitnessGrid[i].ToString() == "gold_ore")
-                {
-                    fitness += 1.0;
-
-                    blockOnIndex = true;
-                }
-
-                //Check if there is a block to the right of current block
-                if (i - 1 >= 0)
-                {
-                    if (fitnessGrid[i - 1].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block to the left of current block
-                if (i + 1 <= fitnessGrid.Count() - 1)
-                {
-                    if (fitnessGrid[i + 1].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block in back of current block
-                if (i - gridWLH >= 0)
-                {
-                    if (fitnessGrid[i - gridWLH].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block in front of current block
-                if (i + gridWLH <= fitnessGrid.Count() - 1)
-                {
-                    if (fitnessGrid[i + gridWLH].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 1.0;
-                    }
-                }
-
-                //Check if there is a block below current block
-                if (i - (gridWLH * gridWLH) >= 0)
-                {
-                    if (fitnessGrid[i - (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 2.0;
-                    }
-                }
-
-                //Check if there is a block on top of current block
-                if (i + (gridWLH * gridWLH) <= fitnessGrid.Count() - 1)
-                {
-                    if (fitnessGrid[i + (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
-                    {
-                        fitness += 2.0;
-                    }
-                }
-
-                blockOnIndex = false;
-            }
-
-            return fitness;
-        }
-
         //Fitness function for calculating fitness of building a wall
         private double calculateFitnessWall(JToken fitnessGrid, AgentPosition agentPosition)
         {
             bool blockOnIndex = false;
 
             double fitness = 0.0;
-            int gridWLH = 20;
+            int gridWLH = 41;
 
             //The agents current Y position
             double agentYPos = agentPosition.currentY;
@@ -246,8 +147,6 @@ namespace RunMission
                     fitnessGrid[i].Replace("air");
                 }
             }
-
-            getStructureGrid(fitnessGrid, agentPosition);
 
             //Keeps track of height of the wall and assigns fitness according to
             //the height the block is placed at
@@ -320,6 +219,105 @@ namespace RunMission
             return fitness;
         }
 
+        //Fitness function for calculating fitness of connected structures
+        //private double calculateFitnessConStruct(JToken fitnessGrid, AgentPosition agentPosition)
+        //{
+
+        //    bool blockOnIndex = false;
+
+        //    double fitness = 0.0;
+        //    int gridWLH = 41;
+
+        //    //The agents current Y position
+        //    double agentYPos = agentPosition.currentY;
+
+        //    //The agent starts at Y position 227.
+        //    int layersBelowGroundLevel = (int)(227 - (agentYPos - ((gridWLH - 1) / 2)));
+
+        //    //Disregard blocks below ground level by turning them to air.
+        //    int disregardBlocks = 0;
+        //    if (layersBelowGroundLevel > 0)
+        //    {
+        //        if (layersBelowGroundLevel > gridWLH)
+        //            layersBelowGroundLevel = gridWLH;
+        //        disregardBlocks = (layersBelowGroundLevel * (gridWLH * gridWLH));
+        //        for (int i = 0; i < disregardBlocks; i++)
+        //        {
+        //            fitnessGrid[i].Replace("air");
+        //        }
+        //    }
+
+        //    //Disregard blocks below groundlevel
+        //    for (int i = disregardBlocks; i < fitnessGrid.Count(); i++)
+        //    {
+        //        //Check if current block is a gold ore and increase fitness if so
+        //        if (fitnessGrid[i].ToString() == "gold_ore")
+        //        {
+        //            fitness += 1.0;
+
+        //            blockOnIndex = true;
+        //        }
+
+        //        //Check if there is a block to the right of current block
+        //        if (i - 1 >= 0)
+        //        {
+        //            if (fitnessGrid[i - 1].ToString() == "gold_ore" && blockOnIndex)
+        //            {
+        //                fitness += 1.0;
+        //            }
+        //        }
+
+        //        //Check if there is a block to the left of current block
+        //        if (i + 1 <= fitnessGrid.Count() - 1)
+        //        {
+        //            if (fitnessGrid[i + 1].ToString() == "gold_ore" && blockOnIndex)
+        //            {
+        //                fitness += 1.0;
+        //            }
+        //        }
+
+        //        //Check if there is a block in back of current block
+        //        if (i - gridWLH >= 0)
+        //        {
+        //            if (fitnessGrid[i - gridWLH].ToString() == "gold_ore" && blockOnIndex)
+        //            {
+        //                fitness += 1.0;
+        //            }
+        //        }
+
+        //        //Check if there is a block in front of current block
+        //        if (i + gridWLH <= fitnessGrid.Count() - 1)
+        //        {
+        //            if (fitnessGrid[i + gridWLH].ToString() == "gold_ore" && blockOnIndex)
+        //            {
+        //                fitness += 1.0;
+        //            }
+        //        }
+
+        //        //Check if there is a block below current block
+        //        if (i - (gridWLH * gridWLH) >= 0)
+        //        {
+        //            if (fitnessGrid[i - (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
+        //            {
+        //                fitness += 2.0;
+        //            }
+        //        }
+
+        //        //Check if there is a block on top of current block
+        //        if (i + (gridWLH * gridWLH) <= fitnessGrid.Count() - 1)
+        //        {
+        //            if (fitnessGrid[i + (gridWLH * gridWLH)].ToString() == "gold_ore" && blockOnIndex)
+        //            {
+        //                fitness += 2.0;
+        //            }
+        //        }
+
+        //        blockOnIndex = false;
+        //    }
+
+        //    return fitness;
+        //}
+
         //Method for getting the 20x20x20 grid of the confined area according to agent position, from the 41x41x41 grid
         private bool[] getStructureGrid(JToken fitnessGrid, AgentPosition agentPosition, int gridWLH)
         {
@@ -381,6 +379,8 @@ namespace RunMission
             return flattenedFitnessGrid;
         }
         #endregion
+
+
 
         #endregion
     }
