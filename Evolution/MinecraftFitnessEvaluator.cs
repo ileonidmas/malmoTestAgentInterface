@@ -141,27 +141,40 @@ namespace RunMission
                     fitness += 1 + (i / (20 * 20));
 
                     // check if something is right only if its not right side
-                    if (i % 20 != 0)
+                    if ( (i + 1) % 20 != 0)
                         // check if something is on the right
                         if (fitnessGrid[i + 1] == true)
                             fitness++;
 
                     // check if something is left only if its not left side
-                    if ((i-1) % 20 != 0)
+                    if ( i % 20 != 0)
                         // check if something is on the left
                         if (fitnessGrid[i - 1] == true)
                             fitness++;
+
                     // check if something is front only if its not front side
-                    if (i % 400 >= 381)
+                    if (i % 400 >= 380)
                         // check if something is front
                         if (fitnessGrid[i + 20] == true)
                         fitness++;
                     
                     // check if something is back only if its not back side
-                    if (i % 400 <= 20)
+                    if (i % 400 <= 19)
                         // check if something is back
                         if (fitnessGrid[i - 20] == true)
                         fitness++;
+
+                    // check if something is top and its not top side
+                    if(i + 400 > 20 * 20 * 20)
+                        // check if something is top
+                        if (fitnessGrid[i + 400] == true)
+                            fitness++;
+
+                    // check if something is top and its not top side
+                    if (i - 400 < 0)
+                        // check if something is top
+                        if (fitnessGrid[i - 400] == true)
+                            fitness++;
                 }
             }
 
