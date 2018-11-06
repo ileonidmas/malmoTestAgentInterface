@@ -139,8 +139,33 @@ namespace RunMission
                 {
                     Console.WriteLine(i);
                     fitness += 1 + (i / (20 * 20));
+
+                    // check if something is right only if its not right side
+                    if (i % 20 != 0)
+                        // check if something is on the right
+                        if (fitnessGrid[i + 1] == true)
+                            fitness++;
+
+                    // check if something is left only if its not left side
+                    if ((i-1) % 20 != 0)
+                        // check if something is on the left
+                        if (fitnessGrid[i - 1] == true)
+                            fitness++;
+                    // check if something is front only if its not front side
+                    if (i % 400 >= 381)
+                        // check if something is front
+                        if (fitnessGrid[i + 20] == true)
+                        fitness++;
+                    
+                    // check if something is back only if its not back side
+                    if (i % 400 <= 20)
+                        // check if something is back
+                        if (fitnessGrid[i - 20] == true)
+                        fitness++;
                 }
             }
+
+
 
             return fitness;
 
