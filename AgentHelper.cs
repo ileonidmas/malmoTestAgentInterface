@@ -786,7 +786,7 @@ namespace RunMission
                     var currentYPos = (double)observations.GetValue("YPos");
                     SendAbsoluteCommand("setYaw", 0);
                     SendAbsoluteCommand("setPitch", 90);
-                    SendAbsoluteCommand("tpy", currentYPos + 3);
+                    SendAbsoluteCommand("tpy", currentYPos + 2);
                     break;
             }
             SendAbsoluteCommand("use", 1);

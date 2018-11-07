@@ -44,6 +44,8 @@ namespace RunMission.Evolution
             var agentPosition = new AgentPosition();
             bool gotStartPosition = false;
 
+            Thread.Sleep(500);
+
             while (worldState.is_mission_running)
             {
                 //Give observations to agent and let agent perform actions according to these

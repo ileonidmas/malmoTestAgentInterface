@@ -48,12 +48,33 @@ namespace RunMission.Evolution
             // Convert the action and perform the command
             //outputToCommands();
 
-            if(runOnce)
-            {
-                agentHelper.PlaceBlockAbsolute(Direction.Front);
-                agentHelper.setGridPosition(Direction.Front, true);
-                runOnce = false;
-            }
+            //if (runOnce)
+            //{
+            //    agentHelper.PlaceBlockAbsolute(Direction.Front);
+            //    agentHelper.setGridPosition(Direction.Front, true);
+
+            //    agentHelper.PlaceBlockAbsolute(Direction.FrontTop);
+            //    agentHelper.setGridPosition(Direction.FrontTop, true);
+
+            //    agentHelper.Teleport(Direction.Right);
+            //    var worldState = AgentHelper.AgentHost.getWorldState();
+            //    AgentHelper.ConstantObservations = worldState.observations;
+
+            //    agentHelper.Teleport(Direction.Front);
+            //    worldState = AgentHelper.AgentHost.getWorldState();
+            //    AgentHelper.ConstantObservations = worldState.observations;
+
+            //    agentHelper.PlaceBlockAbsolute(Direction.Under);
+            //    agentHelper.setGridPosition(Direction.Under, true);
+
+            //    worldState = AgentHelper.AgentHost.getWorldState();
+            //    AgentHelper.ConstantObservations = worldState.observations;
+
+            //    agentHelper.PlaceBlockAbsolute(Direction.LeftTop);
+            //    agentHelper.setGridPosition(Direction.LeftTop, true);
+
+            //    runOnce = false;
+            //}
             outputToCommandsAbs();
 
         }
