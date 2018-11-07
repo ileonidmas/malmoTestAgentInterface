@@ -30,6 +30,7 @@ namespace RunMission.Evolution
             private List<bool[]> novelBehaviourArchive = new List<bool[]>();
             private List<bool[]> currentGenerationArchive = new List<bool[]>();
             private Dictionary<ulong, int> distanceDictionary = new Dictionary<ulong, int>();
+            private int distanceCount = 0;
             private int generation = 1;
 
             public MalmoClientPool ClientPool
@@ -67,52 +68,32 @@ namespace RunMission.Evolution
             /// </summary>
             public FitnessInfo Evaluate(IBlackBox brain)
             {
-                distanceDictionary.Clear();
-
                 bool[] fitnessGrid = ClientPool.RunAvailableClient(brain);
 
                 currentGenerationArchive.Add(fitnessGrid);
 
                 int fitness = 0;
 
-                // Update the fitness score of the network
-                //fitness += 1;
-
-                // Update the evaluation counter
-
                 while (currentGenerationArchive.Count != 10) {
-                    
+                    Thread.Sleep(2000);
                 }
 
                 var noveltyDistance = getDistance(fitnessGrid);
-
-                //ulong currentEval = 0;
-
-                //lock (myLock) {
-                //    currentEval = _evalCount;
-                //    _evalCount++;
-                //    Console.WriteLine(_evalCount);
-                //}
-
-
-                //distanceDictionary.Add(currentEval, distance);
-
-                //while(distanceDictionary.Count != 10)
-                //{
-                //}
-
-                //var highestEvalDistance = distanceDictionary.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-                //if (highestEvalDistance == currentEval)
-                //{
-                //    fitness = distance;
-                //}
-                //else
-                //    fitness = 0;
+                distanceCount++;
+                
+              
 
                 if (noveltyDistance > NOVELTY_THRESHOLD)
                 {
                     novelBehaviourArchive.Add(fitnessGrid);
                 }
+
+
+                while(distanceCount!= 10)
+                {
+
+                }
+                distanceCount = 0;
                 currentGenerationArchive.Clear();
                     // Return the fitness score
                 return new FitnessInfo(noveltyDistance, noveltyDistance);
