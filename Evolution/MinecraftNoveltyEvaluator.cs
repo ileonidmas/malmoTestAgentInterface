@@ -13,6 +13,7 @@ namespace RunMission.Evolution
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
 
     namespace RunMission
     #region IPhenomeEvaluator<IBlackBox> Members
@@ -20,7 +21,8 @@ namespace RunMission.Evolution
     {
         public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox>
         {
-            private readonly int NOVELTY_THRESHOLD = 10;
+            private readonly int NOVELTY_THRESHOLD = 5;
+            private readonly int NOVELTY_KNEARSEST = 5;
             private ulong _evalCount;
             private bool _stopConditionSatisfied;
             private MalmoClientPool clientPool;
@@ -78,51 +80,57 @@ namespace RunMission.Evolution
 
                 // Update the evaluation counter
 
-                while (currentGenerationArchive.Count != 10) {                    
+                while (currentGenerationArchive.Count != 10) {
                     
                 }
-                var distance = getDistance(fitnessGrid);
 
-                ulong currentEval = 0;
+                var noveltyDistance = getDistance(fitnessGrid);
 
-                lock (myLock) {
-                    currentEval = _evalCount;
-                    _evalCount++;
-                    Console.WriteLine(_evalCount);
-                }
+                //ulong currentEval = 0;
 
-
-                distanceDictionary.Add(currentEval, distance);
-
-                while(distanceDictionary.Count != 10)
-                {
-                }
-
-                var highestEvalDistance = distanceDictionary.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-                if (highestEvalDistance == currentEval)
-                {
-                    fitness = distance;
-                }
-                else
-                    fitness = 0;
+                //lock (myLock) {
+                //    currentEval = _evalCount;
+                //    _evalCount++;
+                //    Console.WriteLine(_evalCount);
+                //}
 
 
-                if (distance > NOVELTY_THRESHOLD)
+                //distanceDictionary.Add(currentEval, distance);
+
+                //while(distanceDictionary.Count != 10)
+                //{
+                //}
+
+                //var highestEvalDistance = distanceDictionary.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+                //if (highestEvalDistance == currentEval)
+                //{
+                //    fitness = distance;
+                //}
+                //else
+                //    fitness = 0;
+
+                if (noveltyDistance > NOVELTY_THRESHOLD)
                 {
                     novelBehaviourArchive.Add(fitnessGrid);
                 }
                 currentGenerationArchive.Clear();
                     // Return the fitness score
-                return new FitnessInfo(fitness, fitness);
+                return new FitnessInfo(noveltyDistance, noveltyDistance);
             }
 
-            private int getDistance (bool[] fitnessGrid)
+            private double getDistance (bool[] fitnessGrid)
             {
+                currentGenerationArchive.AddRange(novelBehaviourArchive);
+
+                List<int> novelDistances = new List<int>();
+
+                //Compare the individual with each of the other individuals, in both novel archive and current generation
                 var distance = 0;
                 for(int i = 0; i < currentGenerationArchive.Count; i++)
                 {
                     if(fitnessGrid != currentGenerationArchive[i])
                     {
+                        //Compare each structure block by block
                         for (int j = 0; j < 20*20*20; j++)
                         {
                             if (fitnessGrid[j] != currentGenerationArchive[i][j])
@@ -132,26 +140,22 @@ namespace RunMission.Evolution
                     {
                         Console.WriteLine("does work");
                     }
+
+                    novelDistances.Add(distance);
+                    distance = 0;
                 }
 
+                //Sort in ascending order
+                novelDistances.Sort((a, b) => a.CompareTo(b));
 
-                for (int i = 0; i < novelBehaviourArchive.Count; i++)
+                //Find the summed up k-nearest novel distances and return the average of the sum
+                double avgNovelty = 0;
+                for(int i = 0; i < NOVELTY_KNEARSEST; i++)
                 {
-                    if (fitnessGrid != novelBehaviourArchive[i])
-                    {
-                        for (int j = 0; j < 20 * 20 * 20; j++)
-                        {
-                            if (fitnessGrid[j] != novelBehaviourArchive[i][j])
-                                distance++;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("does work");
-                    }
+                    avgNovelty += novelDistances[i];
                 }
 
-                return distance;
+                return avgNovelty / NOVELTY_KNEARSEST;
             }
 
             /// <summary>
