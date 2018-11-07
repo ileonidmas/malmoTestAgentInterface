@@ -20,17 +20,21 @@ namespace RunMission.Evolution
     {
         public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox>
         {
+            private readonly int NOVELTY_THRESHOLD = 10;
             private ulong _evalCount;
             private bool _stopConditionSatisfied;
             private MalmoClientPool clientPool;
+
+            private List<bool[]> novelBehaviourArchive = new List<bool[]>();
+            private List<bool[]> currentGenerationArchive = new List<bool[]>();
+            private Dictionary<ulong, int> distanceDictionary = new Dictionary<ulong, int>();
+            private int generation = 1;
+
             public MalmoClientPool ClientPool
             {
                 get => clientPool;
                 set => clientPool = value;
             }
-
-            private List<bool[]> novelBehaviourArchive = new List<bool[]>();
-            private int generation = 1;
 
             /// <summary>
             /// Gets the total number of evaluations that have been performed.
@@ -50,6 +54,8 @@ namespace RunMission.Evolution
                 get { return _stopConditionSatisfied; }
             }
 
+            public static object myLock = new object();
+
             /// <summary>
             /// Evaluate the provided IBlackBox against the random tic-tac-toe player and return its fitness score.
             /// Each network plays 10 games against the random player and two games against the expert player.
@@ -59,18 +65,93 @@ namespace RunMission.Evolution
             /// </summary>
             public FitnessInfo Evaluate(IBlackBox brain)
             {
-                bool[] clientInfo = ClientPool.RunAvailableClient(brain);
+                distanceDictionary.Clear();
+
+                bool[] fitnessGrid = ClientPool.RunAvailableClient(brain);
+
+                currentGenerationArchive.Add(fitnessGrid);
 
                 int fitness = 0;
 
                 // Update the fitness score of the network
                 //fitness += 1;
 
-                // Update the evaluation counter.
-                _evalCount++;
+                // Update the evaluation counter
 
-                // Return the fitness score
+                while (currentGenerationArchive.Count != 10) {                    
+                    
+                }
+                var distance = getDistance(fitnessGrid);
+
+                ulong currentEval = 0;
+
+                lock (myLock) {
+                    currentEval = _evalCount;
+                    _evalCount++;
+                    Console.WriteLine(_evalCount);
+                }
+
+
+                distanceDictionary.Add(currentEval, distance);
+
+                while(distanceDictionary.Count != 10)
+                {
+                }
+
+                var highestEvalDistance = distanceDictionary.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+                if (highestEvalDistance == currentEval)
+                {
+                    fitness = distance;
+                }
+                else
+                    fitness = 0;
+
+
+                if (distance > NOVELTY_THRESHOLD)
+                {
+                    novelBehaviourArchive.Add(fitnessGrid);
+                }
+                currentGenerationArchive.Clear();
+                    // Return the fitness score
                 return new FitnessInfo(fitness, fitness);
+            }
+
+            private int getDistance (bool[] fitnessGrid)
+            {
+                var distance = 0;
+                for(int i = 0; i < currentGenerationArchive.Count; i++)
+                {
+                    if(fitnessGrid != currentGenerationArchive[i])
+                    {
+                        for (int j = 0; j < 20*20*20; j++)
+                        {
+                            if (fitnessGrid[j] != currentGenerationArchive[i][j])
+                                distance++;
+                        }
+                    } else
+                    {
+                        Console.WriteLine("does work");
+                    }
+                }
+
+
+                for (int i = 0; i < novelBehaviourArchive.Count; i++)
+                {
+                    if (fitnessGrid != novelBehaviourArchive[i])
+                    {
+                        for (int j = 0; j < 20 * 20 * 20; j++)
+                        {
+                            if (fitnessGrid[j] != novelBehaviourArchive[i][j])
+                                distance++;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("does work");
+                    }
+                }
+
+                return distance;
             }
 
             /// <summary>

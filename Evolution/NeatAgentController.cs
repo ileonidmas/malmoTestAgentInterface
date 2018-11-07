@@ -512,7 +512,7 @@ namespace RunMission.Evolution
 
             if (move > placeBlock && move > destroyBlock && direction != Direction.Under)
             {
-                Console.WriteLine("Trying to move " + direction);
+                //Console.WriteLine("Trying to move " + direction);
                 if (direction == Direction.BackUnder || direction == Direction.BackTop)
                 {
                     direction = Direction.Back;
@@ -533,12 +533,12 @@ namespace RunMission.Evolution
                 {
                     agentHelper.Teleport(direction);
                     actionIsPerformed = true;
-                    Console.WriteLine(String.Format("Move action performed"));
+                    //Console.WriteLine(String.Format("Move action performed"));
                 }
             }
             else if (placeBlock >= destroyBlock)
             {
-                Console.WriteLine("Trying to place block  " + direction);
+                //Console.WriteLine("Trying to place block  " + direction);
                 if (!agentHelper.IsThereABlock(direction) || direction == Direction.Under)
                 {
                     if (direction == Direction.BackTop && !agentHelper.IsThereABlock(Direction.Back))
@@ -584,7 +584,7 @@ namespace RunMission.Evolution
 
                     agentHelper.PlaceBlockAbsolute(direction);
                     actionIsPerformed = true;
-                    Console.WriteLine(String.Format("Place action performed"));
+                    //Console.WriteLine(String.Format("Place action performed"));
 
                     agentHelper.setGridPosition(direction, true);
 
@@ -592,12 +592,12 @@ namespace RunMission.Evolution
             }
             else
             {
-                Console.WriteLine("Trying to destroy block  " + direction);
+                //Console.WriteLine("Trying to destroy block  " + direction);
                 if (agentHelper.IsThereABlock(direction))
                 {
                     agentHelper.DestroyBlockAbsolute(direction);
 
-                    Console.WriteLine(String.Format("Destroy action performed"));
+                    //Console.WriteLine(String.Format("Destroy action performed"));
 
                     actionIsPerformed = true;
 
@@ -608,7 +608,7 @@ namespace RunMission.Evolution
 
             if (!actionIsPerformed)
             {
-                Console.WriteLine(String.Format("No action"));
+                //Console.WriteLine(String.Format("No action"));
             }
         }
 

@@ -141,13 +141,13 @@ namespace RunMission
                     fitness += 1 + (i / (20 * 20));
 
                     // check if something is right only if its not right side
-                    if ((i + 1) % 20 != 0)
+                    if ( (i + 1) % 20 != 0)
                         // check if something is on the right
                         if (fitnessGrid[i + 1] == true)
                             fitness++;
 
                     // check if something is left only if its not left side
-                    if (i % 20 != 0)
+                    if ( i % 20 != 0)
                         // check if something is on the left
                         if (fitnessGrid[i - 1] == true)
                             fitness++;
