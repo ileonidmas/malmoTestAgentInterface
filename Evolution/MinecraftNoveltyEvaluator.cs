@@ -74,8 +74,8 @@ namespace RunMission.Evolution
 
                 int fitness = 0;
 
-                while (currentGenerationArchive.Count != 10) {
-                    Thread.Sleep(2000);
+                while (currentGenerationArchive.Count < 10) {
+                    Thread.Sleep(1000);
                 }
 
                 var noveltyDistance = getDistance(fitnessGrid);
@@ -93,6 +93,7 @@ namespace RunMission.Evolution
                 {
 
                 }
+                Thread.Sleep(500);
                 distanceCount = 0;
                 currentGenerationArchive.Clear();
                     // Return the fitness score

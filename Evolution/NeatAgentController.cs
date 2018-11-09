@@ -15,6 +15,13 @@ namespace RunMission.Evolution
         /// The neural network that this player uses to make its decision.
         /// </summary>
         public IBlackBox Brain { get; set; }
+
+        private bool agentNotStuck = true;
+        public bool AgentNotStuck
+        {
+            get => agentNotStuck;
+            set => agentNotStuck = value;
+        }
         private AgentHelper agentHelper;
         public AgentHelper AgentHelper
         {
@@ -75,7 +82,10 @@ namespace RunMission.Evolution
 
             //    runOnce = false;
             //}
-            outputToCommandsAbs();
+            if (agentNotStuck)
+            {
+                agentNotStuck = outputToCommandsAbs();
+            }
 
         }
 
@@ -446,7 +456,7 @@ namespace RunMission.Evolution
 
         //***************************************************** THIRD CONTROLLER ***********************************************
 
-        private void outputToCommandsAbs()
+        private bool outputToCommandsAbs()
         {
             bool actionIsPerformed = false;
 
@@ -535,10 +545,158 @@ namespace RunMission.Evolution
                     actionIsPerformed = true;
                     //Console.WriteLine(String.Format("Move action performed"));
                 }
+                else
+                {
+                    Console.WriteLine("Agent stuck");
+                    return false;
+                }
             }
             else if (placeBlock >= destroyBlock)
-            {
-                //Console.WriteLine("Trying to place block  " + direction);
+            {                
+                if (direction == Direction.BackUnder || direction == Direction.BackTop)
+                {
+                    direction = Direction.Back;
+                }
+                else if (direction == Direction.RightUnder || direction == Direction.RightTop)
+                {
+                    direction = Direction.Right;
+                }
+                else if (direction == Direction.FrontUnder || direction == Direction.FrontTop)
+                {
+                    direction = Direction.Front;
+                }
+                else if (direction == Direction.LeftUnder || direction == Direction.LeftTop)
+                {
+                    direction = Direction.Left;
+                }
+
+                if (direction == Direction.Back)
+                {
+                    if (!agentHelper.IsThereABlock(Direction.BackUnder))
+                    {
+                        direction = Direction.BackUnder;
+                    }
+                    else
+                    {
+                        if (!agentHelper.IsThereABlock(Direction.Back))
+                        {
+                            direction = Direction.Back;
+                        }
+                        else
+                        {
+                            if (!agentHelper.IsThereABlock(Direction.BackTop))
+                            {
+                                direction = Direction.BackTop;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Agent stuck");
+                                return false;
+                            }
+                        }
+                    }
+
+                } else
+                {
+                    if(direction == Direction.Right)
+                    {
+                        if (!agentHelper.IsThereABlock(Direction.RightUnder))
+                        {
+                            direction = Direction.RightUnder;
+                        }
+                        else
+                        {
+                            if (!agentHelper.IsThereABlock(Direction.Right))
+                            {
+                                direction = Direction.Right;
+                            }
+                            else
+                            {
+                                if (!agentHelper.IsThereABlock(Direction.RightTop))
+                                {
+                                    direction = Direction.RightTop;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Agent stuck");
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(direction == Direction.Front)
+                        {
+                            if (!agentHelper.IsThereABlock(Direction.FrontUnder))
+                            {
+                                direction = Direction.FrontUnder;
+                            }
+                            else
+                            {
+                                if (!agentHelper.IsThereABlock(Direction.Front))
+                                {
+                                    direction = Direction.Front;
+                                }
+                                else
+                                {
+                                    if (!agentHelper.IsThereABlock(Direction.FrontTop))
+                                    {
+                                        direction = Direction.FrontTop;
+                                    } else
+                                    {
+                                        Console.WriteLine("Agent stuck");
+                                        return false;
+                                    }
+                                }
+                            }
+                        } else
+                        {
+                            if(direction == Direction.Left)
+                            {
+                                if (!agentHelper.IsThereABlock(Direction.LeftUnder))
+                                {
+                                    direction = Direction.LeftUnder;
+                                }
+                                else
+                                {
+                                    if (!agentHelper.IsThereABlock(Direction.Left))
+                                    {
+                                        direction = Direction.Left;
+                                    }
+                                    else
+                                    {
+                                        if (!agentHelper.IsThereABlock(Direction.LeftTop))
+                                        {
+                                            direction = Direction.LeftTop;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Agent stuck");
+                                            return false;
+                                        }
+                                    }
+                                }
+                            } else
+                            {
+                                if (direction == Direction.Under)
+                                {
+                                    direction = Direction.Under;
+                                } else
+                                {
+                                    Console.WriteLine("Agent stuck");
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                agentHelper.PlaceBlockAbsolute(direction);
+                actionIsPerformed = true;
+                agentHelper.setGridPosition(direction, true);
+
+                /*
                 if (!agentHelper.IsThereABlock(direction) || direction == Direction.Under)
                 {
                     if (direction == Direction.BackTop && !agentHelper.IsThereABlock(Direction.Back))
@@ -581,14 +739,12 @@ namespace RunMission.Evolution
                         //Console.WriteLine(String.Format("No action"));
                         return;
                     }
-
                     agentHelper.PlaceBlockAbsolute(direction);
                     actionIsPerformed = true;
                     //Console.WriteLine(String.Format("Place action performed"));
-
-                    agentHelper.setGridPosition(direction, true);
-
+                    agentHelper.setGridPosition(direction, true);                    
                 }
+                */
             }
             else
             {
@@ -602,14 +758,14 @@ namespace RunMission.Evolution
                     actionIsPerformed = true;
 
                     agentHelper.setGridPosition(direction, false);
+                } else
+                {
+                    Console.WriteLine("Agent stuck");
+                    return false;
                 }
             }
 
-
-            if (!actionIsPerformed)
-            {
-                //Console.WriteLine(String.Format("No action"));
-            }
+            return actionIsPerformed;
         }
 
 

@@ -39,6 +39,9 @@ namespace RunMission.Evolution
                         
             ConsoleOutputWhileMissionLoads();
 
+            //set agnet bool
+            neatPlayer.AgentNotStuck = true;
+
             Console.WriteLine("Mission has started!");
             
             var agentPosition = new AgentPosition();
