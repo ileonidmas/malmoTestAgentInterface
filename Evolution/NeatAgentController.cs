@@ -82,11 +82,8 @@ namespace RunMission.Evolution
 
             //    runOnce = false;
             //}
-            if (agentNotStuck)
-            {
-                agentNotStuck = outputToCommandsAbs();
-            }
 
+            agentNotStuck = outputToCommandsAbs();
         }
 
         // Method for passing observations as inputs for the ANN
@@ -767,7 +764,5 @@ namespace RunMission.Evolution
 
             return actionIsPerformed;
         }
-
-
     }
 }

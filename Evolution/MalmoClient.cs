@@ -39,7 +39,7 @@ namespace RunMission.Evolution
                         
             ConsoleOutputWhileMissionLoads();
 
-            //set agnet bool
+            //set agent stuck bool
             neatPlayer.AgentNotStuck = true;
 
             Console.WriteLine("Mission has started!");
@@ -51,6 +51,16 @@ namespace RunMission.Evolution
 
             while (worldState.is_mission_running)
             {
+                //Early termination of mission in case no action was performed (agent is stuck)
+                if (!neatPlayer.AgentNotStuck)
+                {
+                    //Ensures that the video is at least 2 seconds long, showing the users that no action actually was performed
+                    Thread.Sleep(2000);
+
+                    neatPlayer.AgentHelper.endMission();
+                    break;
+                }
+
                 //Give observations to agent and let agent perform actions according to these
                 worldState = agentHost.getWorldState();
                 if (worldState.observations.Count == 0)

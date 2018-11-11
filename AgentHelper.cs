@@ -855,6 +855,12 @@ namespace RunMission
             agentHost.sendCommand("attack 1");
         }
 
+        //Ends the mission by sending a command to the agent host
+        public void endMission()
+        {
+            agentHost.sendCommand("quit");
+        }
+
         #endregion
     }
 }

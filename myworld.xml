@@ -29,6 +29,7 @@
          </ObservationFromGrid>
 	 <AbsoluteMovementCommands/>
          <DiscreteMovementCommands/>
+	 <MissionQuitCommands/>
       </AgentHandlers>
    </AgentSection>
 </Mission>
