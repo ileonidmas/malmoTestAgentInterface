@@ -30,7 +30,6 @@ class Program
 
     private static void Run()
     {
-
         MalmoClientPool clientPool = new MalmoClientPool(2);
         MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Novelty");
         XmlDocument xmlConfig = new XmlDocument();

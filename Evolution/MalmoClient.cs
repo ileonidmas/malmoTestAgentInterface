@@ -120,7 +120,7 @@ namespace RunMission.Evolution
 
             mission = new MissionSpec(missionXMLpath, false);
             AddBlocks(mission);
-            mission.setModeToCreative();         
+            mission.setModeToCreative();
         }
 
         private void AddBlocks(MissionSpec mission)
@@ -163,19 +163,17 @@ namespace RunMission.Evolution
 
         }
         private void TryStartMission()
-        {                                                                               
-            
+        {
             try
             {
                 agentHost.startMission(mission, availableClients, new MissionRecordSpec(), 0, "Test Builder");
-                
-             }
-             catch (Exception ex)
-             {
-                string errorLine = "Fatal error when starting a mission in ProgramMalmo: " + ex.Message;
-                Console.WriteLine("Error starting mission: {0}", ex.Message);
-                Environment.Exit(1);
-             } 
+            }
+            catch (Exception ex)
+            {
+            string errorLine = "Fatal error when starting a mission in ProgramMalmo: " + ex.Message;
+            Console.WriteLine("Error starting mission: {0}", ex.Message);
+            Environment.Exit(1);
+            } 
         }
 
         private string SaferRead(string path)

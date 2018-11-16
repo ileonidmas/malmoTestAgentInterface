@@ -35,6 +35,7 @@ namespace RunMission.Evolution
                 if (evaluatorType == "Novelty")
                 {
                     MinecraftNoveltyEvaluator evaluator = new MinecraftNoveltyEvaluator();
+                    evaluator.createFolders();
                     evaluator.ClientPool = malmoClientPool;
                     return evaluator;
                 }
