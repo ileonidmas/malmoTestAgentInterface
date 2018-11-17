@@ -47,5 +47,20 @@ namespace RunMission.Evolution
 
             return client.GetFitnessGrid();
         }
+
+        public void ShowStructure()
+        {
+            MalmoClient client = null;
+
+            try
+            {
+                client = new MalmoClient(availableClients);
+                client.ShowBuiltStructure(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\noveltyResults\test.txt");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Client exception (Highly due to stopping while performing movement)!");
+            }
+        }
     }
 }

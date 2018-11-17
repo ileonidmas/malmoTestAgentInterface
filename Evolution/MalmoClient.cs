@@ -34,7 +34,7 @@ namespace RunMission.Evolution
 
             InitializeMission();
 
-            CreateWorld();
+            CreateWorld(null);
             TryStartMission();
                         
             ConsoleOutputWhileMissionLoads();
@@ -99,6 +99,28 @@ namespace RunMission.Evolution
             Console.WriteLine("Mission has ended!");
         }
 
+        public void ShowBuiltStructure(String path)
+        {
+            agentHost = new AgentHost();
+
+            InitializeMission();
+
+            CreateWorld(path);
+            TryStartMission();
+
+            ConsoleOutputWhileMissionLoads();
+
+            while (worldState.is_mission_running)
+            {
+
+            }
+
+            Thread.Sleep(2000);
+            agentHost.Dispose();
+
+            Console.WriteLine("Mission has ended!");
+        }
+
         public bool[] GetFitnessGrid()
         {
             return neatPlayer.AgentHelper.FitnessGrid;
@@ -119,7 +141,7 @@ namespace RunMission.Evolution
                 missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\myworld.xml");
 
             mission = new MissionSpec(missionXMLpath, false);
-            AddBlocks(mission);
+            //AddBlocks(mission);
             mission.setModeToCreative();
         }
 
@@ -160,8 +182,44 @@ namespace RunMission.Evolution
                     mission.drawBlock(x4, y, z4, "cobblestone");
                 }
             }
-
         }
+
+        private void BuildStructureFromFile(MissionSpec mission, String path)
+        {
+            //Load structure from file as a string array
+            StreamReader reader = new StreamReader(path);
+            string[] allLines = new string[8000];
+            string line;
+            int counter = 0;
+
+            while((line = reader.ReadLine()) != null)
+            {
+                allLines[counter] = line;
+                counter++;
+            }
+            reader.Close();
+            
+            //Build structure from loaded file
+            for(int y = 0; y < 20; y++)
+            {
+                for(int z = 0; z < 20; z++)
+                {
+                    for(int x = 0; x < 20; x++)
+                    {
+                        String indexVal = allLines[y * 400 + z * 20 + x];
+                        if (indexVal == "True")
+                        {
+                            mission.drawBlock(x, y + 227, z, "cobblestone");
+                        }
+                    }
+                }
+            }
+
+            //Place agent in a position to show the whole structure
+            mission.startAtWithPitchAndYaw(10, 235, -2, 45, 0);
+            mission.setModeToSpectator();
+        }
+
         private void TryStartMission()
         {
             try
@@ -176,25 +234,20 @@ namespace RunMission.Evolution
             } 
         }
 
-        private string SaferRead(string path)
-        {
-            string newFile = null;
-            using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    newFile = reader.ReadToEnd();
-                }
-            }
-            return newFile;
-        }
-
-        private void CreateWorld()
+        private void CreateWorld(string path)
         {
             if (!isWorldCreated)
             {
                 mission.forceWorldReset();
-                //AddBlocks(mission);
+
+                if(path == null)
+                {
+                    AddBlocks(mission);
+                } else
+                {
+                    BuildStructureFromFile(mission, path);
+                }
+                
                 isWorldCreated = true;
             }
         }

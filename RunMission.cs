@@ -11,6 +11,7 @@ using RunMission.Evolution;
 using RunMission.Evolution.Enums;
 using SharpNeat.EvolutionAlgorithms;
 using SharpNeat.Genomes.Neat;
+using SharpNeat.Phenomes;
 
 class Program
 {
@@ -30,13 +31,16 @@ class Program
 
     private static void Run()
     {
-        MalmoClientPool clientPool = new MalmoClientPool(2);
-        MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Novelty");
-        XmlDocument xmlConfig = new XmlDocument();
-        xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
-        experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
-        var algorithm = experiment.CreateEvolutionAlgorithm();
-        algorithm.StartContinue();
+        MalmoClientPool clientPool = new MalmoClientPool(1);
+       // MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Novelty");
+        //XmlDocument xmlConfig = new XmlDocument();
+        //xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
+        //experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
+        //var algorithm = experiment.CreateEvolutionAlgorithm();
+        //algorithm.StartContinue();
+
+        clientPool.ShowStructure();
+        
         Console.ReadKey();
     }
     static void ea_UpdateEvent(object sender, EventArgs e)

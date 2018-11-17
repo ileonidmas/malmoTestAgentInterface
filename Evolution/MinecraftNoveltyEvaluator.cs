@@ -86,7 +86,6 @@ namespace RunMission.Evolution
                 {
                     novelBehaviourArchive.Add(structureGrid);
                     saveNovelStructure(structureGrid, novelBehaviourArchive.FindIndex(x => x == structureGrid));
-                    Console.WriteLine(noveltyDistance);
                 }
 
                 while(distanceCount != 10)
