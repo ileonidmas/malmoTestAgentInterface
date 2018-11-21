@@ -21,18 +21,20 @@ namespace RunMission.Evolution
     {
         public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox>
         {
-            private readonly int NOVELTY_THRESHOLD = 5;
+            private readonly double NOVELTY_THRESHOLD = 1;
             private readonly int NOVELTY_KNEARSEST = 5;
             private ulong _evalCount;
-            private bool _stopConditionSatisfied;
+            private bool _stopConditionSatisfied = false;
             private MalmoClientPool clientPool;
+            private Boolean combinedArchiveAndGeneration = false;
+            private Boolean wroteArchiveInfo = false;
             
             private string noveltyArchivePath;
             private List<bool[]> novelBehaviourArchive = new List<bool[]>();
             private List<bool[]> currentGenerationArchive = new List<bool[]>();
             private Dictionary<ulong, int> distanceDictionary = new Dictionary<ulong, int>();
             private int distanceCount = 0;
-            private int generation = 1;
+            private int generation = 0;
 
             public MalmoClientPool ClientPool
             {
@@ -58,7 +60,7 @@ namespace RunMission.Evolution
                 get { return _stopConditionSatisfied; }
             }
 
-            public static object myLock = new object();
+            public readonly object myLock = new object();
 
             /// <summary>
             /// Evaluate the provided IBlackBox against the random tic-tac-toe player and return its fitness score.
@@ -73,29 +75,64 @@ namespace RunMission.Evolution
 
                 currentGenerationArchive.Add(structureGrid);
 
-                int fitness = 0;
-
                 while (currentGenerationArchive.Count < 10) {
                     Thread.Sleep(1000);
                 }
 
-                var noveltyDistance = getDistance(structureGrid);
-                distanceCount++;
-                
+                double noveltyDistance = 0.0;
+
+                lock(myLock)
+                {
+                    if (!combinedArchiveAndGeneration)
+                    {
+                        currentGenerationArchive.AddRange(novelBehaviourArchive);
+                        combinedArchiveAndGeneration = true;
+                    }
+
+                    noveltyDistance = getDistance(structureGrid);
+                    distanceCount++;
+                }
+
                 if (noveltyDistance > NOVELTY_THRESHOLD)
                 {
                     novelBehaviourArchive.Add(structureGrid);
                     saveNovelStructure(structureGrid, novelBehaviourArchive.FindIndex(x => x == structureGrid));
                 }
 
-                while(distanceCount != 10)
+                while(distanceCount < 10)
                 {
-
+                    
                 }
-                Thread.Sleep(500);
-                distanceCount = 0;
-                currentGenerationArchive.Clear();
-                    // Return the fitness score
+
+                Thread.Sleep(1000);
+
+                lock (myLock)
+                {
+                    if (currentGenerationArchive.Count > 0)
+                    {
+                        currentGenerationArchive.Clear();
+                        combinedArchiveAndGeneration = false;
+                        distanceCount = 0;
+                        generation++;
+                    }
+                }
+
+                lock (myLock)
+                {
+                    if (novelBehaviourArchive.Count >= 10)
+                    {
+                        _stopConditionSatisfied = true;
+
+                        if (!wroteArchiveInfo)
+                        {
+                            saveArchiveInfoInFile();
+                            wroteArchiveInfo = true;
+                        }
+
+                    }
+                }
+
+                // Return the fitness score
                 return new FitnessInfo(noveltyDistance, noveltyDistance);
             }
 
@@ -106,8 +143,6 @@ namespace RunMission.Evolution
             /// <returns>Average novelty distance to k nearest neighbours</returns>
             private double getDistance (bool[] structureGrid)
             {
-                currentGenerationArchive.AddRange(novelBehaviourArchive);
-
                 List<int> novelDistances = new List<int>();
 
                 //Compare the individual with each of the other individuals, in both novel archive and current generation
@@ -159,6 +194,21 @@ namespace RunMission.Evolution
             }
 
             /// <summary>
+            /// Saves info of what was needed to produce the specific novelty archive
+            /// </summary>
+            private void saveArchiveInfoInFile()
+            {
+                string archiveInfoPath = Path.Combine(noveltyArchivePath, "archiveInfo");
+                
+                using(StreamWriter sw = new StreamWriter(archiveInfoPath))
+                {
+                    sw.WriteLine("generation: " + generation);
+                    sw.WriteLine("Novelty Threshold: " + NOVELTY_THRESHOLD);
+                    sw.WriteLine("Novelty KNearest: " + NOVELTY_KNEARSEST);
+                }
+            }
+
+            /// <summary>
             /// Saves the novel structure in the novel archive folder associated to this novelty evolution
             /// </summary>
             /// <param name="structureGrid">The minecraft structure</param>
@@ -190,7 +240,6 @@ namespace RunMission.Evolution
 
             /// <summary>
             /// Reset the internal state of the evaluation scheme if any exists.
-            /// Note. The TicTacToe problem domain has no internal state. This method does nothing.
             /// </summary>
             public void Reset()
             {

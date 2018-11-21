@@ -70,7 +70,7 @@ namespace RunMission.Evolution
         /// </summary>
         public override bool EvaluateParents
         {
-            get { return false; }
+            get { return true; }
         }
     }
 }

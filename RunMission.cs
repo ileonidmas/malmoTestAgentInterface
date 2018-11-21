@@ -31,18 +31,28 @@ class Program
 
     private static void Run()
     {
-        MalmoClientPool clientPool = new MalmoClientPool(2);
-        MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Fitness");
+        MalmoClientPool clientPool = new MalmoClientPool(3);
+        MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Novelty");
         XmlDocument xmlConfig = new XmlDocument();
         xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
         experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
         var algorithm = experiment.CreateEvolutionAlgorithm();
-        algorithm.RequestPause();
-        //algorithm.StartContinue();
 
-        //clientPool.ShowStructure();
+        while(true)
+        {
+            Thread.Sleep(3000);
 
-        algorithm.StartContinue();
+            if (algorithm.StopConditionSatisfied)
+            {
+                break;
+            }
+
+            if (algorithm.RunState != SharpNeat.Core.RunState.Running)
+            {
+                algorithm.StartContinue();
+            }
+        }
+        
         Console.ReadKey();
     }
     static void ea_UpdateEvent(object sender, EventArgs e)
