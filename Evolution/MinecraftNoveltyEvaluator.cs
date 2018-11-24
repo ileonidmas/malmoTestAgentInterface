@@ -21,8 +21,9 @@ namespace RunMission.Evolution
     {
         public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox>
         {
-            private readonly double NOVELTY_THRESHOLD = 1;
+            private readonly double NOVELTY_THRESHOLD = 2;
             private readonly int NOVELTY_KNEARSEST = 5;
+            private readonly int POPULATION_SIZE = 10;
             private ulong _evalCount;
             private bool _stopConditionSatisfied = false;
             private MalmoClientPool clientPool;
@@ -61,6 +62,9 @@ namespace RunMission.Evolution
             }
 
             public readonly object myLock = new object();
+            public readonly object myLock2 = new object();
+            public readonly object myLock3 = new object();
+            public readonly object myLock4 = new object();
 
             /// <summary>
             /// Evaluate the provided IBlackBox against the random tic-tac-toe player and return its fitness score.
@@ -73,15 +77,18 @@ namespace RunMission.Evolution
             {
                 bool[] structureGrid = ClientPool.RunAvailableClient(brain);
 
-                currentGenerationArchive.Add(structureGrid);
+                lock (myLock)
+                {
+                    currentGenerationArchive.Add(structureGrid);
+                }
 
-                while (currentGenerationArchive.Count < 10) {
+                while (currentGenerationArchive.Count < POPULATION_SIZE) {
                     Thread.Sleep(1000);
                 }
 
                 double noveltyDistance = 0.0;
 
-                lock(myLock)
+                lock(myLock2)
                 {
                     if (!combinedArchiveAndGeneration)
                     {
@@ -99,14 +106,14 @@ namespace RunMission.Evolution
                     saveNovelStructure(structureGrid, novelBehaviourArchive.FindIndex(x => x == structureGrid));
                 }
 
-                while(distanceCount < 10)
+                while(distanceCount < POPULATION_SIZE)
                 {
-                    
+                    Thread.Sleep(1000);
                 }
 
-                Thread.Sleep(1000);
+                Thread.Sleep(3000);
 
-                lock (myLock)
+                lock (myLock3)
                 {
                     if (currentGenerationArchive.Count > 0)
                     {
@@ -117,7 +124,7 @@ namespace RunMission.Evolution
                     }
                 }
 
-                lock (myLock)
+                lock (myLock4)
                 {
                     if (novelBehaviourArchive.Count >= 10)
                     {

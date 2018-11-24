@@ -36,6 +36,7 @@ class Program
         XmlDocument xmlConfig = new XmlDocument();
         xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
         experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
+
         var algorithm = experiment.CreateEvolutionAlgorithm();
 
         while(true)

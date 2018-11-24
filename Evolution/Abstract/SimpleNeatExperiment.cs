@@ -102,6 +102,12 @@ namespace RunMission.Evolution
             _eaParams = new NeatEvolutionAlgorithmParameters();
             _eaParams.SpecieCount = _specieCount;
             _neatGenomeParams = new NeatGenomeParameters();
+
+            _neatGenomeParams.ConnectionWeightMutationProbability = 0.78;
+            _neatGenomeParams.AddConnectionMutationProbability = 0.27;
+            _neatGenomeParams.DeleteConnectionMutationProbability = 0.003;
+            _neatGenomeParams.NodeAuxStateMutationProbability = 0.0;
+            _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
         }
 
         /// <summary>
